@@ -1,0 +1,46 @@
+/* ── Badge — mobile first ──────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: calc(var(--space-1, 4px) * 0.75) var(--space-2, 8px);
+  border-radius: var(--radius-badge);
+  font-family: var(--font-sans);
+  font-size: var(--text-label);
+  font-weight: var(--weight-label);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ── Variants ──────────────────────────────── */
+.genre {
+  background: var(--color-surface-raised);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}
+
+.rating {
+  background: oklch(80% 0.18 85 / 0.15);
+  color: var(--color-rating);
+  border: 1px solid oklch(80% 0.18 85 / 0.3);
+}
+
+.type {
+  background: var(--color-accent-muted);
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent-muted);
+}
+
+.new {
+  background: oklch(72% 0.19 142 / 0.15);
+  color: var(--color-success);
+  border: 1px solid oklch(72% 0.19 142 / 0.3);
+}
+
+.status {
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border-subtle);
+}

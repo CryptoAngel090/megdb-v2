@@ -1,0 +1,151 @@
+/* ── FilterBar — rules 62–63 ─────────────────────────────────── */
+
+/**
+ * rule 62: Горизонтальная полоса под заголовком
+ * Не сайдбар — всегда видна при скролле, не теряется.
+ */
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2); /* rule 28: кратно 8px */
+  align-items: center;
+  padding: var(--space-2) 0; /* rule 28: 8px */
+}
+
+/**
+ * rule 63: Кнопка фильтра — базовое состояние
+ * rule 16: min-height 44px (Apple HIG touch target)
+ * Capsule filters: --radius-pill (not --radius-button — rule 19 is for rectangular CTAs).
+ */
+.filterBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px; /* Apple HIG touch target (mobile) */
+  padding: var(--space-2) var(--space-3); /* rule 18: горизонталь > вертикаль */
+  border-radius: var(--radius-pill);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--text-secondary);
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.filterBtn:hover:not(.filterBtnActive) {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.filterBtn:active {
+  transform: scale(0.97);
+}
+
+.filterBtn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/**
+ * rule 63: Активный фильтр = залитый фон акцентным цветом
+ * Не только цвет — залитый фон однозначно показывает активное состояние.
+ */
+.filterBtnActive {
+  background: var(--primary);
+  color: var(--on-primary);
+  border-color: var(--primary);
+  font-weight: var(--weight-bold);
+  box-shadow: 0 2px 12px var(--primary-glow);
+}
+
+.filterBtnActive:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
+
+/* rule 5: disabled */
+.filterBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Mobile: горизонтальный скролл если фильтров много */
+@media (max-width: 767px) {
+  .filterBar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-snap-type: x proximity;
+    padding-bottom: var(--space-2);
+    /* Небольшой отступ чтобы тень кнопок не обрезалась */
+    padding-inline: var(--radius-xs);
+    margin-inline: calc(var(--radius-xs) * -1);
+  }
+
+  .filterBar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filterBtn {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+  }
+}
+
+/* rule 64: кнопка "Очистить" — появляется только при активных фильтрах */
+.clearBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 44px;
+  padding: var(--space-2) var(--space-2-5);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+  /* Отделяем от фильтров небольшим отступом */
+  margin-left: var(--space-1);
+}
+
+.clearBtn:hover {
+  background: rgba(229, 9, 20, 0.12);
+  color: var(--text-primary);
+  border-color: rgba(229, 9, 20, 0.3);
+}
+
+.clearBtn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .filterBtn,
+  .clearBtn {
+    transition-duration: 0.01ms;
+  }
+
+  .filterBtn:active {
+    transform: none;
+  }
+}

@@ -1,0 +1,322 @@
+/* ============================================
+   DESIGN TOKENS — MegDB 2026
+   3 color roles: Primary · Background · Surface
+   ── Canonical source for the public site (apps/web).
+   ── @repo/ui uses packages/ui tokens for admin + /ui-kit primitives.
+   ── Policy: docs/design-system.md
+   ============================================ */
+
+/* Layer order — see .cursor/rules/01-css.mdc */
+@layer reset, tokens, base, components, pages, utilities;
+
+@layer tokens {
+  :root {
+    /* ── PRIMARY — #E50914 (MegDB / Netflix-style red) ─
+     CTAs, ratings, active states, hover accents — all derived from this.
+  ─────────────────────────────────────────── */
+    --primary: #e50914;
+    --primary-hover: #cc0812; /* -10% lightness */
+    --primary-active: #b00710; /* -20% lightness */
+    --primary-muted: rgba(229, 9, 20, 0.12);
+    --primary-border: rgba(229, 9, 20, 0.3);
+    --primary-glow: rgba(229, 9, 20, 0.22);
+    --on-primary: #ffffff; /* text on primary */
+
+    /* ── BACKGROUND — #121212 ───────────────────
+     Page background; steps slightly lighter for elevation.
+  ─────────────────────────────────────────── */
+    --bg: #121212;
+    --bg-elevated: #181818; /* navbar, sticky */
+    --bg-overlay: rgba(18, 18, 18, 0.92);
+
+    /* ── SURFACE — #1F1F1F ──────────────────────
+     Cards, modals, dropdowns — steps of ~+8 lightness.
+  ─────────────────────────────────────────── */
+    --surface: #1f1f1f;
+    --surface-hover: #272727;
+    --surface-raised: #2f2f2f;
+    --surface-overlay: #383838;
+
+    /* ── BORDER — surface-relative tints ─────────*/
+    /* Site-wide thin red outline (requested). */
+    --border: rgba(229, 9, 20, 0.18);
+    --border-strong: rgba(229, 9, 20, 0.3);
+    /** Slightly thicker outline when emphasis is needed (posters, list panel, header). */
+    --border-width-ui: 2px;
+
+    /* ── TEXT — white scale ─────────────────────*/
+    --text-primary: #ffffff; /* 21:1 on bg   ✅ WCAG AAA */
+    --text-secondary: #aaaaaa; /* 7.1:1 on bg  ✅ WCAG AAA */
+    --text-muted: #8a8a8a; /* 5.3:1 on bg  ✅ WCAG AA  */
+    /* De-emphasized copy: same hue scale as muted. Controls: use RULE 5 `opacity: 0.4` on the node, not a near-bg gray. */
+    --text-disabled: var(--text-muted);
+
+    /* ── GLASS — blurred surface ───────────────*/
+    --glass-bg: rgba(31, 31, 31, 0.8);
+    --glass-border: rgba(229, 9, 20, 0.18);
+    --glass-bg-nav: rgba(18, 18, 18, 0.88);
+    --glass-border-nav: rgba(229, 9, 20, 0.14);
+
+    /* ── FUNCTIONAL — minimal set ─────────────*/
+    --color-success: #46d369;
+    --color-error: #e50914;
+    --color-warning: #f59e0b;
+    --color-info: #3b82f6;
+    --color-overlay: rgba(0, 0, 0, 0.75);
+
+    /* Legacy aliases — keep in sync with tokens above */
+    --color-bg: var(--bg);
+    --color-bg-base: var(--bg);
+    --color-surface: var(--surface);
+    --color-surface-hover: var(--surface-hover);
+    --color-surface-raised: var(--surface-raised);
+    --color-border: var(--border);
+    --color-border-subtle: var(--border);
+    --color-text-primary: var(--text-primary); /* #FFFFFF  21:1  */
+    --color-text-secondary: var(--text-secondary); /* #AAAAAA   7.1:1 */
+    --color-text-muted: var(--text-muted); /* #8A8A8A   5.3:1 */
+    --color-text-disabled: var(
+      --text-disabled
+    ); /* alias → muted; pair with opacity for disabled controls */
+    --color-accent: var(--primary);
+    --color-accent-hover: var(--primary-hover);
+    --color-accent-muted: var(--primary-muted);
+    --color-rating: oklch(75% 0.15 85); /* MegDB star / rating gold — muted vs 80%/0.18 */
+    --shadow-glow: 0 0 40px var(--primary-glow);
+
+    /* ── Typography ─────────────────────────────
+     Rule 7: Inter (body) + Plus Jakarta Sans (display); JetBrains Mono for code/mono only
+     Rule 8: headings use fluid clamp() (--text-h1…h4); body/caption steps below
+     Rule 14: no sizes within 1–2px — small vs caption use different *roles* (12 vs 13)
+  ─────────────────────────────────────────── */
+    --font-sans: var(--font-inter, 'Inter', system-ui, sans-serif);
+    --font-display: var(--font-jakarta, 'Plus Jakarta Sans', 'Inter', sans-serif);
+    --font-heading: var(--font-jakarta, 'Plus Jakarta Sans', 'Inter', sans-serif);
+    --font-mono: var(
+      --font-jetbrains-mono,
+      ui-monospace,
+      'Cascadia Code',
+      'Segoe UI Mono',
+      monospace
+    );
+
+    /* Display: optional marketing / hero one-off; prefer --text-h1 for page titles. */
+    --text-display: clamp(32px, 5.5vw, 50px);
+    --text-h1: clamp(28px, 5vw, 40px);
+    --text-h2: clamp(24px, 3.5vw, 32px);
+    --text-h3: clamp(20px, 2.5vw, 25px);
+    --text-h4: clamp(18px, 2vw, 20px);
+    /* Fluid body scale — min ~15px, max 18px for readability on narrow + large screens */
+    --text-body: clamp(0.9375rem, 0.86rem + 0.32vw, 1.125rem);
+    --text-small: clamp(0.6875rem, 0.64rem + 0.2vw, 0.75rem);
+    --text-caption: clamp(0.75rem, 0.7rem + 0.2vw, 0.8125rem);
+    --text-label: 10px; /* micro-label; fixed role size */
+    /** Comfortable reading line length in prose (not a hard cap on all UI) */
+    --prose-max: 65ch;
+    /** Section vertical gaps — fluid */
+    --space-section: clamp(1.5rem, 3.5vw + 0.5rem, 3.5rem);
+    --space-block: clamp(0.75rem, 1.2vw + 0.4rem, 1.5rem);
+
+    /* Rule 10: only 400 / 500 / 600 / 700 / 800 — no 300 or 900 */
+    --weight-regular: 400;
+    --weight-medium: 500;
+    --weight-semibold: 600;
+    --weight-bold: 700;
+    --weight-extrabold: 800;
+
+    --weight-h1: 800;
+    --weight-h2: 700;
+    --weight-h3: 600;
+    --weight-body: 400;
+    --weight-label: 600;
+
+    /* Rule 9: H1=1.2  H2/H3=1.35  body=1.6  caption=1.4 */
+    --leading-tight: 1.2;
+    --leading-snug: 1.35;
+    --leading-normal: 1.6;
+    --leading-caption: 1.4;
+    --leading-relaxed: 1.625;
+
+    --tracking-tighter: -0.04em;
+    --tracking-tight: -0.02em;
+    --tracking-normal: 0em;
+    --tracking-wide: 0.025em;
+    --tracking-wider: 0.08em;
+    --tracking-widest: 0.15em;
+
+    /* ── Spacing (8pt grid) ─────────────────────*/
+    --touch-target: 44px; /* Apple HIG minimum; use for buttons, icon hit areas */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 16px;
+    --space-4: 24px;
+    --space-5: 32px;
+    --space-6: 48px;
+    --space-7: 64px;
+    --space-8: 96px;
+
+    /**
+   * Derived steps — same 4px rhythm; prefer over raw px in components.
+   */
+    --space-2-5: calc(var(--space-2) + var(--space-1)); /* 12px */
+    --space-3-5: calc(var(--space-3) + var(--space-1)); /* 20px */
+    --space-4-5: calc(var(--space-2) + var(--space-2) + var(--space-1) / 2); /* 18px */
+    --space-5-5: calc(var(--space-5) + var(--space-1)); /* 36px */
+    --layout-pill-inner-min: calc(var(--space-6) + var(--space-2) + var(--space-1)); /* 60px */
+    --layout-pill-inner-min-lg: calc(var(--space-7) + var(--space-1)); /* 68px */
+
+    /** Small gap above the nav pill (below notch / status bar). Responsive in media blocks below. */
+    --layout-header-top-gutter: var(--space-2);
+
+    /**
+   * Fixed header block height (matches Header.module.css).
+   * safe-area + top gutter + .pill border (×2) + .inner min-height.
+   */
+    --layout-header-height-mobile: calc(
+      env(safe-area-inset-top, 0px) + var(--layout-header-top-gutter) +
+        var(--layout-pill-inner-min) + calc(2 * var(--border-width-ui))
+    );
+    --layout-header-height-md: calc(
+      env(safe-area-inset-top, 0px) + var(--layout-header-top-gutter) +
+        var(--layout-pill-inner-min-lg) + calc(2 * var(--border-width-ui))
+    );
+    --layout-header-height-xl: calc(
+      env(safe-area-inset-top, 0px) + var(--layout-header-top-gutter) +
+        var(--layout-pill-inner-min-lg) + calc(2 * var(--border-width-ui))
+    );
+    /** Active clearance for <main>, scroll-padding, anchors — switches at 768 / 1280px. */
+    --layout-header-clearance: var(--layout-header-height-mobile);
+
+    /* ── Border Radius ──────────────────────────
+   * Roles (use the matching token — avoid raw px / 9999px in modules):
+   *   --radius-button — primary/secondary/ghost CTA & rectangular actions (rule 19).
+   *   --radius-pill   — capsule chips, filter toggles, search shell, nav pills (same geometry as full).
+   *   --radius-card   — cards, poster frames, panels.
+   *   --radius-badge  — small labels / rating chips.
+   *   --radius-input  — text fields.
+   * Circle icon targets: border-radius: 50% (not a token — intentional shape).
+   * --radius-full — geometric “max” rounding (e.g. scrollbar thumbs); alias of pill cap.
+   */
+    --radius-xs: 2px;
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+    --radius-2xl: 16px;
+    --radius-3xl: 24px;
+    --radius-full: 9999px;
+    --radius-pill: var(--radius-full);
+
+    --radius-card: 10px;
+    --radius-button: 12px;
+    --radius-badge: 6px;
+    --radius-input: 6px;
+    --radius-glass: 8px;
+
+    /* ── Shadows ────────────────────────────────*/
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.7);
+    --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.85);
+
+    /* ── Animation ──────────────────────────────*/
+    --duration-instant: 100ms;
+    --duration-fast: 150ms;
+    --duration-normal: 200ms;
+    --duration-medium: 300ms;
+    --duration-slow: 500ms;
+    --duration-crawl: 700ms;
+
+    --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    /* Spring hover / press (checklist — same curve as --ease-spring) */
+    --spring-duration: 0.4s;
+    --spring-easing: var(--ease-spring);
+    --ease-decel: cubic-bezier(0, 0, 0.2, 1);
+    --ease-cinema: cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* ── Layout — rule 29: 1280–1440px cap; padding fluid on all viewports ──*/
+    --container-max: 1440px;
+    --container-padding: clamp(0.75rem, 2.4vw + 0.4rem, 3.75rem);
+
+    /**
+   * Horizontal media rails — same tile width + gap as MovieDetailPage
+   * `MovieCollectionSection` / “More Like This” (`.collectionTrack` + `.collectionSlot`).
+   * Shelves use `100cqi` with `container-type: inline-size` on the rail wrapper.
+   */
+    --media-card-rail-gap: clamp(0.5rem, 2vw, 0.75rem);
+    --media-card-rail-columns: 3;
+
+    /** Poster frame — strict 2:3 everywhere (MediaCard, skeletons). */
+    --media-card-poster-aspect: 2 / 3;
+
+    /* ── Z-index (single stack; avoid ad-hoc 99999) ─────────────────
+   * Content layers 0–99 stay local. Global UI uses these only.
+   */
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    /* Page scroll progress (thin bar) — below header, above content */
+    --z-progress: 500;
+    /* Top read-progress line — above ripple layer or it’s effectively invisible */
+    --z-scroll-progress: 13000;
+    --z-header: 1000;
+    /* Thin top bar during route transitions — above header chrome, below drawer/modals */
+    --z-nav-progress: 1050;
+    --z-header-drawer-backdrop: 1100;
+    --z-header-drawer: 1101;
+    --z-modal: 2000;
+    --z-toast: 3000;
+    /* Global click ripple — above modals/toasts, still pointer-events: none */
+    --z-ripple: 12000;
+    /* Grain must stay *below* UI — high z-index + blend mode caused blank/white full viewport in Edge. */
+    --z-grain: 0;
+  }
+
+  @media (min-width: 48rem) {
+    :root {
+      --media-card-rail-columns: 5;
+    }
+  }
+
+  @media (min-width: 62rem) {
+    :root {
+      --media-card-rail-columns: 6;
+    }
+  }
+
+  @media (min-width: 80rem) {
+    :root {
+      --media-card-rail-columns: 7;
+    }
+  }
+
+  @media (min-width: 90rem) {
+    :root {
+      --media-card-rail-columns: 8;
+    }
+  }
+
+  @media (min-width: 768px) {
+    :root {
+      --layout-header-top-gutter: var(--space-2-5);
+      --layout-header-clearance: var(--layout-header-height-md);
+    }
+  }
+
+  @media (min-width: 1280px) {
+    :root {
+      --layout-header-top-gutter: var(--space-3);
+      --layout-header-clearance: var(--layout-header-height-xl);
+    }
+  }
+}
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+}

@@ -1,0 +1,4 @@
+/* Route shell — scoped to /settings only; children supply layout. */
+.page {
+  display: contents;
+}

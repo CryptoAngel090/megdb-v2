@@ -1,0 +1,20 @@
+/* ── Homepage — Netflix style ───────────────── */
+/* rule 32: section margin-bottom 48–64px → gap: 48px (--space-6) */
+/* rule 33: максимум 6–7 секций на странице (контролируется в page.tsx) */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6); /* rule 32: 48px между секциями */
+  padding-top: var(--space-4); /* rule 28: кратно 8px */
+  padding-bottom: max(var(--space-8), env(safe-area-inset-bottom, 0px));
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1024px) {
+  .page {
+    gap: var(--space-7); /* rule 32: 64px на десктопе */
+  }
+}

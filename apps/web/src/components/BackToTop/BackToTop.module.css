@@ -1,0 +1,49 @@
+/* ── BackToTop ───────────────────────────────────────────── */
+
+.btn {
+  position: fixed;
+  bottom: max(32px, env(safe-area-inset-bottom, 0px));
+  right: 20px;
+  z-index: 500;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(20, 20, 20, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  transition:
+    border-color 150ms ease,
+    background 150ms ease;
+}
+
+.btn:hover {
+  border-color: var(--primary, #e50914);
+  background: rgba(30, 30, 30, 0.98);
+  color: #fff;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-accent, #e50914);
+  outline-offset: 3px;
+}
+
+/* На мобильных — выше bottom nav */
+@media (max-width: 767px) {
+  .btn {
+    bottom: max(88px, calc(env(safe-area-inset-bottom, 0px) + 80px));
+    right: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+  }
+}

@@ -1,0 +1,218 @@
+/* Keyframes + view transitions + global motion prefs (unlayered). */
+/* ============================================
+   ANIMATIONS — 2026 Best Practices
+   ============================================ */
+
+/* ── Shimmer keyframe (global — used by skeleton components) ── */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ── Fade In animations ── */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Scale animations ── */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+/* ── Slide animations ── */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ── Rotate animations ── */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Bounce animation ── */
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* ── Glow animation ── */
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(229, 9, 20, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(229, 9, 20, 0.4);
+  }
+}
+
+/* ── Skeleton pulse (alternative to shimmer) ── */
+@keyframes skeletonPulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    /* Отключаем только бесконечные/тяжёлые анимации */
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    /* Не трогаем transitions в этом правиле — feedback остаётся */
+    scroll-behavior: auto !important;
+  }
+
+  /* Короткие transitions для кликабельного/фокусируемого */
+  button,
+  a,
+  input,
+  [role='button'] {
+    transition-duration: 150ms !important;
+  }
+
+  /* Любой код, что использует var(--spring-*) (карточки, .interactive) */
+  :root {
+    --spring-duration: 70ms;
+    --spring-easing: var(--ease-out);
+  }
+}
+
+/* Runtime low FPS — usePerformanceMonitor sets `html.low-performance` (not body); skipped when user prefers reduced motion. */
+html.low-performance {
+  scroll-behavior: auto !important;
+  --spring-duration: 70ms;
+  --spring-easing: var(--ease-out);
+}
+
+/* Heavy / decorative layers — best-effort hide (classes may be unused) */
+html.low-performance .cursor-trail,
+html.low-performance .particle-effect,
+html.low-performance .ambient-light {
+  display: none !important;
+}
+
+/* Cap motion when FPS is low (broader than a11y reduced-motion — intentional for this path) */
+html.low-performance * {
+  animation-duration: 0.2s !important;
+  transition-duration: 0.2s !important;
+}
+
+/* Tamer hover than default `.interactive` (see block below) */
+html.low-performance .interactive:hover {
+  transform: translateY(-4px) scale(1.02) !important;
+}
+
+/* ============================================
+   VIEW TRANSITIONS API — 2026 Native Support
+   ============================================ */
+
+/* Enable View Transitions API for smooth page transitions */
+@view-transition {
+  navigation: auto;
+}
+
+/* Customize default transitions */
+::view-transition-old(root) {
+  animation: fadeOut 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+::view-transition-new(root) {
+  animation: fadeIn 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+/* Shared element transitions (карточка → детальная страница) */
+::view-transition-old(card-to-detail),
+::view-transition-new(card-to-detail) {
+  animation-duration: 400ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}

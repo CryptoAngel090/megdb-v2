@@ -1,0 +1,90 @@
+.root {
+  min-height: 100svh;
+  background: var(--bg);
+  padding-top: var(--layout-header-clearance);
+}
+
+.hero {
+  position: relative;
+  height: clamp(240px, 52vw, 480px);
+  margin: 0;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+.shimmer {
+  position: absolute;
+  inset: 0;
+  background: #1a1a1a;
+}
+
+.main {
+  max-width: min(72rem, 100%);
+  width: 100%;
+  margin: 0 auto;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: clamp(1.5rem, 3.5vw, 2rem) clamp(0.75rem, 0.55rem + 2.4vw, 1.75rem)
+    clamp(2.5rem, 5vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2.5vw, 1.35rem);
+}
+
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.line {
+  height: 14px;
+  border-radius: 6px;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+}
+
+.lineShort {
+  width: 55%;
+}
+
+.lineMed {
+  width: 80%;
+}
+
+.trailerSk {
+  aspect-ratio: 16 / 9;
+  border-radius: 1rem;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  margin-top: 1rem;
+}
+
+.castRow {
+  display: flex;
+  gap: 0.75rem;
+  overflow: hidden;
+  margin-top: 2rem;
+  padding-bottom: 0.5rem;
+}
+
+.castSk {
+  flex: 0 0 auto;
+  width: clamp(7.5rem, 22vw + 3rem, 8.875rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.castPhotoSk {
+  aspect-ratio: 2 / 3;
+  border-radius: 0.5rem;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+}
+
+.castLine {
+  height: 10px;
+  border-radius: 4px;
+  background: #252525;
+}

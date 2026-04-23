@@ -1,0 +1,198 @@
+/* ── Button — mobile first ─────────────────── */
+/* Rules 15–21: иерархия Primary→Secondary→Ghost, 44px min, 80px min-width,
+   padding h×2, один border-radius, иконка слева gap 8px */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2, 8px);
+  min-height: var(--touch-target, 44px);
+  min-width: calc(var(--space-7, 64px) + var(--space-3, 16px));
+  padding: var(--space-2-5, 12px) var(--space-4, 24px);
+  border-radius: var(--radius-button); /* rule 19: ОДИН радиус для всех кнопок */
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  border: none;
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out),
+    opacity var(--duration-fast) var(--ease-out),
+    background var(--duration-normal) var(--ease-out),
+    filter var(--duration-fast) var(--ease-out);
+  text-decoration: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  /* Rule 27: не меняем layout при hover — только transform/shadow/filter */
+  will-change: transform;
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* Rule 4: hover яркость +10–15% ИЛИ scale 1.02–1.05 */
+.button:hover {
+  transform: scale(1.03);
+}
+.button:active {
+  transform: scale(0.97);
+}
+
+/* Rule 5: disabled opacity 0.35–0.45, cursor not-allowed */
+.button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+}
+
+/* ── Variants — rule 15: Primary → Secondary → Ghost ── */
+
+/* Tier 1 Primary: brand CTA — красный #E50914 */
+.primary {
+  background: var(--color-accent, #e50914);
+  color: #ffffff;
+  box-shadow: 0 4px 16px var(--color-accent-muted, rgba(229, 9, 20, 0.22));
+}
+.primary:hover:not(:disabled) {
+  background: var(--color-accent-hover, #cc0812);
+  box-shadow: 0 8px 28px rgba(229, 9, 20, 0.35);
+  filter: brightness(1.08);
+}
+.primary:active:not(:disabled) {
+  filter: brightness(0.92);
+  box-shadow: none;
+}
+
+.secondary {
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+}
+.secondary:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-accent);
+}
+
+.ghost {
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid transparent;
+}
+.ghost:hover {
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+}
+
+.danger {
+  background: var(--color-error);
+  color: var(--color-text-primary);
+  box-shadow: 0 4px 16px oklch(62% 0.22 27 / 0.3);
+}
+.danger:hover {
+  filter: brightness(1.15);
+}
+
+/* ── Sizes ─────────────────────────────────── */
+.sm {
+  min-height: var(--space-5-5, 36px);
+  padding: 0 var(--space-3);
+  font-size: var(--text-small);
+}
+
+.lg {
+  min-height: calc(var(--space-6, 48px) + var(--space-2, 8px));
+  padding: 0 var(--space-6);
+  font-size: var(--text-h4);
+}
+
+/* ── Icon only — rule 21: только однозначные иконки + title tooltip ── */
+.iconOnly {
+  padding: 0;
+  width: var(--touch-target, 44px);
+  min-width: var(--touch-target, 44px);
+  border-radius: var(--radius-button);
+  position: relative; /* для tooltip */
+}
+.iconOnly.sm {
+  width: var(--space-5-5, 36px);
+  min-width: var(--space-5-5, 36px);
+}
+.iconOnly.lg {
+  width: calc(var(--space-6, 48px) + var(--space-2, 8px));
+  min-width: calc(var(--space-6, 48px) + var(--space-2, 8px));
+}
+
+/* CSS tooltip для icon-only кнопок */
+.iconOnly[title]::after {
+  content: attr(title);
+  position: absolute;
+  bottom: calc(100% + var(--space-2, 8px));
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background: var(--color-surface-raised, #2f2f2f);
+  color: var(--color-text-primary, #fff);
+  font-size: 11px;
+  font-weight: 600;
+  padding: var(--space-1, 4px) var(--space-2, 8px);
+  border-radius: var(--radius-sm, 4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--duration-fast, 150ms) ease;
+  z-index: 100;
+}
+
+.iconOnly[title]:hover::after,
+.iconOnly[title]:focus-visible::after {
+  opacity: 1;
+}
+
+/* ── Full width ────────────────────────────── */
+.fullWidth {
+  width: 100%;
+}
+
+/* ── Loading ───────────────────────────────── */
+.loading {
+  position: relative;
+  color: transparent;
+  pointer-events: none;
+}
+.loading::after {
+  content: '';
+  position: absolute;
+  width: var(--space-3, 16px);
+  height: var(--space-3, 16px);
+  border: 2px solid transparent;
+  border-top-color: var(--color-text-primary);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Reduced motion — rule 4 ─────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .button:hover,
+  .button:active {
+    transform: none;
+    filter: none;
+  }
+
+  .button {
+    transition-duration: 0.01ms;
+  }
+}

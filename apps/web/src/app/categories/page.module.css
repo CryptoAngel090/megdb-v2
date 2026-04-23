@@ -1,0 +1,4 @@
+/* Route shell — scoped to /categories only; children supply layout. */
+.page {
+  display: contents;
+}

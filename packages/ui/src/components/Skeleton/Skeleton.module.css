@@ -1,0 +1,58 @@
+/* ── Skeleton — mobile first ───────────────── */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface) 25%,
+    var(--color-surface-hover) 50%,
+    var(--color-surface) 75%
+  );
+  background-size: 400px 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: var(--radius-md);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+/* ── Shape variants ───────────────────────── */
+.text {
+  height: var(--text-body, 16px);
+  border-radius: var(--radius-sm);
+}
+
+.title {
+  height: var(--space-3, 24px);
+  border-radius: var(--radius-sm);
+}
+
+.card {
+  aspect-ratio: 2/3;
+  border-radius: var(--radius-card);
+  width: 100%;
+}
+
+.avatar {
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.badge {
+  /* 22px = --space-3 + --radius-md (not space-5 + half space-1 → 34px) */
+  height: calc(var(--space-3, 16px) + var(--radius-md, 6px));
+  width: 60px;
+  border-radius: var(--radius-badge);
+}
+
+/* ── prefers-reduced-motion ────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+    background: var(--color-surface-hover);
+  }
+}

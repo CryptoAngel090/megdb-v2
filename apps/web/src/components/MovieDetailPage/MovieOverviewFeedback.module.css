@@ -1,0 +1,173 @@
+.feedbackPanel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0 0 0.8rem;
+  width: 100%;
+}
+
+.feedbackItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem !important;
+}
+
+.feedbackButton {
+  min-height: 40px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 0.84rem;
+  font-weight: 700;
+  transition:
+    transform 140ms ease,
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.feedbackButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.62);
+}
+
+.feedbackButton:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.feedbackButton:disabled {
+  cursor: default;
+}
+
+.feedbackButtonSelected {
+  color: #fff;
+}
+
+.likeButton {
+  border-color: rgba(0, 255, 178, 0.86);
+  background: linear-gradient(135deg, rgba(0, 255, 178, 0.5), rgba(0, 255, 178, 0.24));
+  box-shadow:
+    0 0 0 1px rgba(0, 255, 178, 0.58),
+    0 10px 24px rgba(0, 255, 178, 0.3);
+}
+
+.dislikeButton {
+  border-color: rgba(255, 47, 123, 0.9);
+  background: linear-gradient(135deg, rgba(255, 47, 123, 0.54), rgba(255, 47, 123, 0.26));
+  box-shadow:
+    0 0 0 1px rgba(255, 47, 123, 0.6),
+    0 10px 24px rgba(255, 47, 123, 0.32);
+}
+
+.likeButton.feedbackButtonSelected {
+  border-color: #00ffb2;
+  background: linear-gradient(135deg, rgba(0, 255, 178, 0.52), rgba(0, 255, 178, 0.24));
+  box-shadow:
+    0 0 0 1px rgba(0, 255, 178, 0.75),
+    0 12px 28px rgba(0, 255, 178, 0.45);
+}
+
+.dislikeButton.feedbackButtonSelected {
+  border-color: #ff2f7b;
+  background: linear-gradient(135deg, rgba(255, 47, 123, 0.52), rgba(255, 47, 123, 0.24));
+  box-shadow:
+    0 0 0 1px rgba(255, 47, 123, 0.75),
+    0 12px 28px rgba(255, 47, 123, 0.45);
+}
+
+.feedbackButtonPulse {
+  animation: feedbackPulse 420ms ease;
+}
+
+.feedbackIcon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.count {
+  min-width: min(3.25rem, 100%);
+  min-height: 40px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  border-radius: var(--radius-button);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.24);
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.35);
+}
+
+.countLike {
+  border-color: rgba(0, 255, 178, 0.4);
+  background: rgba(13, 27, 23, 0.82);
+  box-shadow:
+    0 0 0 1px rgba(0, 255, 178, 0.18),
+    0 8px 18px rgba(0, 0, 0, 0.28);
+}
+
+.countDislike {
+  border-color: rgba(255, 47, 123, 0.42);
+  background: rgba(31, 16, 23, 0.84);
+  box-shadow:
+    0 0 0 1px rgba(255, 47, 123, 0.2),
+    0 8px 18px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes feedbackPulse {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (min-width: 48rem) {
+  .feedbackPanel {
+    justify-content: flex-start;
+    gap: 1rem;
+    margin: 0;
+    width: auto;
+  }
+
+  .feedbackItem {
+    gap: 1rem !important;
+  }
+
+  .feedbackButton {
+    min-height: 34px;
+    padding: 0 12px;
+    gap: 0.35rem;
+    font-size: 0.76rem;
+  }
+
+  .feedbackIcon {
+    width: 13px;
+    height: 13px;
+  }
+
+  .count {
+    min-width: min(2.75rem, 100%);
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: 0.8rem;
+  }
+}

@@ -1,0 +1,164 @@
+/* ── YearRangeSlider — rule 66 ───────────────────────────────── */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  user-select: none;
+}
+
+/* Строка с подписями и значениями */
+.labels {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--text-caption);
+  color: var(--text-muted);
+}
+
+.label {
+  font-weight: var(--weight-medium);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.values {
+  display: flex;
+  align-items: center;
+  gap: var(--radius-md);
+  font-size: var(--text-body);
+  color: var(--text-primary);
+}
+
+.values strong {
+  font-weight: var(--weight-bold);
+  color: var(--primary);
+  min-width: 2.5ch;
+  text-align: center;
+}
+
+.dash {
+  color: var(--text-muted);
+}
+
+/* Трек + заливка */
+.trackWrap {
+  position: relative;
+  height: var(--radius-md);
+  margin-block: var(--space-2);
+}
+
+.track {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-pill);
+  background: var(--surface-raised);
+}
+
+.fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: var(--radius-pill);
+  background: var(--primary);
+  box-shadow: 0 0 8px var(--primary-glow);
+  pointer-events: none;
+  transition:
+    left var(--duration-fast) var(--ease-out),
+    width var(--duration-fast) var(--ease-out);
+}
+
+/* Два range input поверх трека */
+.inputs {
+  position: relative;
+  height: 0;
+  /* Поднимаем на высоту трека чтобы ручки были по центру */
+  margin-top: calc(-1 * (var(--space-2) + var(--radius-md)));
+}
+
+.thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(var(--space-4) + var(--space-1)); /* увеличенная зона тапа (28px) */
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: none;
+}
+
+/* Только ручка кликабельна */
+.thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: var(--space-3-5);
+  height: var(--space-3-5);
+  border-radius: 50%;
+  background: var(--primary);
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  pointer-events: all;
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.thumb::-moz-range-thumb {
+  width: var(--space-3-5);
+  height: var(--space-3-5);
+  border-radius: 50%;
+  background: var(--primary);
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.thumb::-webkit-slider-thumb:hover,
+.thumb:focus-visible::-webkit-slider-thumb {
+  transform: scale(1.2);
+  box-shadow:
+    0 0 0 4px var(--primary-muted),
+    0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.thumb:focus-visible {
+  outline: none;
+}
+
+.thumb:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--primary);
+  outline-offset: var(--radius-xs);
+}
+
+/* Скрываем трек у самого input — используем свой */
+.thumb::-webkit-slider-runnable-track {
+  background: transparent;
+  height: var(--radius-md);
+}
+
+.thumb::-moz-range-track {
+  background: transparent;
+  height: var(--radius-md);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .fill,
+  .thumb::-webkit-slider-thumb {
+    transition-duration: 0.01ms;
+  }
+
+  .thumb::-webkit-slider-thumb:hover {
+    transform: none;
+  }
+}

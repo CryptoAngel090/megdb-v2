@@ -1,0 +1,142 @@
+/* ── FormField — rule 72 (inline error) ─────────────────────── */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1); /* rule 28: 4px между элементами */
+}
+
+/* rule 11: label font-weight 600 */
+.label {
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
+  color: var(--text-secondary);
+  line-height: var(--leading-caption);
+}
+
+.required {
+  color: var(--primary);
+}
+
+.inputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  position: absolute;
+  left: calc(var(--space-3) - var(--space-1) / 2);
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* rule 16: min-height 44px */
+.input {
+  width: 100%;
+  min-height: calc(var(--space-6) - var(--space-1));
+  padding: var(--space-2-5) var(--space-3);
+  border-radius: var(--radius-input); /* rule 19: один радиус = 6px */
+  font-size: var(--text-body);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-normal);
+  color: var(--text-primary);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  outline: none;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.inputWithIcon {
+  padding-left: calc(var(--space-4) + var(--space-3) + var(--space-1) / 2);
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+}
+
+.input:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--surface-hover);
+}
+
+.input:focus {
+  border-color: var(--primary);
+  background: var(--surface-hover);
+  box-shadow: 0 0 0 3px var(--primary-muted);
+}
+
+.input:focus-visible {
+  outline: none; /* box-shadow достаточно */
+}
+
+/* rule 5: disabled */
+.input:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* rule 72: error state — красная граница */
+.inputWrapError .input {
+  border-color: var(--color-error, #e50914);
+  background: rgba(229, 9, 20, 0.04);
+}
+
+.inputWrapError .input:focus {
+  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.15);
+}
+
+/* rule 72: inline error под полем */
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: calc(var(--space-1) + var(--space-1) / 4);
+  margin: 0;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-caption);
+  color: var(--color-error, #e50914);
+  /* Плавное появление */
+  animation: errorSlideIn var(--duration-fast) var(--ease-out);
+}
+
+.error svg {
+  flex-shrink: 0;
+  margin-top: calc(var(--space-1) / 4);
+}
+
+@keyframes errorSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--space-1) * -1));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Подсказка */
+.hint {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: var(--leading-caption);
+  color: var(--text-muted);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .input,
+  .error {
+    transition-duration: 0.01ms;
+    animation: none;
+  }
+}

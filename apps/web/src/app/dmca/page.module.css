@@ -1,0 +1,4 @@
+/* Route shell — scoped to /dmca only; children supply layout. */
+.page {
+  display: contents;
+}

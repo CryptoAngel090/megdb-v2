@@ -1,0 +1,102 @@
+/* ── EmptyState — rule 71 ────────────────────────────────────── */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-8) var(--space-4); /* rule 28: кратно 8px */
+  gap: var(--space-3);
+  min-height: 240px;
+}
+
+/* rule 71: иконка — заметная, без перегруза */
+.icon {
+  font-size: 40px;
+  line-height: 1;
+  margin-bottom: var(--space-2);
+  /* Лёгкое покачивание для живости */
+  animation: emptyBounce 2s ease-in-out infinite;
+}
+
+@keyframes emptyBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(calc(var(--space-1) * -1.5));
+  }
+}
+
+/* rule 71: заголовок */
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-h3); /* rule 8: 25px */
+  font-weight: var(--weight-bold); /* rule 10: 700 */
+  line-height: var(--leading-snug); /* rule 9: 1.35 */
+  color: var(--text-primary);
+}
+
+/* rule 71: описание */
+.description {
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: var(--leading-normal); /* rule 9: 1.6 */
+  color: var(--text-muted);
+  max-width: 40ch; /* rule 12: ~60-75 символов */
+}
+
+/* rule 71: CTA — решение проблемы */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: calc(var(--space-6) - var(--space-1));
+  min-width: min(5rem, 100%);
+  padding: var(--space-2-5) var(--space-4);
+  border-radius: var(--radius-button); /* rule 19 */
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  background: var(--primary);
+  color: var(--on-primary);
+  box-shadow: 0 4px 16px var(--primary-glow);
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+  margin-top: var(--space-2);
+}
+
+.cta:hover {
+  background: var(--primary-hover);
+  transform: scale(1.03);
+  box-shadow: 0 8px 24px var(--primary-glow);
+}
+
+.cta:active {
+  transform: scale(0.98);
+}
+
+.cta:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .icon {
+    animation: none;
+  }
+
+  .cta:hover,
+  .cta:active {
+    transform: none;
+  }
+}
