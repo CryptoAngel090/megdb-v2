@@ -59,8 +59,8 @@
 .title {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(20px, 2vw, 25px);
-  font-weight: 700;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
   color: var(--color-text-primary);
   letter-spacing: -0.02em;
   line-height: var(--leading-snug);
@@ -209,8 +209,8 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
-  font-size: clamp(24px, 5vw, 32px);
-  font-weight: 800;
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-extrabold);
   color: rgba(255, 255, 255, 0.7);
   /* Градиент на основе акцентного цвета — стильно, не broken image */
   background: linear-gradient(

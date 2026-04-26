@@ -1,21 +1,30 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalDocument, LegalNote } from '@/components/LegalDocument/LegalDocument'
+import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
+import { discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
 export const revalidate = 86_400
 
+const title = 'Terms of Service'
+const description =
+  'Terms governing your use of MegDB movie and TV discovery services, content sources, and acceptable use.'
+
 export const metadata: Metadata = {
-  title: 'Terms of Service',
-  description:
-    'Terms governing your use of MegDB movie and TV discovery services, content sources, and acceptable use.',
+  title,
+  description,
+  alternates: { canonical: '/terms' },
+  ...discoverSocialMeta(title, description, '/terms'),
 }
 
 const UPDATED = 'April 21, 2026'
 
 export default function TermsPage() {
   return (
-    <div className={styles.page}>
+    <>
+      <WebPageJsonLd pathname="/terms" title={title} description={description} />
+      <div className={styles.page}>
       <LegalDocument title="Terms of Service" lastUpdated={UPDATED}>
         <h2 id="agreement">1. Agreement to terms</h2>
         <p>
@@ -225,5 +234,6 @@ export default function TermsPage() {
         </p>
       </LegalDocument>
     </div>
+    </>
   )
 }

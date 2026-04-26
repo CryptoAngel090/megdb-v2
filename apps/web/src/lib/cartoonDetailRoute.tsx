@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
+import { HeroLcpPreloadLinks } from '@/components/MovieDetailPage/HeroLcpPreloadLinks'
 import {
   MovieDetailPage,
   type MovieDetailPageNav,
@@ -213,6 +214,7 @@ export async function CartoonDetailPageApp({ params }: Props) {
 
   return (
     <>
+      <HeroLcpPreloadLinks posterPath={data.posterPath} backdropPath={data.backdropPath} />
       <link rel="preconnect" href="https://www.youtube.com" crossOrigin="anonymous" />
       <link rel="preconnect" href="https://www.youtube-nocookie.com" crossOrigin="anonymous" />
       <link rel="preconnect" href="https://i.ytimg.com" crossOrigin="anonymous" />

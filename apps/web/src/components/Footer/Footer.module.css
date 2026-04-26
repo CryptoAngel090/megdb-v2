@@ -38,7 +38,7 @@
 
 .tagline {
   margin: var(--space-3) 0 0;
-  font-size: 14px;
+  font-size: var(--text-caption);
   line-height: var(--leading-normal);
   font-weight: var(--weight-regular);
   color: color-mix(in oklab, var(--text-primary) 58%, transparent);
@@ -101,7 +101,7 @@
   padding: 0 0 var(--space-3);
   border-bottom: 1px solid var(--primary);
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: var(--text-caption);
   font-weight: var(--weight-bold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -128,7 +128,7 @@
   }
 
   .tagline {
-    font-size: 15px;
+    font-size: var(--text-base);
   }
 
   /* Panel spans full footer inner — columns use horizontal space, no side void */
@@ -156,7 +156,7 @@
     padding: 0 0 var(--space-2);
     border-bottom: 1px solid color-mix(in oklab, var(--primary) 52%, #ff3d4d 48%);
     font-family: var(--font-sans);
-    font-size: 11px;
+    font-size: var(--text-sm);
     font-weight: var(--weight-semibold);
     letter-spacing: 0.1em;
     color: var(--text-secondary);
@@ -169,7 +169,7 @@
   .navLink {
     min-height: 32px;
     padding: 1px 0;
-    font-size: 13px;
+    font-size: var(--text-caption);
   }
 
   .socials {
@@ -214,7 +214,7 @@
   align-items: center;
   min-height: 44px;
   padding: var(--space-2) 0;
-  font-size: 14px;
+  font-size: var(--text-caption);
   font-weight: var(--weight-medium);
   color: var(--text-muted);
   text-decoration: none;
@@ -227,7 +227,7 @@
 
 @media (max-width: 380px) {
   .navLink {
-    font-size: 13px;
+    font-size: var(--text-caption);
   }
 }
 
@@ -282,8 +282,8 @@
 .copyright {
   margin: 0 auto var(--space-3);
   max-width: 40rem;
-  font-size: 13px;
-  line-height: 1.6;
+  font-size: var(--text-caption);
+  line-height: var(--leading-normal);
   color: color-mix(in oklab, var(--text-primary) 40%, transparent);
   text-align: center;
 }
@@ -317,7 +317,7 @@
   }
 
   .tagline {
-    font-size: 13px;
+    font-size: var(--text-caption);
   }
 
   .socials {
@@ -330,6 +330,6 @@
   }
 
   .copyright {
-    font-size: 12px;
+    font-size: var(--text-sm);
   }
 }

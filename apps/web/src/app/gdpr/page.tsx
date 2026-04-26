@@ -1,21 +1,30 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalDocument, LegalNote } from '@/components/LegalDocument/LegalDocument'
+import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
+import { discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
 export const revalidate = 86_400
 
+const title = 'GDPR & EU/UK data protection'
+const description =
+  'MegDB GDPR summary: legal bases, rights, supervisory authorities, transfers, and 2025–2026 EU Digital Omnibus context.'
+
 export const metadata: Metadata = {
-  title: 'GDPR & EU/UK data protection',
-  description:
-    'MegDB GDPR summary: legal bases, rights, supervisory authorities, transfers, and 2025–2026 EU Digital Omnibus context.',
+  title,
+  description,
+  alternates: { canonical: '/gdpr' },
+  ...discoverSocialMeta(title, description, '/gdpr'),
 }
 
 const UPDATED = 'April 21, 2026'
 
 export default function GdprPage() {
   return (
-    <div className={styles.page}>
+    <>
+      <WebPageJsonLd pathname="/gdpr" title={title} description={description} />
+      <div className={styles.page}>
       <LegalDocument title="GDPR & EU/UK data protection information" lastUpdated={UPDATED}>
         <h2 id="scope">1. Scope of this page</h2>
         <p>
@@ -271,5 +280,6 @@ export default function GdprPage() {
         </p>
       </LegalDocument>
     </div>
+    </>
   )
 }

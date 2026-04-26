@@ -18,17 +18,28 @@ function yearFromRelease(iso: string | null): number | null {
   return Number.isFinite(y) ? y : null
 }
 
+const TRAILER_ROBOTS = { index: false, follow: true } as const
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params
   const movieId = Number(id)
-  if (!Number.isFinite(movieId)) return { title: 'Trailer | MegDB' }
+  if (!Number.isFinite(movieId)) {
+    return { title: 'Trailer | MegDB', robots: TRAILER_ROBOTS }
+  }
   const movie = await getMoviePageData(movieId).catch(() => null)
-  if (!movie || !movie.trailerYoutubeKey) return { title: 'Trailer | MegDB' }
+  if (!movie || !movie.trailerYoutubeKey) {
+    return {
+      title: 'Trailer | MegDB',
+      robots: TRAILER_ROBOTS,
+      alternates: { canonical: `/trailer/${movieId}` },
+    }
+  }
   const y = yearFromRelease(movie.releaseDate)
   const head = y ? `${movie.title} (${y}) — Trailer` : `${movie.title} — Trailer`
   return {
     title: `${head} | MegDB`,
     description: `Watch the trailer for ${movie.title}.`,
+    robots: TRAILER_ROBOTS,
     alternates: { canonical: `${SITE_URL}/trailer/${movieId}` },
     openGraph: { title: head, type: 'video.other', url: `${SITE_URL}/trailer/${movieId}` },
   }

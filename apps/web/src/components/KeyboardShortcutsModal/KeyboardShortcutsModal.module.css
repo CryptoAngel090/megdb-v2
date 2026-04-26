@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: var(--space-4);
 }
 
 .modal {
@@ -27,14 +27,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 20px 16px;
+  padding: var(--space-3-5) var(--space-3-5) var(--space-3);
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .title {
   margin: 0;
-  font-size: 16px;
-  font-weight: 700;
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
   color: #fff;
   letter-spacing: -0.01em;
 }
@@ -68,7 +68,7 @@
 .list {
   list-style: none;
   margin: 0;
-  padding: 12px 0;
+  padding: var(--space-2-5) 0;
 }
 
 .row {
@@ -76,7 +76,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 8px 20px;
+  padding: var(--space-2) var(--space-3-5);
   transition: background 120ms ease;
 }
 
@@ -102,31 +102,31 @@
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(255, 255, 255, 0.07);
   color: rgba(255, 255, 255, 0.85);
-  font-size: 12px;
-  font-weight: 600;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
   font-family: var(--font-mono, monospace);
   line-height: 1;
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .then {
-  font-size: 10px;
+  font-size: var(--text-xs);
   color: rgba(255, 255, 255, 0.3);
   margin: 0 2px;
   font-style: italic;
 }
 
 .label {
-  font-size: 13px;
+  font-size: var(--text-caption);
   color: rgba(255, 255, 255, 0.6);
   text-align: right;
 }
 
 .hint {
   margin: 0;
-  padding: 12px 20px 16px;
+  padding: var(--space-2-5) var(--space-3-5) var(--space-3);
   border-top: 1px solid rgba(255, 255, 255, 0.07);
-  font-size: 12px;
+  font-size: var(--text-sm);
   color: rgba(255, 255, 255, 0.3);
   text-align: center;
 }

@@ -3364,6 +3364,22 @@ export function moviesDiscoverActiveFilterKeys(state: MoviesDiscoverState): stri
   return keys
 }
 
+/** Same shape as `moviesDiscoverActiveFilterKeys` for `/series` (no expected-month facet). */
+export function seriesDiscoverActiveFilterKeys(state: SeriesDiscoverState): string[] {
+  const keys: string[] = []
+  if (state.genre) keys.push('genre')
+  if (state.year) keys.push('year')
+  if (state.sortParam !== 'popularity.desc') keys.push('sort')
+  if (state.provider) keys.push('provider')
+  if (state.studio) keys.push('studio')
+  if (state.rating) keys.push('rating')
+  if (state.language) keys.push('language')
+  if (state.country) keys.push('country')
+  if (state.runtime) keys.push('runtime')
+  if (state.comingYear != null) keys.push('coming')
+  return keys
+}
+
 export interface DiscoverMoviesBrowseInput {
   genre?: string
   year?: string

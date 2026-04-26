@@ -136,6 +136,9 @@
     --leading-normal: 1.6;
     --leading-caption: 1.4;
     --leading-relaxed: 1.625;
+    --leading-loose: 1.7;        /* relaxed prose, длинный body-текст        */
+    --leading-mid: 1.5;          /* между caption и normal — карточки, описания */
+    --leading-display: 0.95;     /* tight для больших числовых/display-блоков */
 
     --tracking-tighter: -0.04em;
     --tracking-tight: -0.02em;
@@ -218,10 +221,34 @@
     --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.7);
     --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.85);
 
+    /* ── Typography scale aliases — 01-css.mdc ─────────────────────
+     * Canonical names for consistency pass (Пункт 1).
+     * Prefer semantic names (--text-body, --text-h1) in new components.
+     */
+    --text-xs:   var(--text-label);   /* 10px */
+    --text-sm:   var(--text-small);   /* clamp(11px, …, 12px) */
+    --text-base: var(--text-body);    /* clamp(15px, …, 18px) */
+    --text-lg:   var(--text-h4);      /* clamp(18px, …, 20px) */
+    --text-xl:   var(--text-h3);      /* clamp(20px, …, 25px) */
+    --text-2xl:  var(--text-h2);      /* clamp(24px, …, 32px) */
+    --text-3xl:  var(--text-h1);      /* clamp(28px, …, 40px) */
+
+    /* ── Color alias — 01-css.mdc name ── */
+    --color-primary: var(--primary);  /* alias; value stays #e50914 */
+
+    /* ── Shadow — card elevation ── */
+    --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.45);
+
+    /* ── Spacing — extended scale (8pt rhythm) ── */
+    --space-9:  128px;
+    --space-10: 160px;
+    --space-12: 192px;
+
     /* ── Animation ──────────────────────────────*/
     --duration-instant: 100ms;
     --duration-fast: 150ms;
     --duration-normal: 200ms;
+    --duration-base: var(--duration-normal); /* 200ms — 01-css.mdc alias */
     --duration-medium: 300ms;
     --duration-slow: 500ms;
     --duration-crawl: 700ms;

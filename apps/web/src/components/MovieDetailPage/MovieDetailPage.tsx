@@ -429,6 +429,7 @@ export function MovieDetailPage({
                 alt=""
                 fill
                 priority
+                fetchPriority="high"
                 sizes="100vw"
                 className={styles.heroImgPoster}
                 placeholder="blur"
@@ -445,6 +446,7 @@ export function MovieDetailPage({
                 alt=""
                 fill
                 priority
+                fetchPriority="high"
                 sizes="100vw"
                 className={styles.heroImgCover}
                 placeholder="blur"

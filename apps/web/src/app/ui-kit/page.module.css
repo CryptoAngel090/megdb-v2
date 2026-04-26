@@ -83,7 +83,7 @@
 .colorName {
   font-size: var(--text-small);
   color: var(--color-text-primary);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
 }
 
 .colorToken {

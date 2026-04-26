@@ -2,7 +2,7 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { z } from 'zod'
-import { and, db, eq, movieFeedbackVotes, sql } from '@repo/db'
+import { and, db, eq, movieFeedbackVotes, sql, users } from '@repo/db'
 
 const app = new Hono()
 
@@ -21,6 +21,89 @@ app.use(
 )
 
 app.get('/health', (c) => c.json({ status: 'ok', ts: Date.now() }))
+
+// ── Auth: Register ────────────────────────────
+
+const registerSchema = z.object({
+  email: z.string().email(),
+  username: z.string().min(3).max(50).regex(/^[a-zA-Z0-9_]+$/),
+  password: z.string().min(8),
+})
+
+app.post('/api/auth/register', async (c) => {
+  const body = await c.req.json().catch(() => null)
+  const parsed = registerSchema.safeParse(body)
+
+  if (!parsed.success) {
+    return c.json(
+      {
+        success: false,
+        error: 'Invalid input',
+        details: parsed.error.flatten().fieldErrors,
+      },
+      400
+    )
+  }
+
+  const { email, username, password } = parsed.data
+
+  // Check if email already exists
+  const existingEmail = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(eq(users.email, email))
+    .limit(1)
+
+  if (existingEmail.length > 0) {
+    return c.json({ success: false, error: 'Email already registered' }, 409)
+  }
+
+  // Check if username already exists
+  const existingUsername = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(eq(users.username, username))
+    .limit(1)
+
+  if (existingUsername.length > 0) {
+    return c.json({ success: false, error: 'Username already taken' }, 409)
+  }
+
+  // Hash password (using Bun's built-in password hashing)
+  const passwordHash = await Bun.password.hash(password, {
+    algorithm: 'bcrypt',
+    cost: 10,
+  })
+
+  // Create user
+  const [newUser] = await db
+    .insert(users)
+    .values({
+      email,
+      username,
+      passwordHash,
+      name: username, // Default name to username
+      role: 'user',
+    })
+    .returning({
+      id: users.id,
+      email: users.email,
+      username: users.username,
+      name: users.name,
+      role: users.role,
+      createdAt: users.createdAt,
+    })
+
+  return c.json(
+    {
+      success: true,
+      data: {
+        user: newUser,
+      },
+    },
+    201
+  )
+})
 
 const tmdbMovieIdSchema = z.coerce.number().int().positive()
 const voteBodySchema = z.object({

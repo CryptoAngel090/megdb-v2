@@ -8,7 +8,7 @@
 .overview {
   margin: 0;
   font-size: clamp(0.9375rem, 0.88rem + 0.35vw, 1.125rem);
-  line-height: 1.6;
+  line-height: var(--leading-normal);
   max-width: min(72ch, 100%);
   text-align: left;
   color: rgba(255, 255, 255, 0.72);
@@ -27,8 +27,8 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.05);
   color: rgba(255, 255, 255, 0.92);
-  font-size: 0.8125rem;
-  font-weight: 600;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
   transition:
     background 150ms ease,
     border-color 150ms ease,

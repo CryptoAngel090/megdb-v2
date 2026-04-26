@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
+import { HeroLcpPreloadLinks } from '@/components/MovieDetailPage/HeroLcpPreloadLinks'
 import { MovieDetailPage } from '@/components/MovieDetailPage/MovieDetailPage'
 import { getImageUrl, getMoviePageData } from '@/lib/tmdb'
 import type { MoviePageDetail } from '@/lib/tmdb'
@@ -205,6 +206,7 @@ export default async function MoviePage({ params }: Props) {
 
   return (
     <div className={styles.page}>
+      <HeroLcpPreloadLinks posterPath={data.posterPath} backdropPath={data.backdropPath} />
       <link rel="preconnect" href="https://www.youtube.com" crossOrigin="anonymous" />
       <link rel="preconnect" href="https://www.youtube-nocookie.com" crossOrigin="anonymous" />
       <link rel="preconnect" href="https://i.ytimg.com" crossOrigin="anonymous" />

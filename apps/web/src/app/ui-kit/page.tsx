@@ -1,15 +1,29 @@
+import type { Metadata } from 'next'
 import { Button } from '@repo/ui/button'
 import { Badge } from '@repo/ui/badge'
 import { Input } from '@repo/ui/input'
 import { Skeleton } from '@repo/ui/skeleton'
+import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
+import { discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
-export const metadata = { title: 'UI Kit', robots: { index: false } }
+const title = 'UI Kit'
+const description = 'Internal MegDB design system showcase for @repo/ui components (not indexed).'
+
+export const metadata: Metadata = {
+  title,
+  description,
+  robots: { index: false, follow: true },
+  alternates: { canonical: '/ui-kit' },
+  ...discoverSocialMeta(title, description, '/ui-kit'),
+}
 
 export default function UiKitPage() {
   return (
-    <div className={styles.page}>
-      <h1 className={styles.title}>Design System — UI Kit</h1>
+    <>
+      <WebPageJsonLd pathname="/ui-kit" title={title} description={description} />
+      <div className={styles.page}>
+        <h1 className={styles.title}>Design System — UI Kit</h1>
 
       <p className={styles.scopeNote}>
         Витрина компонентов <code>@repo/ui</code> (как в админке). Основной сайт MegDB опирается на
@@ -123,6 +137,7 @@ export default function UiKitPage() {
           ))}
         </div>
       </section>
-    </div>
+      </div>
+    </>
   )
 }

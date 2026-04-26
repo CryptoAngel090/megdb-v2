@@ -8,7 +8,7 @@
   font-family: var(--font-sans);
   font-size: var(--text-label);
   font-weight: var(--weight-label);
-  line-height: 1;
+  line-height: var(--leading-tight);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   white-space: nowrap;

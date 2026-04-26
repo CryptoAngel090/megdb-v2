@@ -4,10 +4,10 @@
   justify-content: center;
   gap: 8px;
   min-height: 36px;
-  padding: 0 0.75rem;
+  padding: 0 var(--space-2-5);
   border-radius: var(--radius-button);
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: #1a1a1a;
   color: #fff;
@@ -36,7 +36,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: max(16px, env(safe-area-inset-top)) 16px 16px;
+  padding: max(16px, env(safe-area-inset-top)) var(--space-3) var(--space-3);
   box-sizing: border-box;
 }
 
@@ -58,23 +58,23 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  padding: 18px 18px 14px;
+  padding: var(--space-4-5) var(--space-4-5) 14px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   flex-shrink: 0;
 }
 
 .modalTitle {
-  margin: 0 0 4px;
-  font-size: 17px;
-  font-weight: 700;
+  margin: 0 0 var(--space-1);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
   color: #fff;
   letter-spacing: -0.02em;
 }
 
 .modalSubtitle {
   margin: 0;
-  font-size: 13px;
-  line-height: 1.35;
+  font-size: var(--text-caption);
+  line-height: var(--leading-snug);
   color: rgba(255, 255, 255, 0.45);
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -110,7 +110,7 @@
 }
 
 .modalBody {
-  padding: 12px 14px 18px;
+  padding: var(--space-2-5) 14px var(--space-4-5);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -123,8 +123,8 @@
   column-gap: 12px;
   row-gap: 2px;
   align-items: center;
-  padding: 12px 14px;
-  margin-bottom: 8px;
+  padding: var(--space-2-5) 14px;
+  margin-bottom: var(--space-2);
   border-radius: var(--radius-button);
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.04);
@@ -157,20 +157,20 @@
 
 .actionLabel {
   grid-column: 2;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
 }
 
 .actionHint {
   grid-column: 2;
-  font-size: 12px;
+  font-size: var(--text-sm);
   color: rgba(255, 255, 255, 0.38);
 }
 
 .gridLabel {
   margin: 14px 0 10px;
-  font-size: 11px;
-  font-weight: 700;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.35);
@@ -190,13 +190,13 @@
   align-items: center;
   justify-content: center;
   min-height: 44px;
-  padding: 8px 10px;
+  padding: var(--space-2) 10px;
   border-radius: var(--radius-button);
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.05);
   color: rgba(255, 255, 255, 0.92);
-  font-size: 13px;
-  font-weight: 600;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
   text-decoration: none;
   transition:
     background 150ms ease,

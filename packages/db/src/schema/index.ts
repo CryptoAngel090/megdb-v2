@@ -142,6 +142,8 @@ export const mediaVideos = pgTable('media_videos', {
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
   email: text('email').notNull().unique(),
+  username: text('username').notNull().unique(),
+  passwordHash: text('password_hash').notNull(),
   name: text('name').notNull(),
   avatarUrl: text('avatar_url'),
   role: userRoleEnum('role').default('user'),

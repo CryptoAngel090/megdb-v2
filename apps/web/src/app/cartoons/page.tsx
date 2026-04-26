@@ -1,9 +1,15 @@
 import type { Metadata } from 'next'
+import { MosaicHeroLcpPreload } from '@/components/MosaicHeroLcpPreload'
 import { MoviesDiscoverPage } from '@/components/MoviesDiscoverPage/MoviesDiscoverPage'
 import {
+  getCartoonsDiscoverCanonicalPath,
   getCartoonsDiscoverDescription,
   getCartoonsDiscoverHeroLead,
+  getCartoonsDiscoverKeywords,
+  getCartoonsDiscoverTitle,
 } from '@/lib/cartoonsDiscoverCopy'
+import { buildCollectionPageJsonLd } from '@/lib/jsonLdSite'
+import { discoverSocialMeta } from '@/lib/seoSocial'
 import {
   discoverCartoonsBrowse,
   discoverCartoonsFetchKey,
@@ -31,56 +37,46 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   const state = parseCartoonsDiscoverSearchParams(sp)
   const keys = moviesDiscoverActiveFilterKeys(state)
   const genreOnly = state.genre && keys.length === 1 && keys[0] === 'genre'
-  const genres = genreOnly ? await getMovieGenresList().catch(() => []) : []
-  const description = getCartoonsDiscoverDescription(state, genres)
-  const y = new Date().getFullYear()
+  const needsGenres = genreOnly || (state.genre != null && keys.length > 1)
+  const needsProviders = keys.includes('provider')
+  const needsStudios = keys.includes('studio')
 
-  if (genreOnly) {
-    const g = genres.find((x) => String(x.id) === state.genre)
-    if (g) {
-      return {
-        title: `Best ${g.name} Cartoons ${y}`,
-        description,
-        alternates: { canonical: `/cartoons?genre=${state.genre}` },
-      }
-    }
-  }
+  const [allGenresRaw, providers, studios] = await Promise.all([
+    needsGenres ? getMovieGenresList().catch(() => []) : Promise.resolve([]),
+    needsProviders ? getWatchProvidersMovieList().catch(() => []) : Promise.resolve([]),
+    needsStudios ? getMovieStudiosList().catch(() => []) : Promise.resolve([]),
+  ])
+  const genres = needsGenres ? allGenresRaw : []
+
+  const ctx = { providers, studios }
+  const description = getCartoonsDiscoverDescription(state, genres, ctx)
+  const title = getCartoonsDiscoverTitle(state, genres, ctx)
+  const path = getCartoonsDiscoverCanonicalPath(state, genres, ctx)
+  const keywords = getCartoonsDiscoverKeywords(state, genres)
 
   if (keys.length > 1) {
     return {
-      title: 'Browse cartoons',
+      title,
       description,
       robots: { index: false, follow: true },
-      alternates: { canonical: '/cartoons' },
-    }
-  }
-
-  if (state.year && keys.length === 1 && keys[0] === 'year') {
-    return {
-      title: `Cartoons from ${state.year}`,
-      description,
-      alternates: { canonical: `/cartoons?year=${state.year}` },
+      alternates: { canonical: path },
+      ...discoverSocialMeta(title, description, path),
     }
   }
 
   return {
-    title: `Best Cartoons and Animated Movies to Watch (${y})`,
+    title,
     description,
-    keywords: [
-      `best cartoons ${y}`,
-      'animated movies to watch online',
-      'best animation streaming',
-      `top animation ${y}`,
-      'family animation picks',
-      'where to watch cartoons',
-    ],
-    alternates: { canonical: '/cartoons' },
+    ...(keywords ? { keywords } : {}),
+    alternates: { canonical: path },
+    ...discoverSocialMeta(title, description, path),
   }
 }
 
 export default async function CartoonsPage({ searchParams }: PageProps) {
   const sp = await searchParams
   const state = parseCartoonsDiscoverSearchParams(sp)
+  const keys = moviesDiscoverActiveFilterKeys(state)
   const { input, mode, comingYear } = discoverCartoonsStateToBrowseInput(state, 1)
   const fetchParams = discoverCartoonsStateToFetchParams(state)
   const filterKey = discoverCartoonsFetchKey(state)
@@ -97,7 +93,16 @@ export default async function CartoonsPage({ searchParams }: PageProps) {
   const initialItems = await enrichMovieShelfRuntime(
     results.results.map(mapTmdbCartoonRowToShelfItem)
   )
-  const heroDescription = getCartoonsDiscoverHeroLead(state, genres)
+  const cartoonsCopyCtx = { providers, studios }
+  const heroDescription = getCartoonsDiscoverHeroLead(state, genres, cartoonsCopyCtx)
+  const collectionLd =
+    keys.length > 1
+      ? null
+      : buildCollectionPageJsonLd({
+          name: getCartoonsDiscoverTitle(state, genres, cartoonsCopyCtx),
+          description: getCartoonsDiscoverDescription(state, genres, cartoonsCopyCtx),
+          pathname: getCartoonsDiscoverCanonicalPath(state, genres, cartoonsCopyCtx),
+        })
   const cartoonRuntimeOptions = [
     { value: '', label: 'Any runtime' },
     { value: '0-90', label: 'Under 90 min' },
@@ -163,30 +168,39 @@ export default async function CartoonsPage({ searchParams }: PageProps) {
   })
 
   return (
-    <div className={styles.page}>
-      <MoviesDiscoverPage
-        discoverState={state}
-        genres={genres}
-        providers={providers}
-        studios={studios}
-        fetchParams={fetchParams}
-        filterKey={filterKey}
-        basePath="/cartoons"
-        apiPath="/api/cartoons-discover"
-        pageTitle="Cartoons"
-        emptyText="No cartoons match these filters yet."
-        contentLabelPlural="cartoons"
-        presetsStorageKey="megdb-cartoons-filter-presets-v1"
-        runtimeFilterLabel="Runtime"
-        runtimeOptions={cartoonRuntimeOptions}
-        presetSuggestions={cartoonPresetSuggestions}
-        initialItems={initialItems}
-        totalPages={results.total_pages}
-        mosaicUrls={mosaicUrls}
-        heroDescription={heroDescription}
-        enableDiscoverPolish
-        trustUpdatedAtLabel={trustUpdatedAtLabel}
-      />
-    </div>
+    <>
+      {collectionLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionLd) }}
+        />
+      )}
+      <div className={styles.page}>
+        <MosaicHeroLcpPreload href={mosaicUrls[0]} />
+        <MoviesDiscoverPage
+          discoverState={state}
+          genres={genres}
+          providers={providers}
+          studios={studios}
+          fetchParams={fetchParams}
+          filterKey={filterKey}
+          basePath="/cartoons"
+          apiPath="/api/cartoons-discover"
+          pageTitle="Cartoons"
+          emptyText="No cartoons match these filters yet."
+          contentLabelPlural="cartoons"
+          presetsStorageKey="megdb-cartoons-filter-presets-v1"
+          runtimeFilterLabel="Runtime"
+          runtimeOptions={cartoonRuntimeOptions}
+          presetSuggestions={cartoonPresetSuggestions}
+          initialItems={initialItems}
+          totalPages={results.total_pages}
+          mosaicUrls={mosaicUrls}
+          heroDescription={heroDescription}
+          enableDiscoverPolish
+          trustUpdatedAtLabel={trustUpdatedAtLabel}
+        />
+      </div>
+    </>
   )
 }

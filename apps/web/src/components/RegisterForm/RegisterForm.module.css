@@ -69,7 +69,7 @@
   max-width: 480px;
   position: relative;
   z-index: 1;
-  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: fadeInUp var(--duration-slow) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes fadeInUp {
@@ -86,7 +86,7 @@
 .card {
   background: rgba(18, 18, 18, 0.85);
   border: 1px solid rgba(229, 9, 20, 0.2);
-  border-radius: 24px;
+  border-radius: var(--radius-card);
   padding: var(--space-7) var(--space-6);
   box-shadow:
     0 32px 80px rgba(0, 0, 0, 0.9),
@@ -137,7 +137,7 @@
   gap: var(--space-2);
   text-decoration: none;
   margin-bottom: var(--space-5);
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform var(--duration-slow) var(--ease-spring);
   position: relative;
 }
 
@@ -146,7 +146,7 @@
 }
 
 .logoIcon {
-  font-size: 32px;
+  font-size: var(--text-h3);
   color: var(--primary);
   text-shadow:
     0 0 30px rgba(229, 9, 20, 0.8),
@@ -166,8 +166,8 @@
 
 .logoText {
   font-family: var(--font-display);
-  font-size: 36px;
-  font-weight: 900;
+  font-size: var(--text-h3);
+  font-weight: var(--weight-h1);
   background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -178,23 +178,23 @@
 
 .title {
   font-family: var(--font-display);
-  font-size: clamp(28px, 5vw, 36px);
-  font-weight: 900;
+  font-size: var(--text-h2);
+  font-weight: var(--weight-h1);
   background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin: 0 0 var(--space-3);
   letter-spacing: -0.03em;
-  line-height: 1.2;
+  line-height: var(--leading-tight);
 }
 
 .subtitle {
-  font-size: 15px;
+  font-size: var(--text-body);
   color: rgba(255, 255, 255, 0.7);
   margin: 0;
-  line-height: 1.6;
-  font-weight: 400;
+  line-height: var(--leading-normal);
+  font-weight: var(--weight-body);
 }
 
 .form {
@@ -209,10 +209,10 @@
   padding: var(--space-3) var(--space-4);
   background: linear-gradient(135deg, rgba(229, 9, 20, 0.15) 0%, rgba(229, 9, 20, 0.08) 100%);
   border: 1px solid rgba(229, 9, 20, 0.5);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   color: #ff6b6b;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: var(--text-small);
+  font-weight: var(--weight-label);
   text-align: center;
   animation: shake 0.4s ease;
   box-shadow: 0 4px 20px rgba(229, 9, 20, 0.2);
@@ -238,8 +238,8 @@
 }
 
 .label {
-  font-size: 13px;
-  font-weight: 700;
+  font-size: var(--text-label);
+  font-weight: var(--weight-label);
   color: rgba(255, 255, 255, 0.9);
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -251,11 +251,11 @@
   padding: 0 var(--space-4);
   background: rgba(255, 255, 255, 0.03);
   border: 2px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
+  border-radius: var(--radius-input);
   color: var(--text-primary);
-  font-size: 16px;
+  font-size: var(--text-body);
   font-family: var(--font-sans);
-  font-weight: 500;
+  font-weight: var(--weight-body);
   transition:
     border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
@@ -265,7 +265,7 @@
 
 .input::placeholder {
   color: rgba(255, 255, 255, 0.3);
-  font-weight: 400;
+  font-weight: var(--weight-body);
 }
 
 .input:hover:not(:disabled) {
@@ -301,7 +301,7 @@
 
 .togglePassword {
   position: absolute;
-  right: 8px;
+  right: var(--space-2);
   top: 50%;
   transform: translateY(-50%);
   width: 44px;
@@ -313,11 +313,11 @@
   border: none;
   color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   transition:
-    color 0.2s ease,
-    background 0.2s ease,
-    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    color var(--duration-normal) var(--ease-out),
+    background var(--duration-normal) var(--ease-out),
+    transform var(--duration-normal) var(--ease-spring);
 }
 
 .togglePassword:hover:not(:disabled) {
@@ -342,9 +342,9 @@
   background: linear-gradient(135deg, var(--primary) 0%, #c00812 100%);
   color: var(--on-primary);
   border: none;
-  border-radius: 16px;
-  font-size: 17px;
-  font-weight: 800;
+  border-radius: var(--radius-button);
+  font-size: var(--text-h4);
+  font-weight: var(--weight-h1);
   letter-spacing: 0.02em;
   cursor: pointer;
   display: flex;
@@ -352,8 +352,8 @@
   justify-content: center;
   gap: var(--space-2);
   transition:
-    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.3s ease;
+    transform var(--duration-slow) var(--ease-spring),
+    box-shadow var(--duration-slow) var(--ease-out);
   position: relative;
   overflow: hidden;
   margin-top: var(--space-2);
@@ -406,7 +406,7 @@
   height: 20px;
   border: 3px solid rgba(255, 255, 255, 0.3);
   border-top-color: white;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   animation: spin 0.6s linear infinite;
 }
 
@@ -421,8 +421,8 @@
   align-items: center;
   gap: var(--space-3);
   color: rgba(255, 255, 255, 0.4);
-  font-size: 13px;
-  font-weight: 600;
+  font-size: var(--text-label);
+  font-weight: var(--weight-label);
   margin: var(--space-3) 0;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -448,20 +448,20 @@
   padding: 0 var(--space-4);
   background: rgba(255, 255, 255, 0.04);
   border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 14px;
+  border-radius: var(--radius-input);
   color: var(--text-primary);
-  font-size: 15px;
-  font-weight: 700;
+  font-size: var(--text-body);
+  font-weight: var(--weight-h3);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
   transition:
-    background 0.3s ease,
-    border-color 0.3s ease,
-    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.3s ease;
+    background var(--duration-slow) var(--ease-out),
+    border-color var(--duration-slow) var(--ease-out),
+    transform var(--duration-slow) var(--ease-spring),
+    box-shadow var(--duration-slow) var(--ease-out);
 }
 
 .socialButton:hover:not(:disabled) {
@@ -482,28 +482,28 @@
 
 .footer {
   text-align: center;
-  font-size: 14px;
+  font-size: var(--text-small);
   color: rgba(255, 255, 255, 0.6);
   margin: var(--space-4) 0 0;
-  font-weight: 500;
+  font-weight: var(--weight-body);
 }
 
 .terms {
   text-align: center;
-  font-size: 12px;
+  font-size: var(--text-caption);
   color: rgba(255, 255, 255, 0.4);
-  line-height: 1.6;
+  line-height: var(--leading-normal);
   margin: var(--space-3) 0 0;
-  font-weight: 400;
+  font-weight: var(--weight-body);
 }
 
 .link {
   color: var(--primary);
   text-decoration: none;
-  font-weight: 700;
+  font-weight: var(--weight-h3);
   transition:
-    color 0.2s ease,
-    text-shadow 0.2s ease;
+    color var(--duration-normal) var(--ease-out),
+    text-shadow var(--duration-normal) var(--ease-out);
   position: relative;
 }
 
@@ -515,7 +515,7 @@
   width: 0;
   height: 2px;
   background: var(--primary);
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: width var(--duration-slow) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .link:hover {
@@ -530,25 +530,25 @@
 @media (max-width: 640px) {
   .card {
     padding: var(--space-6) var(--space-5);
-    border-radius: 20px;
+    border-radius: var(--radius-xl);
   }
 
   .title {
-    font-size: 26px;
+    font-size: var(--text-h3);
   }
 
   .subtitle {
-    font-size: 14px;
+    font-size: var(--text-small);
   }
 
   .input {
     min-height: 52px;
-    font-size: 16px;
+    font-size: var(--text-body);
   }
 
   .submitButton {
     min-height: 56px;
-    font-size: 16px;
+    font-size: var(--text-h4);
   }
 }
 
@@ -563,13 +563,13 @@
 
 .inputIcon {
   position: absolute;
-  left: 16px;
+  left: var(--space-3);
   top: 50%;
   transform: translateY(-50%);
   color: rgba(255, 255, 255, 0.4);
   pointer-events: none;
-  transition: color 0.2s ease;
-  margin-right: 12px;
+  transition: color var(--duration-normal) var(--ease-out);
+  margin-right: var(--space-2);
 }
 
 .inputWrapper:has(.input:focus) .inputIcon {
@@ -586,16 +586,16 @@
 
 .strengthBars {
   display: flex;
-  gap: 6px;
+  gap: var(--space-1);
   flex: 1;
 }
 
 .strengthBar {
-  height: 4px;
+  height: var(--space-1);
   flex: 1;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
-  transition: background-color 0.3s ease;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--duration-slow) var(--ease-out);
 }
 
 .strengthBarActive {
@@ -613,8 +613,8 @@
 }
 
 .strengthLabel {
-  font-size: 12px;
-  font-weight: 700;
+  font-size: var(--text-label);
+  font-weight: var(--weight-label);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -640,23 +640,23 @@
   height: 24px;
   flex-shrink: 0;
   border: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
+  border-radius: var(--radius-badge);
   background: rgba(255, 255, 255, 0.03);
   display: flex;
   align-items: center;
   justify-content: center;
   transition:
-    border-color 0.2s ease,
-    background 0.2s ease,
-    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border-color var(--duration-normal) var(--ease-out),
+    background var(--duration-normal) var(--ease-out),
+    transform var(--duration-normal) var(--ease-spring);
 }
 
 .checkboxCustom svg {
   opacity: 0;
   transform: scale(0);
   transition:
-    opacity 0.2s ease,
-    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    opacity var(--duration-normal) var(--ease-out),
+    transform var(--duration-slow) var(--ease-spring);
 }
 
 .checkbox:hover .checkboxCustom {
@@ -680,9 +680,9 @@
 }
 
 .checkboxLabel {
-  font-size: 14px;
+  font-size: var(--text-small);
   color: rgba(255, 255, 255, 0.7);
-  line-height: 1.5;
+  line-height: var(--leading-snug);
   padding-top: 2px;
 }
 
@@ -709,11 +709,11 @@
 .validIcon,
 .invalidIcon {
   position: absolute;
-  right: 16px;
+  right: var(--space-3);
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-  animation: iconPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: iconPop var(--duration-slow) var(--ease-spring);
 }
 
 .validIcon {
@@ -742,13 +742,13 @@
 
 /* Field hint */
 .fieldHint {
-  font-size: 12px;
+  font-size: var(--text-small);
   color: #ff6b6b;
   margin: var(--space-1) 0 0;
   display: flex;
   align-items: center;
-  gap: 6px;
-  animation: slideDown 0.3s ease;
+  gap: var(--space-1);
+  animation: slideDown var(--duration-slow) var(--ease-out);
 }
 
 @keyframes slideDown {
@@ -773,7 +773,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: fadeIn 0.4s ease;
+  animation: fadeIn var(--duration-slow) var(--ease-out);
 }
 
 @keyframes fadeIn {
@@ -788,7 +788,7 @@
 .successCard {
   background: linear-gradient(165deg, rgba(31, 31, 31, 0.95) 0%, rgba(18, 18, 18, 0.98) 100%);
   border: 2px solid rgba(68, 255, 68, 0.3);
-  border-radius: 24px;
+  border-radius: var(--radius-card);
   padding: var(--space-8);
   text-align: center;
   max-width: 400px;
@@ -852,8 +852,8 @@
 
 .successTitle {
   font-family: var(--font-display);
-  font-size: 32px;
-  font-weight: 900;
+  font-size: var(--text-h2);
+  font-weight: var(--weight-h1);
   background: linear-gradient(135deg, #44ff44 0%, #00ff88 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -863,7 +863,7 @@
 }
 
 .successText {
-  font-size: 16px;
+  font-size: var(--text-h4);
   color: rgba(255, 255, 255, 0.7);
   margin: 0;
 }

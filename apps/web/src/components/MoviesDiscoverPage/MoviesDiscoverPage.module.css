@@ -180,7 +180,7 @@
   font-size: var(--text-h1);
   font-weight: var(--weight-h1);
   letter-spacing: var(--tracking-tight);
-  line-height: 1.1;
+  line-height: var(--leading-tight);
   color: #fff;
   text-shadow:
     0 1px 2px rgba(0, 0, 0, 0.9),
@@ -194,7 +194,7 @@
   font-family: var(--font-sans);
   font-size: clamp(14px, 1.05vw, 17px);
   font-weight: var(--weight-regular);
-  line-height: 1.55;
+  line-height: var(--leading-mid);
   letter-spacing: 0;
   white-space: pre-line;
   text-wrap: pretty;
@@ -223,7 +223,7 @@
   min-height: calc(var(--space-4) + var(--space-2) + var(--space-1) / 2);
   border-radius: var(--radius-pill);
   padding: calc(var(--space-1) * 1.5) var(--space-2-5);
-  font-size: 12px;
+  font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
   border: 1px solid var(--border-strong);
   background: rgba(255, 255, 255, 0.04);
@@ -259,7 +259,7 @@
   border: 1px solid var(--border-strong);
   background: var(--surface);
   color: var(--text-primary);
-  font-size: 13px;
+  font-size: var(--text-caption);
   font-weight: var(--weight-semibold);
   display: inline-flex;
   align-items: center;
@@ -269,7 +269,7 @@
 
 .mobileFilterBadge {
   color: var(--primary);
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1;
 }
 
@@ -278,7 +278,7 @@
   max-width: var(--container-max);
   margin: 0 auto;
   padding: var(--space-2) var(--container-padding) 0;
-  font-size: 12px;
+  font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
   color: var(--text-muted);
 }
@@ -298,7 +298,7 @@
   border: 1px solid var(--primary-border);
   background: rgba(229, 9, 20, 0.1);
   color: var(--text-primary);
-  font-size: 12px;
+  font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   padding: calc(var(--space-1) * 1.5) calc(var(--space-2) + var(--space-1) / 2);
   display: inline-flex;
@@ -313,7 +313,7 @@
   border: 1px solid var(--primary-border);
   background: rgba(229, 9, 20, 0.18);
   color: var(--primary);
-  font-size: 14px;
+  font-size: var(--text-caption);
   line-height: 1;
   display: inline-flex;
   align-items: center;
@@ -348,13 +348,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px var(--space-3);
+  padding: var(--space-2-5) var(--space-3);
   border-bottom: 1px solid var(--border);
 }
 
 .mobileModalTitle {
   margin: 0;
-  font-size: 16px;
+  font-size: var(--text-base);
   font-weight: var(--weight-bold);
   color: var(--text-primary);
 }
@@ -366,7 +366,7 @@
   border: 1px solid var(--border-strong);
   background: var(--surface);
   color: var(--text-primary);
-  font-size: 22px;
+  font-size: var(--text-xl);
   line-height: 1;
   display: inline-flex;
   align-items: center;
@@ -389,7 +389,7 @@
 
 .modalPresetTitle {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
   color: var(--text-muted);
 }
@@ -413,7 +413,7 @@
   border: 1px solid var(--border-strong);
   background: rgba(255, 255, 255, 0.04);
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
   padding: calc(var(--space-1) * 1.5) calc(var(--space-2) + var(--space-1) / 2);
   overflow: hidden;
@@ -428,7 +428,7 @@
   border: 1px solid var(--primary-border);
   background: rgba(229, 9, 20, 0.1);
   color: var(--primary);
-  font-size: 14px;
+  font-size: var(--text-caption);
   line-height: 1;
   display: inline-flex;
   align-items: center;
@@ -443,7 +443,7 @@
   border: 1px solid var(--border-strong);
   background: rgba(255, 255, 255, 0.05);
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1;
   display: inline-flex;
   align-items: center;
@@ -462,7 +462,7 @@
   border: 1px solid var(--border-strong);
   background: rgba(255, 255, 255, 0.04);
   color: var(--text-primary);
-  font-size: 12px;
+  font-size: var(--text-sm);
   padding: calc(var(--space-1) * 1.5) calc(var(--space-2) + var(--space-1) / 2);
   min-width: min(10rem, 100%);
   max-width: 100%;
@@ -476,7 +476,7 @@
   border: 1px solid var(--primary-border);
   background: rgba(229, 9, 20, 0.12);
   color: var(--primary);
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1;
   display: inline-flex;
   align-items: center;
@@ -499,7 +499,7 @@
 
 .mobileModalAppliedHint {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
   color: var(--text-muted);
   text-align: center;
@@ -515,7 +515,7 @@
 .mobilePrimaryBtn {
   min-height: 42px;
   border-radius: 10px;
-  font-size: 13px;
+  font-size: var(--text-caption);
   font-weight: var(--weight-semibold);
 }
 
@@ -541,7 +541,7 @@
 }
 
 .label {
-  font-size: 11px;
+  font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
   color: var(--text-muted);
   letter-spacing: 0.02em;
@@ -561,7 +561,7 @@
   border: 1px solid var(--primary-border);
   background: rgba(229, 9, 20, 0.1);
   color: var(--primary);
-  font-size: 14px;
+  font-size: var(--text-caption);
   line-height: 1;
   display: inline-flex;
   align-items: center;
@@ -570,13 +570,13 @@
 
 .select {
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: var(--text-caption);
   color: var(--text-primary);
   background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: 12px;
   min-height: 42px;
-  padding: 8px 42px 8px 12px;
+  padding: var(--space-2) 42px var(--space-2) var(--space-2-5);
   width: 100%;
   max-width: 100%;
   text-align: left;
@@ -596,14 +596,14 @@
 
 .clearAll {
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: var(--text-caption);
   font-weight: var(--weight-semibold);
   color: var(--primary);
   background: var(--surface);
   border: 1px solid var(--primary-border);
   border-radius: 12px;
   min-height: 42px;
-  padding: 8px 12px;
+  padding: var(--space-2) var(--space-2-5);
   width: min(100%, 12rem);
   display: inline-flex;
   align-items: center;
@@ -640,7 +640,7 @@
   align-items: center;
   justify-content: center;
   border: 1px solid color-mix(in srgb, var(--primary) 55%, transparent);
-  font-size: 13px;
+  font-size: var(--text-caption);
   line-height: 1;
 }
 
@@ -698,7 +698,7 @@
   gap: 0;
   margin-inline: auto;
   margin-bottom: var(--space-4);
-  padding: 4px;
+  padding: var(--space-1);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border);
@@ -706,12 +706,12 @@
 
 .viewToggleBtn {
   min-height: 36px;
-  padding: 0 12px;
+  padding: 0 var(--space-2-5);
   border-radius: 8px;
   border: none;
   background: transparent;
   color: var(--text-secondary);
-  font-size: 13px;
+  font-size: var(--text-caption);
   font-weight: var(--weight-semibold);
   cursor: pointer;
   transition:
@@ -751,7 +751,7 @@
 .trustFooterText {
   margin: 0;
   font-size: var(--text-small);
-  line-height: 1.5;
+  line-height: var(--leading-mid);
   color: var(--text-muted);
   text-align: center;
 }
@@ -827,7 +827,7 @@
 }
 
 .emptyIcon {
-  font-size: 3rem;
+  font-size: var(--text-display);
   margin-bottom: var(--space-3);
 }
 
@@ -896,7 +896,7 @@
   border: 1px solid var(--primary-border);
   background: rgba(229, 9, 20, 0.08);
   color: var(--primary);
-  font-size: 12px;
+  font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
 }
 

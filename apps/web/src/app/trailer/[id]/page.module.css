@@ -46,8 +46,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.9375rem;
-  font-weight: 600;
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
   color: rgba(250, 204, 21, 0.95);
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -64,7 +64,7 @@
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  padding: 2rem;
+  padding: var(--space-5);
   padding-top: max(
     2rem,
     max(var(--layout-header-clearance, 0px), calc(env(safe-area-inset-top, 0px) + 7rem))
@@ -75,12 +75,12 @@
 
 .fallback p {
   margin: 0;
-  font-size: 1.125rem;
-  font-weight: 600;
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
 }
 
 .fallback a {
   color: rgba(250, 204, 21, 0.95);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   text-decoration: underline;
 }

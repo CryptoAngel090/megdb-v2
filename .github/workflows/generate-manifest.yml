@@ -1,0 +1,39 @@
+name: Generate CODE_INDEX
+
+on:
+  schedule:
+    - cron: '0 3 * * *' # daily 03:00 UTC
+  workflow_dispatch: {}
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node & pnpm
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Install deps
+        run: pnpm install --frozen-lockfile || pnpm install
+
+      - name: Generate CODE_INDEX
+        run: node scripts/generate-manifest.js > CODE_INDEX.md
+
+      - name: Create PR if changed
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: chore: regenerate CODE_INDEX.md
+          branch: manifest/update-${{ github.run_id }}
+          title: chore: update CODE_INDEX.md
+          body: Auto-generated CODE_INDEX.md (daily)
+          labels: automated, repo-maintenance
+

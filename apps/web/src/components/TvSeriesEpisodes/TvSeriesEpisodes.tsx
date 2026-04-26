@@ -126,8 +126,9 @@ export function TvSeriesEpisodes({ seriesId, seriesTitle }: TvSeriesEpisodesProp
         const data: unknown = await response.json()
         const list = seasonsFromApiJson(data)
         setSeasons(list)
-        if (list.length > 0) {
-          setSelectedSeason(list[0].seasonNumber)
+        const firstSeason = list[0]
+        if (firstSeason) {
+          setSelectedSeason(firstSeason.seasonNumber)
         }
       } catch (error) {
         console.error('Failed to load seasons:', error)

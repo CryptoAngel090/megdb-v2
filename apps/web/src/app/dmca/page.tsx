@@ -1,21 +1,30 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalDocument, LegalNote } from '@/components/LegalDocument/LegalDocument'
+import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
+import { discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
 export const revalidate = 86_400
 
+const title = 'DMCA policy'
+const description =
+  'Copyright infringement notices, takedown procedure, counter-notice, and repeat infringer policy for MegDB under U.S. 17 U.S.C. § 512.'
+
 export const metadata: Metadata = {
-  title: 'DMCA policy',
-  description:
-    'Copyright infringement notices, takedown procedure, counter-notice, and repeat infringer policy for MegDB under U.S. 17 U.S.C. § 512.',
+  title,
+  description,
+  alternates: { canonical: '/dmca' },
+  ...discoverSocialMeta(title, description, '/dmca'),
 }
 
 const UPDATED = 'April 21, 2026'
 
 export default function DmcaPage() {
   return (
-    <div className={styles.page}>
+    <>
+      <WebPageJsonLd pathname="/dmca" title={title} description={description} />
+      <div className={styles.page}>
       <LegalDocument title="Digital Millennium Copyright Act (DMCA) policy" lastUpdated={UPDATED}>
         <h2 id="intro">1. Purpose</h2>
         <p>
@@ -181,5 +190,6 @@ export default function DmcaPage() {
         </p>
       </LegalDocument>
     </div>
+    </>
   )
 }

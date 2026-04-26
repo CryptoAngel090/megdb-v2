@@ -132,7 +132,7 @@
   align-items: center;
   justify-content: center;
   color: var(--color-text-muted);
-  font-size: 40px;
+  font-size: var(--text-3xl);
   background: linear-gradient(145deg, #1a1a2e, #16213e);
 }
 
@@ -250,7 +250,7 @@
   border-radius: var(--radius-badge);
   border: 1px solid rgba(229, 9, 20, 0.9);
   font-size: var(--text-label);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   color: #ffd34d;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
@@ -270,7 +270,7 @@
   backdrop-filter: blur(4px);
   border-radius: var(--radius-badge);
   font-size: var(--text-label);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   color: #fff;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -286,11 +286,11 @@
   padding: calc(var(--space-1) * 1.5) calc(var(--space-2) + var(--space-1) / 2);
   border-radius: var(--radius-badge);
   font-size: clamp(11px, 0.58rem + 0.22cqi, 13px);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   letter-spacing: 0.04em;
   font-variant-numeric: tabular-nums;
   color: #fff;
-  line-height: 1.2;
+  line-height: var(--leading-tight);
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -351,10 +351,10 @@
 .title {
   font-family: var(--font-display), system-ui, sans-serif;
   font-size: clamp(13px, 1.12vw, 15px);
-  font-weight: 800;
+  font-weight: var(--weight-extrabold);
   letter-spacing: -0.03em;
   color: var(--text-primary);
-  line-height: 1.25;
+  line-height: var(--leading-snug);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -410,7 +410,7 @@
   min-height: calc(var(--space-4) - var(--space-1) / 2);
   /* Shelf is `container-type: inline-size` — scale meta with card, not raw vw */
   font-size: clamp(12px, 0.65rem + 0.32cqi, 14px);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   font-variant-numeric: tabular-nums;
   color: rgba(255, 255, 255, 0.68);
   flex-shrink: 0;
@@ -486,7 +486,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: inherit;
-  font-size: 12px;
+  font-size: var(--text-sm);
 }
 
 .cardList .titleDivider {
@@ -513,8 +513,8 @@
   border-radius: var(--radius-pill);
   border: 1px solid var(--primary-border);
   background: rgba(229, 9, 20, 0.08);
-  font-size: 13px;
-  font-weight: 700;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-bold);
   color: var(--text-primary);
   justify-content: center;
 }
@@ -549,8 +549,8 @@
 
 .synopsis {
   margin: var(--space-1) 0 0;
-  font-size: 12px;
-  line-height: 1.45;
+  font-size: var(--text-sm);
+  line-height: var(--leading-caption);
   color: var(--text-muted);
   display: -webkit-box;
   -webkit-line-clamp: 6;
@@ -665,7 +665,7 @@
 
 .genreText {
   text-align: center;
-  line-height: 1.2;
+  line-height: var(--leading-tight);
   min-width: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -683,14 +683,14 @@
 /* ── Overlay content ─────────────────────────── */
 .overlayTitle {
   font-size: var(--text-caption);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   color: #fff;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   margin-bottom: var(--space-1);
-  line-height: 1.2;
+  line-height: var(--leading-tight);
 }
 
 .overlayMeta {
@@ -806,7 +806,7 @@
   }
 
   .title {
-    font-size: 13px;
+    font-size: var(--text-caption);
   }
 
   .titleDivider {

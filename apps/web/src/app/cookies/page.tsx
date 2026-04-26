@@ -1,21 +1,30 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalDocument, LegalNote } from '@/components/LegalDocument/LegalDocument'
+import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
+import { discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
 export const revalidate = 86_400
 
+const title = 'Cookie Policy'
+const description =
+  'How MegDB uses cookies and similar storage technologies, consent, and your choices — with 2025–2026 regulatory context.'
+
 export const metadata: Metadata = {
-  title: 'Cookie Policy',
-  description:
-    'How MegDB uses cookies and similar storage technologies, consent, and your choices — with 2025–2026 regulatory context.',
+  title,
+  description,
+  alternates: { canonical: '/cookies' },
+  ...discoverSocialMeta(title, description, '/cookies'),
 }
 
 const UPDATED = 'April 21, 2026'
 
 export default function CookiesPage() {
   return (
-    <div className={styles.page}>
+    <>
+      <WebPageJsonLd pathname="/cookies" title={title} description={description} />
+      <div className={styles.page}>
       <LegalDocument title="Cookie Policy" lastUpdated={UPDATED}>
         <h2 id="intro">1. Introduction</h2>
         <p>
@@ -205,5 +214,6 @@ export default function CookiesPage() {
         </p>
       </LegalDocument>
     </div>
+    </>
   )
 }

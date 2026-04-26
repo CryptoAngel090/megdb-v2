@@ -13,7 +13,7 @@
 
 /* rule 71: иконка — заметная, без перегруза */
 .icon {
-  font-size: 40px;
+  font-size: var(--text-3xl);
   line-height: 1;
   margin-bottom: var(--space-2);
   /* Лёгкое покачивание для живости */

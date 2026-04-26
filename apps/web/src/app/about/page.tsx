@@ -1,21 +1,37 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalDocument, LegalNote } from '@/components/LegalDocument/LegalDocument'
+import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
+import { buildAboutOrganizationStructuredData } from '@/lib/jsonLdSite'
+import { discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
 export const revalidate = 86_400
 
+const title = 'About MegDB'
+const description =
+  'What MegDB is, how we use TMDB, our editorial approach, and product context for 2026.'
+
 export const metadata: Metadata = {
-  title: 'About MegDB',
-  description:
-    'What MegDB is, how we use TMDB, our editorial approach, and product context for 2026.',
+  title,
+  description,
+  alternates: { canonical: '/about' },
+  ...discoverSocialMeta(title, description, '/about'),
 }
 
 const UPDATED = 'April 21, 2026'
 
 export default function AboutPage() {
+  const organizationLd = buildAboutOrganizationStructuredData()
+
   return (
-    <div className={styles.page}>
+    <>
+      <WebPageJsonLd pathname="/about" title={title} description={description} />
+      <div className={styles.page}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
+      />
       <LegalDocument title="About MegDB" lastUpdated={UPDATED}>
         <h2 id="mission">1. Mission</h2>
         <p>
@@ -126,5 +142,6 @@ export default function AboutPage() {
         </p>
       </LegalDocument>
     </div>
+    </>
   )
 }

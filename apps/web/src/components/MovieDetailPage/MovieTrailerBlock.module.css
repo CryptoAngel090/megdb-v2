@@ -78,7 +78,7 @@
 
 @media (max-width: 768px) {
   .playLabel {
-    font-size: 15px;
+    font-size: var(--text-base);
   }
 }
 
@@ -91,7 +91,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: var(--space-4);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   overflow: hidden; /* Запрещаем скролл внутри оверлея */
@@ -158,7 +158,7 @@
 /* Tablet (768px - 1024px) */
 @media (max-width: 1024px) and (min-width: 769px) {
   .modal {
-    padding: 20px;
+    padding: var(--space-3-5);
   }
 
   .modalContent {
@@ -169,7 +169,7 @@
 /* Mobile landscape (480px - 768px) */
 @media (max-width: 768px) and (min-width: 481px) {
   .modal {
-    padding: 16px;
+    padding: var(--space-3);
   }
 
   .modalContent {
@@ -188,7 +188,7 @@
 /* Mobile portrait (до 480px) */
 @media (max-width: 480px) {
   .modal {
-    padding: 12px;
+    padding: var(--space-2-5);
     align-items: center; /* Центрируем, шапка больше не мешает */
   }
 
@@ -213,7 +213,7 @@
 /* Very small screens (до 360px) */
 @media (max-width: 360px) {
   .modal {
-    padding: 8px;
+    padding: var(--space-2);
   }
 
   .modalContent {
@@ -236,7 +236,7 @@
 /* Landscape orientation на мобильных */
 @media (max-height: 500px) and (orientation: landscape) {
   .modal {
-    padding: 8px;
+    padding: var(--space-2);
     align-items: center;
   }
 

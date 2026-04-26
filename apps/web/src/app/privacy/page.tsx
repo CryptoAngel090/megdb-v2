@@ -1,21 +1,30 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalDocument, LegalNote } from '@/components/LegalDocument/LegalDocument'
+import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
+import { discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
 export const revalidate = 86_400
 
+const title = 'Privacy Policy'
+const description =
+  'How MegDB collects, uses, and protects personal information when you browse movies, series, and TV discovery features.'
+
 export const metadata: Metadata = {
-  title: 'Privacy Policy',
-  description:
-    'How MegDB collects, uses, and protects personal information when you browse movies, series, and TV discovery features.',
+  title,
+  description,
+  alternates: { canonical: '/privacy' },
+  ...discoverSocialMeta(title, description, '/privacy'),
 }
 
 const UPDATED = 'April 21, 2026'
 
 export default function PrivacyPage() {
   return (
-    <div className={styles.page}>
+    <>
+      <WebPageJsonLd pathname="/privacy" title={title} description={description} />
+      <div className={styles.page}>
       <LegalDocument title="Privacy Policy" lastUpdated={UPDATED}>
         <h2 id="overview">1. Overview</h2>
         <p>
@@ -360,5 +369,6 @@ export default function PrivacyPage() {
         </p>
       </LegalDocument>
     </div>
+    </>
   )
 }

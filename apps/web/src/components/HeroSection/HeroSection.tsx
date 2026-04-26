@@ -247,6 +247,7 @@ export function HeroSection({ slides }: HeroSectionProps) {
                   alt=""
                   fill
                   priority={currentIndex === 0}
+                  fetchPriority={currentIndex === 0 ? 'high' : 'low'}
                   sizes="100vw"
                   className={styles.backdropImg}
                 />

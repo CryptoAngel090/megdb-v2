@@ -1,22 +1,32 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalDocument, LegalNote } from '@/components/LegalDocument/LegalDocument'
+import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
+import { discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
 export const revalidate = 86_400
 
+const title = 'Settings'
+const description =
+  'MegDB settings: account shortcuts, privacy and cookies, display and motion preferences, notifications, and data requests.'
+
 export const metadata: Metadata = {
-  title: 'Settings',
-  description:
-    'MegDB settings: account shortcuts, privacy and cookies, display and motion preferences, notifications, and data requests.',
+  title,
+  description,
+  alternates: { canonical: '/settings' },
+  robots: { index: false, follow: true },
+  ...discoverSocialMeta(title, description, '/settings'),
 }
 
 const UPDATED = 'April 21, 2026'
 
 export default function SettingsPage() {
   return (
-    <div className={styles.page}>
-      <LegalDocument title="Settings" lastUpdated={UPDATED}>
+    <>
+      <WebPageJsonLd pathname="/settings" title={title} description={description} />
+      <div className={styles.page}>
+        <LegalDocument title="Settings" lastUpdated={UPDATED}>
         <h2 id="overview">1. Overview</h2>
         <p>
           This page collects the main controls and policies that affect your MegDB experience. Some
@@ -129,7 +139,8 @@ export default function SettingsPage() {
         <p>
           <Link href="/help">Help &amp; Support</Link> · <Link href="/contact">Contact</Link>
         </p>
-      </LegalDocument>
-    </div>
+        </LegalDocument>
+      </div>
+    </>
   )
 }

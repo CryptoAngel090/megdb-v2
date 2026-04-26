@@ -1,21 +1,30 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalDocument, LegalNote } from '@/components/LegalDocument/LegalDocument'
+import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
+import { discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
 export const revalidate = 86_400
 
+const title = 'Help & Support'
+const description =
+  'MegDB help center: search, browse, accounts, troubleshooting, TMDB data, rate limits, and how to get support in 2026.'
+
 export const metadata: Metadata = {
-  title: 'Help & Support',
-  description:
-    'MegDB help center: search, browse, accounts, troubleshooting, TMDB data, rate limits, and how to get support in 2026.',
+  title,
+  description,
+  alternates: { canonical: '/help' },
+  ...discoverSocialMeta(title, description, '/help'),
 }
 
 const UPDATED = 'April 21, 2026'
 
 export default function HelpPage() {
   return (
-    <div className={styles.page}>
+    <>
+      <WebPageJsonLd pathname="/help" title={title} description={description} />
+      <div className={styles.page}>
       <LegalDocument title="Help &amp; Support" lastUpdated={UPDATED}>
         <h2 id="start">1. Getting started</h2>
         <p>
@@ -178,5 +187,6 @@ export default function HelpPage() {
         </p>
       </LegalDocument>
     </div>
+    </>
   )
 }

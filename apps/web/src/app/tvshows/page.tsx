@@ -1,9 +1,15 @@
 import type { Metadata } from 'next'
+import { MosaicHeroLcpPreload } from '@/components/MosaicHeroLcpPreload'
 import { MoviesDiscoverPage } from '@/components/MoviesDiscoverPage/MoviesDiscoverPage'
 import {
+  getTvShowsDiscoverCanonicalPath,
   getTvShowsDiscoverDescription,
   getTvShowsDiscoverHeroLead,
+  getTvShowsDiscoverKeywords,
+  getTvShowsDiscoverTitle,
 } from '@/lib/tvShowsDiscoverCopy'
+import { buildCollectionPageJsonLd } from '@/lib/jsonLdSite'
+import { discoverSocialMeta } from '@/lib/seoSocial'
 import {
   discoverTvShowsBrowse,
   discoverTvShowsFetchKey,
@@ -31,56 +37,49 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   const state = parseTvShowsDiscoverSearchParams(sp)
   const keys = moviesDiscoverActiveFilterKeys(state)
   const genreOnly = state.genre && keys.length === 1 && keys[0] === 'genre'
-  const tvShowOnlyGenreIds = new Set(['10764', '10767', '10763', '10766'])
-  const genres = genreOnly
-    ? (await getTvGenresList().catch(() => [])).filter((g) => tvShowOnlyGenreIds.has(String(g.id)))
-    : []
-  const description = getTvShowsDiscoverDescription(state, genres)
-  const y = new Date().getFullYear()
+  const needsGenres = genreOnly || (state.genre != null && keys.length > 1)
+  const needsProviders = keys.includes('provider')
+  const needsStudios = keys.includes('studio')
 
-  if (genreOnly) {
-    const g = genres.find((x) => String(x.id) === state.genre)
-    if (g) {
-      return {
-        title: `Best ${g.name} TV Shows ${y}`,
-        description,
-        alternates: { canonical: `/tvshows?genre=${state.genre}` },
-      }
-    }
-  }
+  const tvShowOnlyGenreIds = new Set(['10764', '10767', '10763', '10766'])
+  const [allGenresRaw, providers, studios] = await Promise.all([
+    needsGenres ? getTvGenresList().catch(() => []) : Promise.resolve([]),
+    needsProviders ? getWatchProvidersTvList().catch(() => []) : Promise.resolve([]),
+    needsStudios ? getSeriesStudiosList().catch(() => []) : Promise.resolve([]),
+  ])
+  const genres = needsGenres
+    ? allGenresRaw.filter((g) => tvShowOnlyGenreIds.has(String(g.id)))
+    : []
+
+  const ctx = { providers, studios }
+  const description = getTvShowsDiscoverDescription(state, genres, ctx)
+  const title = getTvShowsDiscoverTitle(state, genres, ctx)
+  const path = getTvShowsDiscoverCanonicalPath(state, genres, ctx)
+  const keywords = getTvShowsDiscoverKeywords(state, genres)
+
   if (keys.length > 1) {
     return {
-      title: 'Browse TV shows',
+      title,
       description,
       robots: { index: false, follow: true },
-      alternates: { canonical: '/tvshows' },
+      alternates: { canonical: path },
+      ...discoverSocialMeta(title, description, path),
     }
   }
-  if (state.year && keys.length === 1 && keys[0] === 'year') {
-    return {
-      title: `TV Shows from ${state.year}`,
-      description,
-      alternates: { canonical: `/tvshows?year=${state.year}` },
-    }
-  }
+
   return {
-    title: `Best TV Shows to Watch (${y})`,
+    title,
     description,
-    keywords: [
-      `best tv shows ${y}`,
-      'tv shows to watch online',
-      'top tv series streaming',
-      `trending tv shows ${y}`,
-      'where to watch tv shows',
-      'tv runtime filters',
-    ],
-    alternates: { canonical: '/tvshows' },
+    ...(keywords ? { keywords } : {}),
+    alternates: { canonical: path },
+    ...discoverSocialMeta(title, description, path),
   }
 }
 
 export default async function TvShowsPage({ searchParams }: PageProps) {
   const sp = await searchParams
   const state = parseTvShowsDiscoverSearchParams(sp)
+  const keys = moviesDiscoverActiveFilterKeys(state)
   const { input, mode, comingYear } = discoverTvShowsStateToBrowseInput(state, 1)
   const fetchParams = discoverTvShowsStateToFetchParams(state)
   const filterKey = discoverTvShowsFetchKey(state)
@@ -93,8 +92,9 @@ export default async function TvShowsPage({ searchParams }: PageProps) {
     discoverTvShowsBrowse(input, mode, comingYear),
     getTopTvShows2026MosaicPosterUrls(MOSAIC_POSTER_CAP),
   ])
-  const tvShowOnlyGenreIds = new Set(['10764', '10767', '10763', '10766'])
-  const genres = allGenres.filter((g) => tvShowOnlyGenreIds.has(String(g.id)))
+  const tvShowOnlyGenreIdsPage = new Set(['10764', '10767', '10763', '10766'])
+  const genres = allGenres.filter((g) => tvShowOnlyGenreIdsPage.has(String(g.id)))
+  const tvShowsCopyCtx = { providers, studios }
 
   const initialItems = await enrichTvShowsShelfRuntime(
     results.results.map(mapTmdbTvShowRowToShelfItem)
@@ -141,7 +141,15 @@ export default async function TvShowsPage({ searchParams }: PageProps) {
       },
     },
   ]
-  const heroDescription = getTvShowsDiscoverHeroLead(state, genres)
+  const heroDescription = getTvShowsDiscoverHeroLead(state, genres, tvShowsCopyCtx)
+  const collectionLd =
+    keys.length > 1
+      ? null
+      : buildCollectionPageJsonLd({
+          name: getTvShowsDiscoverTitle(state, genres, tvShowsCopyCtx),
+          description: getTvShowsDiscoverDescription(state, genres, tvShowsCopyCtx),
+          pathname: getTvShowsDiscoverCanonicalPath(state, genres, tvShowsCopyCtx),
+        })
   const trustUpdatedAtLabel = new Date().toLocaleString('en-GB', {
     dateStyle: 'medium',
     timeStyle: 'short',
@@ -149,30 +157,39 @@ export default async function TvShowsPage({ searchParams }: PageProps) {
   })
 
   return (
-    <div className={styles.page}>
-      <MoviesDiscoverPage
-        discoverState={state}
-        genres={genres}
-        providers={providers}
-        studios={studios}
-        fetchParams={fetchParams}
-        filterKey={filterKey}
-        basePath="/tvshows"
-        apiPath="/api/tvshows-discover"
-        pageTitle="TV Shows"
-        emptyText="No TV shows match these filters yet."
-        contentLabelPlural="tv shows"
-        presetsStorageKey="megdb-tvshows-filter-presets-v1"
-        runtimeFilterLabel="Episode runtime"
-        runtimeOptions={runtimeOptions}
-        presetSuggestions={presetSuggestions}
-        initialItems={initialItems}
-        totalPages={results.total_pages}
-        mosaicUrls={mosaicUrls}
-        heroDescription={heroDescription}
-        enableDiscoverPolish
-        trustUpdatedAtLabel={trustUpdatedAtLabel}
-      />
-    </div>
+    <>
+      {collectionLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionLd) }}
+        />
+      )}
+      <div className={styles.page}>
+        <MosaicHeroLcpPreload href={mosaicUrls[0]} />
+        <MoviesDiscoverPage
+          discoverState={state}
+          genres={genres}
+          providers={providers}
+          studios={studios}
+          fetchParams={fetchParams}
+          filterKey={filterKey}
+          basePath="/tvshows"
+          apiPath="/api/tvshows-discover"
+          pageTitle="TV Shows"
+          emptyText="No TV shows match these filters yet."
+          contentLabelPlural="tv shows"
+          presetsStorageKey="megdb-tvshows-filter-presets-v1"
+          runtimeFilterLabel="Episode runtime"
+          runtimeOptions={runtimeOptions}
+          presetSuggestions={presetSuggestions}
+          initialItems={initialItems}
+          totalPages={results.total_pages}
+          mosaicUrls={mosaicUrls}
+          heroDescription={heroDescription}
+          enableDiscoverPolish
+          trustUpdatedAtLabel={trustUpdatedAtLabel}
+        />
+      </div>
+    </>
   )
 }

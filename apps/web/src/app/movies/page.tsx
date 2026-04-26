@@ -1,6 +1,15 @@
 import type { Metadata } from 'next'
+import { MosaicHeroLcpPreload } from '@/components/MosaicHeroLcpPreload'
 import { MoviesDiscoverPage } from '@/components/MoviesDiscoverPage/MoviesDiscoverPage'
-import { getMoviesDiscoverDescription, getMoviesDiscoverHeroLead } from '@/lib/moviesDiscoverCopy'
+import {
+  getMoviesDiscoverCanonicalPath,
+  getMoviesDiscoverDescription,
+  getMoviesDiscoverHeroLead,
+  getMoviesDiscoverKeywords,
+  getMoviesDiscoverTitle,
+} from '@/lib/moviesDiscoverCopy'
+import { buildCollectionPageJsonLd } from '@/lib/jsonLdSite'
+import { discoverSocialMeta } from '@/lib/seoSocial'
 import {
   discoverMoviesBrowse,
   discoverFetchKey,
@@ -27,84 +36,47 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   const sp = await searchParams
   const state = parseMoviesDiscoverSearchParams(sp)
   const keys = moviesDiscoverActiveFilterKeys(state)
-  const y = new Date().getFullYear()
-
   const genreOnly = state.genre && keys.length === 1 && keys[0] === 'genre'
-  const genres = genreOnly ? await getMovieGenresList().catch(() => []) : []
-  const description = getMoviesDiscoverDescription(state, genres)
+  const needsGenres = genreOnly || (state.genre != null && keys.length > 1)
+  const needsProviders = keys.includes('provider')
+  const needsStudios = keys.includes('studio')
 
-  if (genreOnly) {
-    const g = genres.find((x) => String(x.id) === state.genre)
-    if (g) {
-      return {
-        title: `Best ${g.name} Movies ${y}`,
-        description,
-        alternates: { canonical: `/movies?genre=${state.genre}` },
-      }
-    }
-  }
+  const [allGenresRaw, providers, studios] = await Promise.all([
+    needsGenres ? getMovieGenresList().catch(() => []) : Promise.resolve([]),
+    needsProviders ? getWatchProvidersMovieList().catch(() => []) : Promise.resolve([]),
+    needsStudios ? getMovieStudiosList().catch(() => []) : Promise.resolve([]),
+  ])
+  const genres = needsGenres ? allGenresRaw : []
+
+  const ctx = { providers, studios }
+  const description = getMoviesDiscoverDescription(state, genres, ctx)
+  const title = getMoviesDiscoverTitle(state, genres, ctx)
+  const path = getMoviesDiscoverCanonicalPath(state, genres, ctx)
+  const keywords = getMoviesDiscoverKeywords(state, genres)
 
   if (keys.length > 1) {
     return {
-      title: 'Browse movies',
+      title,
       description,
       robots: { index: false, follow: true },
-      alternates: { canonical: '/movies' },
-    }
-  }
-
-  if (state.year && keys.length === 1 && keys[0] === 'year') {
-    return {
-      title: `Movies from ${state.year}`,
-      description,
-      alternates: { canonical: `/movies?year=${state.year}` },
-    }
-  }
-
-  if (state.comingYear != null && keys.length === 1 && keys[0] === 'coming') {
-    return {
-      title: `Coming in ${state.comingYear}`,
-      description,
-      alternates: { canonical: `/movies?coming=${state.comingYear}` },
-    }
-  }
-
-  if (
-    state.expectedYear != null &&
-    state.expectedMonth != null &&
-    keys.length === 1 &&
-    keys[0] === 'expected'
-  ) {
-    const monthTitle = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(
-      new Date(Date.UTC(state.expectedYear, state.expectedMonth - 1, 1))
-    )
-    const expectedQs = `${state.expectedYear}-${String(state.expectedMonth).padStart(2, '0')}`
-    return {
-      title: `Expected in ${monthTitle} ${state.expectedYear}`,
-      description,
-      alternates: { canonical: `/movies?expected=${expectedQs}` },
+      alternates: { canonical: path },
+      ...discoverSocialMeta(title, description, path),
     }
   }
 
   return {
-    title: `Where to Watch Movies Online — Netflix, Prime, Disney+ (${y})`,
+    title,
     description,
-    keywords: [
-      `best movies ${y}`,
-      'movies to watch online',
-      'best movies to stream',
-      `top movies ${y}`,
-      `movies streaming ${y}`,
-      'where to watch movies',
-      `best films ${y}`,
-    ],
-    alternates: { canonical: '/movies' },
+    ...(keywords ? { keywords } : {}),
+    alternates: { canonical: path },
+    ...discoverSocialMeta(title, description, path),
   }
 }
 
 export default async function MoviesPage({ searchParams }: PageProps) {
   const sp = await searchParams
   const state = parseMoviesDiscoverSearchParams(sp)
+  const keys = moviesDiscoverActiveFilterKeys(state)
   const { input, mode, comingYear } = discoverStateToBrowseInput(state, 1)
   const fetchParams = discoverStateToFetchParams(state)
   const filterKey = discoverFetchKey(state)
@@ -122,7 +94,16 @@ export default async function MoviesPage({ searchParams }: PageProps) {
   const initialItems = await enrichMovieShelfRuntime(
     results.results.map(mapTmdbMovieRowToShelfItem)
   )
-  const heroDescription = getMoviesDiscoverHeroLead(state, genres)
+  const moviesCopyCtx = { providers, studios }
+  const heroDescription = getMoviesDiscoverHeroLead(state, genres, moviesCopyCtx)
+  const collectionLd =
+    keys.length > 1
+      ? null
+      : buildCollectionPageJsonLd({
+          name: getMoviesDiscoverTitle(state, genres, moviesCopyCtx),
+          description: getMoviesDiscoverDescription(state, genres, moviesCopyCtx),
+          pathname: getMoviesDiscoverCanonicalPath(state, genres, moviesCopyCtx),
+        })
   const trustUpdatedAtLabel = new Date().toLocaleString('en-GB', {
     dateStyle: 'medium',
     timeStyle: 'short',
@@ -130,27 +111,36 @@ export default async function MoviesPage({ searchParams }: PageProps) {
   })
 
   return (
-    <div className={styles.page}>
-      <MoviesDiscoverPage
-        discoverState={state}
-        genres={genres}
-        providers={providers}
-        studios={studios}
-        fetchParams={fetchParams}
-        filterKey={filterKey}
-        basePath="/movies"
-        apiPath="/api/discover"
-        pageTitle="Movies"
-        emptyText="No movies match these filters yet."
-        contentLabelPlural="movies"
-        presetsStorageKey="megdb-movies-filter-presets-v1"
-        initialItems={initialItems}
-        totalPages={results.total_pages}
-        mosaicUrls={mosaicUrls}
-        heroDescription={heroDescription}
-        enableDiscoverPolish
-        trustUpdatedAtLabel={trustUpdatedAtLabel}
-      />
-    </div>
+    <>
+      {collectionLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionLd) }}
+        />
+      )}
+      <div className={styles.page}>
+        <MosaicHeroLcpPreload href={mosaicUrls[0]} />
+        <MoviesDiscoverPage
+          discoverState={state}
+          genres={genres}
+          providers={providers}
+          studios={studios}
+          fetchParams={fetchParams}
+          filterKey={filterKey}
+          basePath="/movies"
+          apiPath="/api/discover"
+          pageTitle="Movies"
+          emptyText="No movies match these filters yet."
+          contentLabelPlural="movies"
+          presetsStorageKey="megdb-movies-filter-presets-v1"
+          initialItems={initialItems}
+          totalPages={results.total_pages}
+          mosaicUrls={mosaicUrls}
+          heroDescription={heroDescription}
+          enableDiscoverPolish
+          trustUpdatedAtLabel={trustUpdatedAtLabel}
+        />
+      </div>
+    </>
   )
 }

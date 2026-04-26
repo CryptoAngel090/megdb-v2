@@ -6,7 +6,12 @@ type Props = { params: Promise<{ id: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params
-  return { title: `Person ${id}` }
+  return {
+    title: `Person ${id}`,
+    description: 'Actor or crew profile on MegDB (filmography coming soon).',
+    robots: { index: false, follow: true },
+    alternates: { canonical: `/person/${id}` },
+  }
 }
 
 export default async function PersonPage({ params }: Props) {
