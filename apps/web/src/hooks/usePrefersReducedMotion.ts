@@ -11,9 +11,6 @@ export function usePrefersReducedMotion(): boolean {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 }
 
-/** Same implementation — safe SSR snapshot. Use if migrating from Framer’s `useReducedMotion`. */
-export const useReducedMotion = usePrefersReducedMotion
-
 function subscribe(onChange: () => void): () => void {
   if (typeof window === 'undefined') return () => {}
   const mq = window.matchMedia('(prefers-reduced-motion: reduce)')

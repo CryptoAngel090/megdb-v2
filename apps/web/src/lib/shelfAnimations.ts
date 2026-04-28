@@ -1,123 +1,74 @@
 import type { UseInViewOptions } from 'framer-motion'
 import type { Variants } from 'framer-motion'
 
-// ── Animation Constants 2026 ────────────────────────────────────────────────
+/**
+ * Single easing curve used everywhere for scroll-reveal animations.
+ * Smooth deceleration — no spring bounce, no overshoot.
+ */
+export const EASE_SMOOTH: [number, number, number, number] = [0.25, 0.1, 0, 1]
 
-const DURATION = {
-  FAST: 0.15,
-  MEDIUM: 0.25,
-  SLOW: 0.35,
-  CINEMA: 0.5,
-}
-
-const EASING = {
-  OUT: [0.25, 0.46, 0.45, 0.94] as const,
-  CINEMA: [0.16, 1, 0.3, 1] as const,
-  SPRING: [0.34, 1.56, 0.64, 1] as const,
-}
-
-// ── Scroll / intersection (use on an element that never uses opacity: 0) ─────
+/** Legacy aliases kept for imports that reference them directly. */
+const EASE_OUT: [number, number, number, number] = EASE_SMOOTH
 
 export const shelfInViewOptions: UseInViewOptions = {
   once: true,
   amount: 'some',
-  margin: '0px 0px -100px 0px', // Trigger earlier for smoother experience
+  margin: '0px 0px -60px 0px',
 }
 
-/** Applied to inner `motion.div` — outer `<section>` holds `ref` for `useInView`. */
+/**
+ * Section-level scroll reveal: fade up smoothly when the shelf enters the viewport.
+ * duration 0.55s — fast enough to feel snappy, slow enough to feel intentional.
+ */
 export const shelfSectionRevealVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 50,
-    scale: 0.98, // Subtle scale for depth
-  },
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    scale: 1,
-    transition: {
-      duration: DURATION.CINEMA,
-      ease: EASING.CINEMA,
-    },
+    transition: { type: 'tween', duration: 0.55, ease: EASE_SMOOTH },
   },
 }
-
-// ── Media shelf row + cards (stagger driven by parent `visible`) ────────────
 
 export const shelfMediaRowListVariants: Variants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.06, // Faster stagger for 2026
-      delayChildren: 0.15,
+      staggerChildren: 0.04,
+      delayChildren: 0.05,
     },
   },
 }
 
-/** Card tiles under `shelfMediaRowListVariants` — no per-card `whileInView`. */
 export const mediaShelfCardVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 40,
-    scale: 0.95,
-    rotateY: -5, // Subtle 3D effect
-  },
+  hidden: { opacity: 0, y: 16 },
   visible: {
     opacity: 1,
     y: 0,
-    scale: 1,
-    rotateY: 0,
-    transition: {
-      duration: 0.5,
-      ease: EASING.CINEMA,
-    },
+    transition: { type: 'tween', duration: 0.45, ease: EASE_SMOOTH },
   },
 }
-
-// ── Popular actors rail ─────────────────────────────────────────────────────
 
 export const actorRowListVariants: Variants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.05, // Faster for actors
-      delayChildren: 0.12,
+      staggerChildren: 0.04,
+      delayChildren: 0.05,
     },
   },
 }
 
 export const actorCardVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 30,
-    scale: 0.96,
-  },
+  hidden: { opacity: 0, y: 16 },
   visible: {
     opacity: 1,
     y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.45,
-      ease: EASING.CINEMA,
-    },
+    transition: { type: 'tween', duration: 0.45, ease: EASE_SMOOTH },
   },
 }
 
-/** Shared spring for shelf scroll / actor tile taps */
-export const shelfTapSpring = {
-  type: 'spring' as const,
-  stiffness: 520, // Snappier for 2026
-  damping: 28,
-}
-
-export const shelfLinkTapSpring = {
-  type: 'spring' as const,
-  stiffness: 480,
-  damping: 24,
-}
-
-export const actorTileTapSpring = {
-  type: 'spring' as const,
-  stiffness: 500,
-  damping: 26,
+export const tapTransition = {
+  type: 'tween' as const,
+  duration: 0.15,
+  ease: EASE_OUT,
 }

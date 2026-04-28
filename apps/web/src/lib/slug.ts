@@ -1,4 +1,5 @@
-import { searchMovies, searchTvShows } from '@/lib/tmdb'
+import type { MediaType } from '@repo/types'
+import { searchMovies, searchTvShows } from './tmdb'
 
 export function toSlug(text: string): string {
   return text
@@ -36,15 +37,6 @@ export function seriesPath(title: string, firstAirDate?: string | null): string 
   return y ? `/series/${slug}-${y}` : `/series/${slug}`
 }
 
-/** Canonical path for `tvshow` shelf cards: `/tvshow/title-year`. */
-export function tvshowPath(title: string, firstAirDate?: string | null): string {
-  const slug = toSlug(title)
-  if (!slug) return '/tvshows'
-  const year = firstAirDate && firstAirDate.length >= 4 ? Number(firstAirDate.slice(0, 4)) : null
-  const y = year != null && Number.isFinite(year) ? year : null
-  return y ? `/tvshow/${slug}-${y}` : `/tvshow/${slug}`
-}
-
 export type DetailMediaKind = 'movie' | 'series' | 'tvshow' | 'cartoon'
 
 export function detailPathForMedia(
@@ -56,12 +48,42 @@ export function detailPathForMedia(
     case 'series':
       return seriesPath(title, releaseOrFirstAir)
     case 'tvshow':
-      return tvshowPath(title, releaseOrFirstAir)
+      /* One canonical TV detail URL (`/series/…`). Legacy `/tvshow/[id]` and `/tvshows/[id]` 308/301 here. */
+      return seriesPath(title, releaseOrFirstAir)
     case 'cartoon':
       return cartoonPath(title, releaseOrFirstAir)
     default:
       return moviePath(title, releaseOrFirstAir)
   }
+}
+
+/** Normalize shelf/release dates to `YYYY-MM-DD` (or `YYYY` prefix) for slug helpers. */
+export function releaseDateToYmd(d: Date | string | null | undefined): string | null {
+  if (d == null) return null
+  if (d instanceof Date) {
+    if (Number.isNaN(d.getTime())) return null
+    return d.toISOString().slice(0, 10)
+  }
+  const t = d.trim()
+  if (t.length >= 10) return t.slice(0, 10)
+  if (t.length >= 4) return t.slice(0, 4)
+  return null
+}
+
+/**
+ * Single entry for **internal** card links: title-year (or title) slugs, aligned with `discoverPageAlternates` / sitemap.
+ * `MediaType` matches `DetailMediaKind` — `tvshow` and `series` both map to `/series/…`.
+ */
+export function detailPathForShelfItem(item: {
+  type: MediaType
+  title: string
+  releaseDate: Date | string | null | undefined
+}): string {
+  return detailPathForMedia(
+    item.type as DetailMediaKind,
+    item.title,
+    releaseDateToYmd(item.releaseDate)
+  )
 }
 
 export function parseSlug(slug: string): { query: string; year: number | null } {
@@ -80,6 +102,14 @@ export function parseSlug(slug: string): { query: string; year: number | null } 
 export function personPath(id: number, name: string): string {
   const slug = toSlug(name)
   return slug ? `/person/${id}-${slug}` : `/person/${id}`
+}
+
+/** Numeric id or legacy `123-name` segment from `/person/[id]`. */
+export function resolvePersonIdFromParam(raw: string): number | null {
+  if (/^\d+$/.test(raw)) return Number(raw)
+  const legacy = raw.match(/^(\d+)-/)
+  if (legacy) return Number(legacy[1])
+  return null
 }
 
 export async function resolveMovieIdFromParam(raw: string): Promise<number | null> {
