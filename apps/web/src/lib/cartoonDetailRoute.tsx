@@ -1,17 +1,24 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { notFound, redirect } from 'next/navigation'
 import { HeroLcpPreloadLinks } from '@/components/MovieDetailPage/HeroLcpPreloadLinks'
+import { MovieDetailBelowFoldSuspenseFallback } from '@/components/MovieDetailPage/MovieDetailBelowFoldDynamics'
 import {
   MovieDetailPage,
   type MovieDetailPageNav,
 } from '@/components/MovieDetailPage/MovieDetailPage'
-import { getImageUrl, getMoviePageData, type MoviePageDetail } from '@/lib/tmdb'
+import { MovieDetailStreamedBelowFold } from '@/components/MovieDetailPage/MovieDetailStreamedBelowFold'
+import { getMoviePageDataShellCached } from '@/lib/moviePageDataCache'
+import { getImageUrl, type MoviePageDetail } from '@/lib/tmdb'
+import { jsonLdMainEntityId, jsonLdSameAsTmdb, jsonLdYoutubeVideoId } from '@/lib/jsonLdEntity'
+import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
+import { buildWatchSeoTitle } from '@/lib/seoTitles'
 import { SITE_URL } from '@/lib/site'
+import { ROUTE_REVALIDATE_MEDIA_DETAIL } from '@/lib/cachePolicy'
 import { cartoonPath, resolveMovieIdFromParam } from '@/lib/slug'
 import { containsCyrillic } from '@/lib/textScript'
 
-/** ISR window (seconds). `app/cartoon/[id]/page.tsx` must use the same literal for `export const revalidate`. */
-export const CARTOON_DETAIL_REVALIDATE = 3600
+const CARTOON_DETAIL_REVALIDATE = ROUTE_REVALIDATE_MEDIA_DETAIL
 
 const cartoonNav: MovieDetailPageNav = {
   backHref: '/cartoons',
@@ -35,6 +42,8 @@ function buildJsonLdCartoon(movie: MoviePageDetail, canonicalPath: string) {
   return {
     '@context': 'https://schema.org',
     '@type': 'Movie',
+    '@id': jsonLdMainEntityId(canonicalPath),
+    sameAs: jsonLdSameAsTmdb({ tmdbId: movie.id, media: 'movie', imdbId: movie.imdbId }),
     name: movie.title,
     description:
       movie.overview.trim() && !containsCyrillic(movie.overview) ? movie.overview : undefined,
@@ -42,7 +51,7 @@ function buildJsonLdCartoon(movie: MoviePageDetail, canonicalPath: string) {
     datePublished: movie.releaseDate || undefined,
     duration: movie.runtime ? `PT${movie.runtime}M` : undefined,
     aggregateRating:
-      movie.voteAverage > 0
+      movie.voteAverage > 0 && movie.voteCount > 0
         ? {
             '@type': 'AggregateRating',
             ratingValue: movie.voteAverage.toFixed(1),
@@ -57,7 +66,7 @@ function buildJsonLdCartoon(movie: MoviePageDetail, canonicalPath: string) {
     ...(movie.cast.length > 0
       ? { actor: movie.cast.slice(0, 8).map((a) => ({ '@type': 'Person', name: a.name })) }
       : {}),
-    ...(movie.trailer ? { trailer: { '@id': `${SITE_URL}/trailer/${movie.id}#video` } } : {}),
+    ...(movie.trailer ? { trailer: { '@id': jsonLdYoutubeVideoId(movie.trailer.key) } } : {}),
     ...(movie.justWatchLink
       ? {
           potentialAction: {
@@ -65,12 +74,7 @@ function buildJsonLdCartoon(movie: MoviePageDetail, canonicalPath: string) {
             target: { '@type': 'EntryPoint', urlTemplate: movie.justWatchLink },
           },
         }
-      : {
-          potentialAction: {
-            '@type': 'WatchAction',
-            target: { '@type': 'EntryPoint', urlTemplate: `${SITE_URL}${canonicalPath}` },
-          },
-        }),
+      : {}),
   }
 }
 
@@ -92,7 +96,7 @@ function buildBreadcrumb(movie: MoviePageDetail, canonicalPath: string) {
   }
 }
 
-function buildVideoJsonLd(movie: MoviePageDetail) {
+function buildVideoJsonLd(movie: MoviePageDetail, canonicalPath: string) {
   if (!movie.trailer) return null
   const y = yearFromRelease(movie.releaseDate)
   const { key, name, type, publishedAt } = movie.trailer
@@ -100,7 +104,8 @@ function buildVideoJsonLd(movie: MoviePageDetail) {
   return {
     '@context': 'https://schema.org',
     '@type': 'VideoObject',
-    '@id': `${SITE_URL}/trailer/${movie.id}#video`,
+    '@id': jsonLdYoutubeVideoId(key),
+    about: { '@id': jsonLdMainEntityId(canonicalPath) },
     name: `${movie.title}${y ? ` (${y})` : ''} — ${name || 'Trailer'}`,
     description: `Watch the ${videoType} for ${movie.title}${y ? ` (${y})` : ''}.`.trim(),
     thumbnailUrl: [
@@ -158,11 +163,19 @@ export async function generateCartoonDetailMetadata({ params }: Props): Promise<
   const { id: idStr } = await params
   const id = await resolveMovieIdFromParam(idStr)
   if (id == null) {
-    return { title: 'Cartoon' }
+    return {
+      title: 'Cartoon',
+      description: 'Browse animated movies and cartoons on MegDB.',
+      robots: { index: false, follow: true },
+    }
   }
-  const data = await getMoviePageData(id)
+  const data = await getMoviePageDataShellCached(id)
   if (!data) {
-    return { title: 'Not found' }
+    return {
+      title: 'Not found',
+      description: 'This cartoon page is unavailable on MegDB.',
+      robots: { index: false, follow: true },
+    }
   }
   const canonicalPath = cartoonPath(data.title, data.releaseDate)
   const ov = data.overview.trim()
@@ -171,23 +184,16 @@ export async function generateCartoonDetailMetadata({ params }: Props): Promise<
       ? ov.slice(0, 155) + (ov.length > 155 ? '…' : '')
       : `${data.title} — cartoons on MegDB`
   const ogImage = data.posterPath ? getImageUrl(data.posterPath, 'w780') : undefined
+  const title = buildWatchSeoTitle(data.title, data.releaseDate, 'movie')
   return {
-    title: data.title,
+    title,
     description,
-    alternates: { canonical: `${SITE_URL}${canonicalPath}` },
-    openGraph: {
-      title: data.title,
-      description,
+    alternates: discoverPageAlternates(canonicalPath),
+    ...discoverSocialMeta(data.title, description, canonicalPath, {
       type: 'video.movie',
       ...(data.releaseDate ? { releaseDate: data.releaseDate } : {}),
-      images: ogImage ? [{ url: ogImage, width: 780, height: 1170, alt: data.title }] : undefined,
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: data.title,
-      description,
-      images: ogImage ? [ogImage] : undefined,
-    },
+      ...(ogImage ? { images: [{ url: ogImage, width: 780, height: 1170, alt: data.title }] } : {}),
+    }),
   }
 }
 
@@ -197,7 +203,7 @@ export async function CartoonDetailPageApp({ params }: Props) {
   if (id == null) {
     notFound()
   }
-  const data = await getMoviePageData(id)
+  const data = await getMoviePageDataShellCached(id)
   if (!data) {
     notFound()
   }
@@ -210,7 +216,14 @@ export async function CartoonDetailPageApp({ params }: Props) {
   const jsonLd = buildJsonLdCartoon(data, canonicalPath)
   const breadcrumb = buildBreadcrumb(data, canonicalPath)
   const faqLd = buildFaqJsonLd(data)
-  const videoLd = buildVideoJsonLd(data)
+  const videoLd = buildVideoJsonLd(data, canonicalPath)
+
+  const tailInput = {
+    mediaId: data.id,
+    genreIds: data.genres.map((g) => g.id),
+    releaseYear: yearFromRelease(data.releaseDate),
+    collectionTmdbId: data.belongsToCollectionMeta?.id ?? null,
+  }
 
   return (
     <>
@@ -236,7 +249,22 @@ export async function CartoonDetailPageApp({ params }: Props) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(videoLd) }}
         />
       )}
-      <MovieDetailPage key={data.id} movie={data} nav={cartoonNav} />
+      <MovieDetailPage
+        key={data.id}
+        movie={data}
+        nav={cartoonNav}
+        streamedBelowFold={
+          <Suspense fallback={<MovieDetailBelowFoldSuspenseFallback />}>
+            <MovieDetailStreamedBelowFold
+              tailInput={tailInput}
+              similarMediaKind="cartoon"
+              movieTitle={data.title}
+              cast={data.cast}
+              variant="movie"
+            />
+          </Suspense>
+        }
+      />
     </>
   )
 }
