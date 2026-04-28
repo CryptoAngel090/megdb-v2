@@ -14,11 +14,8 @@ import { jsonLdMainEntityId, jsonLdSameAsTmdb, jsonLdYoutubeVideoId } from '@/li
 import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import { buildWatchSeoTitle } from '@/lib/seoTitles'
 import { SITE_URL } from '@/lib/site'
-import { ROUTE_REVALIDATE_MEDIA_DETAIL } from '@/lib/cachePolicy'
 import { resolveTvSeriesIdFromParam, seriesPath } from '@/lib/slug'
 import { containsCyrillic } from '@/lib/textScript'
-
-const TV_SERIES_DETAIL_REVALIDATE = ROUTE_REVALIDATE_MEDIA_DETAIL
 
 type TvSeriesRouteSegment = 'series' | 'tvshow' | 'tvshows'
 

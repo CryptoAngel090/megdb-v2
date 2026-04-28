@@ -1,22 +1,37 @@
 import type { MediaType } from '@repo/types'
+import {
+  FETCH_REVALIDATE_ALL_TIME,
+  FETCH_REVALIDATE_DEFAULT,
+  FETCH_REVALIDATE_ENRICHMENT,
+  FETCH_REVALIDATE_FAST,
+  FETCH_REVALIDATE_MODERATE,
+  FETCH_REVALIDATE_PEOPLE,
+  CACHE_TAG_TRENDING,
+  CACHE_TAG_HOME_MODERATE,
+  CACHE_TAG_ALL_TIME,
+  CACHE_TAG_PEOPLE,
+} from './cachePolicy'
 import { containsCyrillic } from './textScript'
 
 const TMDB_BASE = 'https://api.themoviedb.org/3'
-const API_KEY = process.env.TMDB_API_KEY ?? ''
-const OMDB_API_KEY = process.env.OMDB_API_KEY ?? ''
-const OMDB_BASE = 'https://www.omdbapi.com/'
 
-/** Default `fetch` cache for TMDB when a caller does not pass a tier (browse pages, mosaics, etc.). */
-const TMDB_REVALIDATE_DEFAULT = 3600
+/** Read on each request — env may be merged from monorepo root in `next.config.ts` after module graph init order edge cases. */
+function getTmdbApiKey(): string {
+  return process.env.TMDB_API_KEY?.trim() ?? ''
+}
+
+const TMDB_REVALIDATE_DEFAULT = FETCH_REVALIDATE_DEFAULT
 
 /**
- * Per-shelf TMDB cache tiers (homepage + callers that opt in).
- * The App Router page `revalidate` should be ≤ the fastest tier used on that route so segments re-run often enough.
+ * Per-shelf TMDB cache tiers (homepage + callers that opt in). Re-exported names preserved for imports.
+ * Policy lives in `cachePolicy.ts`; see `ROUTE_REVALIDATE_*` for segment ISR.
  */
-export const TMDB_REVALIDATE_FAST = 900 /** 15m — trending, hero, new releases */
-export const TMDB_REVALIDATE_MODERATE = 1800 /** 30m — best of year, acclaimed rail */
-export const TMDB_REVALIDATE_PEOPLE = 3600 /** 1h — popular people */
-export const TMDB_REVALIDATE_ALL_TIME = 86_400 /** 24h — top-rated / all-time lists */
+const TMDB_REVALIDATE_FAST = FETCH_REVALIDATE_FAST /** 15m */
+const TMDB_REVALIDATE_MODERATE = FETCH_REVALIDATE_MODERATE /** 30m */
+const TMDB_REVALIDATE_PEOPLE = FETCH_REVALIDATE_PEOPLE /** 1h */
+const TMDB_REVALIDATE_ALL_TIME = FETCH_REVALIDATE_ALL_TIME /** 24h */
+/** 24h — genre/runtime enrichment. Policy source: cachePolicy.ts `FETCH_REVALIDATE_ENRICHMENT`. */
+const TMDB_REVALIDATE_ENRICHMENT = FETCH_REVALIDATE_ENRICHMENT
 
 // ── Raw TMDB shapes ─────────────────────────────────────
 
@@ -72,6 +87,8 @@ export interface HeroItem {
   runtime: number | null
   /** YouTube key if found; hero still shows without trailer (Watch Now). */
   trailerKey: string | null
+  /** Optional source update timestamp from upstream DB/cache pipeline. */
+  updatedAt?: Date | null
 }
 
 export interface ShelfItem {
@@ -87,6 +104,8 @@ export interface ShelfItem {
   genres: string[]
   /** Minutes; from `/movie/{id}` or `/tv/{id}` detail when available. */
   runtimeMinutes?: number | null
+  /** Optional source update timestamp from upstream DB/cache pipeline. */
+  updatedAt?: Date | null
   /**
    * TMDB `genre_ids` from list responses — used while enriching; stripped before UI.
    * @internal
@@ -99,40 +118,18 @@ export interface ShelfItem {
 async function tmdbFetch<T>(
   endpoint: string,
   params?: Record<string, string>,
-  init?: { revalidate?: number }
+  init?: { revalidate?: number; tags?: string[] }
 ): Promise<T> {
   const url = new URL(`${TMDB_BASE}${endpoint}`)
-  url.searchParams.set('api_key', API_KEY)
+  url.searchParams.set('api_key', getTmdbApiKey())
   if (params) Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v))
   const revalidate = init?.revalidate ?? TMDB_REVALIDATE_DEFAULT
-  const res = await fetch(url.toString(), { next: { revalidate } })
+  const tags = init?.tags
+  const res = await fetch(url.toString(), {
+    next: { revalidate, ...(tags?.length ? { tags } : {}) },
+  })
   if (!res.ok) throw new Error(`TMDB ${res.status} ${endpoint}`)
   return res.json() as Promise<T>
-}
-
-interface OmdbByImdbResponse {
-  Response?: 'True' | 'False'
-  imdbRating?: string
-}
-
-async function fetchOmdbImdbRating(imdbId: string): Promise<number | null> {
-  if (!OMDB_API_KEY || !imdbId) return null
-
-  const url = new URL(OMDB_BASE)
-  url.searchParams.set('apikey', OMDB_API_KEY)
-  url.searchParams.set('i', imdbId)
-
-  const res = await fetch(url.toString(), { next: { revalidate: TMDB_REVALIDATE_MODERATE } })
-  if (!res.ok) return null
-
-  const data = (await res.json()) as OmdbByImdbResponse
-  if (data.Response !== 'True') return null
-
-  const raw = data.imdbRating?.trim()
-  if (!raw || raw === 'N/A') return null
-
-  const parsed = Number(raw)
-  return Number.isFinite(parsed) ? parsed : null
 }
 
 // ── Utilities ────────────────────────────────────────────
@@ -198,8 +195,6 @@ const COMING_SHELF_FETCH_MAX_PAGES = 14
 /** TMDB `/movie/upcoming` pages to merge into the homepage rail (theatrical skew). */
 const COMING_UPCOMING_ENDPOINT_MAX_PAGES = 5
 
-/** Homepage “Expected in {month}” — cap + strict quality (see `passesExpectedMonthBlockbusterRaw`). */
-export const EXPECTED_MONTH_HOME_RAIL_CAP = 10
 const EXPECTED_MONTH_POPULARITY_DISCOVER_PAGES = 12
 
 function comingSoonVoteTiers(): { movie: number; tv: number }[] {
@@ -604,6 +599,21 @@ function nextUtcCalendarMonth(d = new Date()): { year: number; month: number } {
   return { year: next.getUTCFullYear(), month: next.getUTCMonth() + 1 }
 }
 
+const _unusedDiscoverRailHelpers = [
+  EXPECTED_MONTH_POPULARITY_DISCOVER_PAGES,
+  passesExpectedMonthBlockbusterFallbackRaw,
+  collectBlockbusterComingMovies,
+  collectBlockbusterMoviesForExpectedMonthRail,
+  discoverExpectedMonthMoviesByPopularity,
+  mergeExpectedMonthShelfPools,
+  fetchTheatricalUpcomingInWindow,
+  mergeComingShelfByDate,
+  monthNameEn,
+  nextUtcCalendarMonth,
+  mergeMovieDetailShellAndTail,
+] as const
+void _unusedDiscoverRailHelpers
+
 /** Prefer TMDB detail order, then fill from list labels without duplicates. */
 function mergeUpToTwoGenres(detailNames: string[], listLabels: string[]): string[] {
   const seen = new Set<string>()
@@ -663,9 +673,11 @@ function mapToShelfItem(item: TmdbRawMedia, type: MediaType): ShelfItem {
 /** Detail endpoints — list views omit full `genres` names, `runtime` / episode length. Chunked to ease TMDB load. */
 async function enrichShelfItemsWithDetails(
   items: ShelfItem[],
-  revalidate = TMDB_REVALIDATE_DEFAULT
+  revalidate = TMDB_REVALIDATE_ENRICHMENT
 ): Promise<ShelfItem[]> {
-  const chunkSize = 8
+  // chunkSize 16: doubles parallelism vs original 8, halving sequential round-trips.
+  // Genre names and runtime are stable data — safe to fetch in larger parallel batches.
+  const chunkSize = 16
   const out: ShelfItem[] = []
   for (let i = 0; i < items.length; i += chunkSize) {
     const chunk = items.slice(i, i + chunkSize)
@@ -1088,7 +1100,7 @@ export interface MoviePageCastMember {
   profilePath: string | null
 }
 
-export interface MovieWatchProviderRow {
+interface MovieWatchProviderRow {
   providerId: number
   name: string
   logoPath: string | null
@@ -1096,7 +1108,7 @@ export interface MovieWatchProviderRow {
   quality: string
 }
 
-export interface MoviePageCrewRef {
+interface MoviePageCrewRef {
   id: number
   name: string
 }
@@ -1111,7 +1123,7 @@ export interface MoviePageCardItem {
   runtimeMinutes?: number | null
 }
 
-export interface MovieWatchProviderItem {
+interface MovieWatchProviderItem {
   providerId: number
   providerName: string
   logoPath: string | null
@@ -1146,7 +1158,6 @@ export interface MoviePageDetail {
   genres: { id: number; name: string }[]
   homepage: string | null
   imdbId: string | null
-  imdbRating?: number | null
   budget: number
   revenue: number
   status: string | null
@@ -1180,9 +1191,269 @@ export interface MoviePageDetail {
     parts: MoviePageCardItem[]
   }
   backdropGallery: MovieBackdropStill[]
+  /** Up to 10 TMDB backdrop stills for the detail hero carousel (loaded in shell with `/images`). */
+  heroBackdropStills: MovieBackdropStill[]
   watchProvidersUs: MovieWatchProvidersUs | null
   /** Latin / US-style title from TMDB alternative titles — shown under H1 when tagline is Cyrillic or missing */
   alternateDisplayTitle: string | null
+  /** TV detail only — seasons from TMDB (season 0 specials excluded) for `TVSeason` JSON-LD. */
+  tvSeasonSummaries?: Array<{
+    seasonNumber: number
+    name: string
+    episodeCount: number
+    airDate: string | null
+  }>
+  /**
+   * TMDB `belongs_to_collection` (id + name) while full `collection.parts` still load in the streamed tail.
+   * Cleared when `getMoviePageData` merges a full `collection` object.
+   */
+  belongsToCollectionMeta?: { id: number; name: string } | null
+}
+
+/** Input for `getMoviePageDataTailMovie` — derived from the shell row (no extra TMDB round-trip). */
+export interface MoviePageDetailTailInput {
+  mediaId: number
+  genreIds: number[]
+  releaseYear: number | null
+  collectionTmdbId: number | null
+}
+
+interface MoviePageDetailTailPatch {
+  similar: MoviePageCardItem[]
+  collection: MoviePageDetail['collection']
+  backdropGallery: MovieBackdropStill[]
+}
+
+/** Max backdrop slides for movie/TV detail hero carousel (TMDB `/images` backdrops). */
+const HERO_DETAIL_BACKDROP_MAX = 10
+
+type TmdbBackdropImageRow = {
+  file_path?: string | null
+  vote_average?: number
+  width?: number
+  height?: number
+}
+
+function pickHeroBackdropStillsForShell(
+  rows: TmdbBackdropImageRow[] | undefined,
+  preferredFilePath: string | null | undefined,
+): MovieBackdropStill[] {
+  const normalized = (rows ?? [])
+    .map((b) => ({
+      filePath: (b.file_path ?? '').trim(),
+      width: typeof b.width === 'number' && b.width > 0 ? b.width : 1280,
+      height: typeof b.height === 'number' && b.height > 0 ? b.height : 720,
+      vote: typeof b.vote_average === 'number' ? b.vote_average : 0,
+    }))
+    .filter((b) => b.filePath.length > 0)
+    .sort((a, b) => b.vote - a.vote)
+
+  const seen = new Set<string>()
+  const out: MovieBackdropStill[] = []
+  const push = (filePath: string, width: number, height: number) => {
+    if (!filePath || seen.has(filePath)) return
+    seen.add(filePath)
+    out.push({ filePath, width, height })
+  }
+
+  const pref = preferredFilePath?.trim()
+  if (pref) {
+    const hit = normalized.find((r) => r.filePath === pref)
+    push(pref, hit?.width ?? 1280, hit?.height ?? 720)
+  }
+  for (const r of normalized) {
+    if (out.length >= HERO_DETAIL_BACKDROP_MAX) break
+    push(r.filePath, r.width, r.height)
+  }
+  return out
+}
+
+function mergeMovieDetailShellAndTail(
+  shell: MoviePageDetail,
+  tail: MoviePageDetailTailPatch,
+): MoviePageDetail {
+  const { belongsToCollectionMeta: shellMeta, ...shellBase } = shell
+  return {
+    ...shellBase,
+    similar: tail.similar,
+    collection: tail.collection,
+    backdropGallery: tail.backdropGallery,
+    ...(tail.collection == null && shellMeta != null ? { belongsToCollectionMeta: shellMeta } : {}),
+  }
+}
+
+/** TMDB tail for movie detail: gallery, similar, collection rails (used by streamed below-fold RSC). */
+export async function getMoviePageDataTailMovie(
+  input: MoviePageDetailTailInput,
+): Promise<MoviePageDetailTailPatch> {
+  const id = input.mediaId
+  if (!Number.isFinite(id) || id <= 0) {
+    return { similar: [], collection: null, backdropGallery: [] }
+  }
+  try {
+    const [similarPage, imagesPayload, collectionPayload] = await Promise.all([
+      tmdbFetch<TmdbPaginated<TmdbRawMedia>>(
+        `/movie/${id}/similar`,
+        { page: '1' },
+        { revalidate: TMDB_REVALIDATE_MODERATE },
+      ).catch(() => null),
+      tmdbFetch<{
+        backdrops?: Array<{
+          file_path: string
+          vote_average: number
+          width?: number
+          height?: number
+        }>
+      }>(`/movie/${id}/images`, undefined, {
+        revalidate: TMDB_REVALIDATE_MODERATE,
+      }).catch(() => null),
+      input.collectionTmdbId
+        ? tmdbFetch<{ id: number; name: string; parts?: TmdbRawMedia[] }>(
+            `/collection/${input.collectionTmdbId}`,
+            undefined,
+            { revalidate: TMDB_REVALIDATE_MODERATE },
+          ).catch(() => null)
+        : Promise.resolve(null),
+    ])
+
+    const backdrops: MovieBackdropStill[] = (imagesPayload?.backdrops ?? [])
+      .sort((a, b) => b.vote_average - a.vote_average)
+      .map((b) => ({
+        filePath: b.file_path,
+        width: typeof b.width === 'number' && b.width > 0 ? b.width : 1280,
+        height: typeof b.height === 'number' && b.height > 0 ? b.height : 720,
+      }))
+
+    const currentGenreIds = new Set(
+      input.genreIds.filter((gid): gid is number => typeof gid === 'number' && Number.isFinite(gid)),
+    )
+    const currentYear = input.releaseYear
+
+    const [collection, similar] = await Promise.all([
+      (async (): Promise<MoviePageDetail['collection']> => {
+        if (!collectionPayload?.parts?.length) return null
+        const rawParts = collectionPayload.parts.map(mapRawToCardItem)
+        const parts = await enrichMoviePageCardItemsWithDetails(rawParts, TMDB_REVALIDATE_MODERATE)
+        if (parts.length <= 1) return null
+        return {
+          id: collectionPayload.id,
+          name: collectionPayload.name?.trim() || 'Collection',
+          parts,
+        }
+      })(),
+      (async (): Promise<MoviePageCardItem[]> => {
+        const discoverSimilarRaw =
+          Number.isFinite(currentYear) && currentGenreIds.size > 0
+            ? await fetchDiscoverMoviesByGenresAndYears(
+                [...currentGenreIds],
+                [currentYear as number, (currentYear as number) - 1],
+                id,
+                TMDB_REVALIDATE_MODERATE,
+              )
+            : []
+
+        const combinedSimilarRaw: TmdbRawMedia[] = (() => {
+          const out: TmdbRawMedia[] = []
+          const seen = new Set<number>()
+          for (const m of [...(similarPage?.results ?? []), ...discoverSimilarRaw]) {
+            if (!m?.id || m.id === id || seen.has(m.id)) continue
+            seen.add(m.id)
+            out.push(m)
+          }
+          return out
+        })()
+
+        const relevantSimilarRaw = pickRelevantSimilarItems(
+          combinedSimilarRaw,
+          currentGenreIds,
+          Number.isFinite(currentYear) ? currentYear : null,
+          16,
+        )
+        const similarBase = relevantSimilarRaw.map(mapRawToCardItem)
+        return enrichMoviePageCardItemsWithDetails(similarBase, TMDB_REVALIDATE_MODERATE)
+      })(),
+    ])
+
+    return { similar, collection, backdropGallery: backdrops }
+  } catch {
+    return { similar: [], collection: null, backdropGallery: [] }
+  }
+}
+
+/** TMDB tail for TV detail: backdrop gallery + similar (no collection on TV template). */
+export async function getTvPageDataTailTv(
+  input: MoviePageDetailTailInput,
+): Promise<MoviePageDetailTailPatch> {
+  const id = input.mediaId
+  if (!Number.isFinite(id) || id <= 0) {
+    return { similar: [], collection: null, backdropGallery: [] }
+  }
+  try {
+    const [similarPage, imagesPayload] = await Promise.all([
+      tmdbFetch<TmdbPaginated<TmdbRawMedia>>(
+        `/tv/${id}/similar`,
+        { page: '1' },
+        { revalidate: TMDB_REVALIDATE_MODERATE },
+      ).catch(() => null),
+      tmdbFetch<{
+        backdrops?: Array<{
+          file_path: string
+          vote_average: number
+          width?: number
+          height?: number
+        }>
+      }>(`/tv/${id}/images`, undefined, {
+        revalidate: TMDB_REVALIDATE_MODERATE,
+      }).catch(() => null),
+    ])
+
+    const backdrops: MovieBackdropStill[] = (imagesPayload?.backdrops ?? [])
+      .sort((a, b) => b.vote_average - a.vote_average)
+      .map((b) => ({
+        filePath: b.file_path,
+        width: typeof b.width === 'number' && b.width > 0 ? b.width : 1280,
+        height: typeof b.height === 'number' && b.height > 0 ? b.height : 720,
+      }))
+
+    const currentGenreIds = new Set(
+      input.genreIds.filter((gid): gid is number => typeof gid === 'number' && Number.isFinite(gid)),
+    )
+    const currentYear = input.releaseYear
+
+    const discoverSimilarRaw =
+      Number.isFinite(currentYear) && currentGenreIds.size > 0
+        ? await fetchDiscoverTvByGenresAndYears(
+            [...currentGenreIds],
+            [currentYear as number, (currentYear as number) - 1],
+            id,
+            TMDB_REVALIDATE_MODERATE,
+          )
+        : []
+
+    const combinedSimilarRaw: TmdbRawMedia[] = (() => {
+      const out: TmdbRawMedia[] = []
+      const seen = new Set<number>()
+      for (const m of [...(similarPage?.results ?? []), ...discoverSimilarRaw]) {
+        if (!m?.id || m.id === id || seen.has(m.id)) continue
+        seen.add(m.id)
+        out.push(m)
+      }
+      return out
+    })()
+
+    const relevantSimilarRaw = pickRelevantSimilarItems(
+      combinedSimilarRaw,
+      currentGenreIds,
+      Number.isFinite(currentYear) ? currentYear : null,
+      16,
+    )
+    const similarBase = relevantSimilarRaw.map(mapRawToCardItem)
+    const similar = await enrichTvPageCardItemsWithDetails(similarBase, TMDB_REVALIDATE_MODERATE)
+
+    return { similar, collection: null, backdropGallery: backdrops }
+  } catch {
+    return { similar: [], collection: null, backdropGallery: [] }
+  }
 }
 
 function mapRawToCardItem(m: TmdbRawMedia): MoviePageCardItem {
@@ -1646,7 +1917,8 @@ function pickAlternateDisplayTitle(
   return null
 }
 
-export async function getMoviePageData(id: number): Promise<MoviePageDetail | null> {
+/** Movie detail without gallery / similar / collection parts — faster shell for streaming + metadata. */
+export async function getMoviePageDataShell(id: number): Promise<MoviePageDetail | null> {
   if (!Number.isFinite(id) || id <= 0) return null
   try {
     const d = await tmdbFetch<{
@@ -1689,7 +1961,6 @@ export async function getMoviePageData(id: number): Promise<MoviePageDetail | nu
       }
     )
 
-    const collectionId = d.belongs_to_collection?.id ?? null
     const origLang = d.original_language?.trim().toLowerCase() ?? ''
     const fetchOrigVideos = origLang.length > 0 && origLang !== 'en' && origLang !== 'en-us'
 
@@ -1697,65 +1968,40 @@ export async function getMoviePageData(id: number): Promise<MoviePageDetail | nu
 
     const [
       providersPayload,
-      similarPage,
-      imagesPayload,
       releasePayload,
-      collectionPayload,
       altTitlesPayload,
       videosEnUs,
       videosOriginalLang,
-      imdbRating,
+      imagesPayload,
     ] = await Promise.all([
       tmdbFetch<TmdbWatchProvidersPayload>(`/movie/${id}/watch/providers`, undefined, {
-        revalidate: TMDB_REVALIDATE_MODERATE,
-      }).catch(() => null),
-      tmdbFetch<TmdbPaginated<TmdbRawMedia>>(
-        `/movie/${id}/similar`,
-        { page: '1' },
-        {
-          revalidate: TMDB_REVALIDATE_MODERATE,
-        }
-      ).catch(() => null),
-      tmdbFetch<{
-        backdrops?: Array<{
-          file_path: string
-          vote_average: number
-          width?: number
-          height?: number
-        }>
-      }>(`/movie/${id}/images`, undefined, {
         revalidate: TMDB_REVALIDATE_MODERATE,
       }).catch(() => null),
       tmdbFetch<TmdbReleaseDatesPayload>(`/movie/${id}/release_dates`, undefined, {
         revalidate: TMDB_REVALIDATE_MODERATE,
       }).catch(() => null),
-      collectionId
-        ? tmdbFetch<{ id: number; name: string; parts?: TmdbRawMedia[] }>(
-            `/collection/${collectionId}`,
-            undefined,
-            { revalidate: TMDB_REVALIDATE_MODERATE }
-          ).catch(() => null)
-        : Promise.resolve(null),
       tmdbFetch<{ titles?: Array<{ iso_3166_1: string; title: string }> }>(
         `/movie/${id}/alternative_titles`,
         undefined,
-        { revalidate: TMDB_REVALIDATE_MODERATE }
+        { revalidate: TMDB_REVALIDATE_MODERATE },
       ).catch(() => null),
       tmdbFetch<TmdbVideosResponse>(
         `/movie/${id}/videos`,
         { language: 'en-US' },
         {
           revalidate: TMDB_REVALIDATE_MODERATE,
-        }
+        },
       ).catch(() => ({ results: [] as TmdbVideosResponse['results'] })),
       fetchOrigVideos
         ? tmdbFetch<TmdbVideosResponse>(
             `/movie/${id}/videos`,
             { language: d.original_language!.trim() },
-            { revalidate: TMDB_REVALIDATE_MODERATE }
+            { revalidate: TMDB_REVALIDATE_MODERATE },
           ).catch(() => ({ results: [] as TmdbVideosResponse['results'] }))
         : Promise.resolve({ results: [] as TmdbVideosResponse['results'] }),
-      rawImdbId ? fetchOmdbImdbRating(rawImdbId).catch(() => null) : Promise.resolve(null),
+      tmdbFetch<{ backdrops?: TmdbBackdropImageRow[] }>(`/movie/${id}/images`, undefined, {
+        revalidate: TMDB_REVALIDATE_MODERATE,
+      }).catch(() => null),
     ])
 
     const crew = d.credits?.crew ?? []
@@ -1817,64 +2063,18 @@ export async function getMoviePageData(id: number): Promise<MoviePageDetail | nu
     const mergedVideos = mergeTmdbMovieVideoResults(videosEnUs.results, videosOriginalLang.results)
     const primary = pickPrimaryYoutubeVideo(mergedVideos)
 
-    const backdrops: MovieBackdropStill[] = (imagesPayload?.backdrops ?? [])
-      .sort((a, b) => b.vote_average - a.vote_average)
-      .map((b) => ({
-        filePath: b.file_path,
-        width: typeof b.width === 'number' && b.width > 0 ? b.width : 1280,
-        height: typeof b.height === 'number' && b.height > 0 ? b.height : 720,
-      }))
+    const belongsToCollectionMeta =
+      d.belongs_to_collection?.id != null
+        ? {
+            id: d.belongs_to_collection.id,
+            name: d.belongs_to_collection.name?.trim() || 'Collection',
+          }
+        : null
 
-    let collection: MoviePageDetail['collection'] = null
-    if (collectionPayload?.parts?.length) {
-      const rawParts = collectionPayload.parts.map(mapRawToCardItem)
-      const parts = await enrichMoviePageCardItemsWithDetails(rawParts, TMDB_REVALIDATE_MODERATE)
-      if (parts.length > 1) {
-        collection = {
-          id: collectionPayload.id,
-          name: collectionPayload.name?.trim() || 'Collection',
-          parts,
-        }
-      }
-    }
-
-    const currentGenreIds = new Set(
-      (d.genres ?? [])
-        .map((g) => g.id)
-        .filter((id): id is number => typeof id === 'number' && Number.isFinite(id))
+    const heroBackdropStills = pickHeroBackdropStillsForShell(
+      imagesPayload?.backdrops,
+      d.backdrop_path,
     )
-    const currentYear =
-      d.release_date && d.release_date.length >= 4 ? Number(d.release_date.slice(0, 4)) : null
-
-    const discoverSimilarRaw =
-      Number.isFinite(currentYear) && currentGenreIds.size > 0
-        ? await fetchDiscoverMoviesByGenresAndYears(
-            [...currentGenreIds],
-            [currentYear as number, (currentYear as number) - 1],
-            id,
-            TMDB_REVALIDATE_MODERATE
-          )
-        : []
-
-    const combinedSimilarRaw: TmdbRawMedia[] = (() => {
-      const out: TmdbRawMedia[] = []
-      const seen = new Set<number>()
-      for (const m of [...(similarPage?.results ?? []), ...discoverSimilarRaw]) {
-        if (!m?.id || m.id === id || seen.has(m.id)) continue
-        seen.add(m.id)
-        out.push(m)
-      }
-      return out
-    })()
-
-    const relevantSimilarRaw = pickRelevantSimilarItems(
-      combinedSimilarRaw,
-      currentGenreIds,
-      Number.isFinite(currentYear) ? currentYear : null,
-      16
-    )
-    const similarBase = relevantSimilarRaw.map(mapRawToCardItem)
-    const similar = await enrichMoviePageCardItemsWithDetails(similarBase, TMDB_REVALIDATE_MODERATE)
 
     const originalForAlt = d.original_title?.trim() || titleForWatch
     const alternateDisplayTitle = pickAlternateDisplayTitle(
@@ -1900,7 +2100,6 @@ export async function getMoviePageData(id: number): Promise<MoviePageDetail | nu
         .map((g) => ({ id: g.id, name: g.name.trim() })),
       homepage: d.homepage?.trim() ? d.homepage.trim() : null,
       imdbId: rawImdbId,
-      imdbRating,
       budget: typeof d.budget === 'number' && d.budget > 0 ? d.budget : 0,
       revenue: typeof d.revenue === 'number' && d.revenue > 0 ? d.revenue : 0,
       status: d.status?.trim() ? d.status.trim() : null,
@@ -1927,19 +2126,21 @@ export async function getMoviePageData(id: number): Promise<MoviePageDetail | nu
       watchNowUrl,
       watchNowLogoUrl,
       watchNowProviderName: watchNowProvider?.provider_name ?? null,
-      similar,
-      collection,
-      backdropGallery: backdrops,
+      similar: [],
+      collection: null,
+      backdropGallery: [],
+      heroBackdropStills,
       watchProvidersUs,
       alternateDisplayTitle,
+      belongsToCollectionMeta,
     }
   } catch {
     return null
   }
 }
 
-/** TV detail mapped into `MoviePageDetail` so the movie detail UI can be reused. */
-export async function getTvPageData(id: number): Promise<MoviePageDetail | null> {
+/** TV detail shell — no similar/images tail (streams in `MovieDetailStreamedBelowFold`). */
+export async function getTvPageDataShell(id: number): Promise<MoviePageDetail | null> {
   if (!Number.isFinite(id) || id <= 0) return null
   try {
     const d = await tmdbFetch<{
@@ -1977,6 +2178,12 @@ export async function getTvPageData(id: number): Promise<MoviePageDetail | null>
         crew: Array<{ id: number; name: string; job: string }>
       }
       external_ids?: { imdb_id?: string | null }
+      seasons?: Array<{
+        season_number?: number
+        name?: string
+        episode_count?: number
+        air_date?: string | null
+      }>
     }>(
       `/tv/${id}`,
       { append_to_response: 'credits,external_ids', language: 'en-US' },
@@ -1995,32 +2202,13 @@ export async function getTvPageData(id: number): Promise<MoviePageDetail | null>
 
     const [
       providersPayload,
-      similarPage,
-      imagesPayload,
       contentRatingsPayload,
       altTitlesPayload,
       videosEnUs,
       videosOriginalLang,
-      imdbRating,
+      tvImagesPayload,
     ] = await Promise.all([
       tmdbFetch<TmdbWatchProvidersPayload>(`/tv/${id}/watch/providers`, undefined, {
-        revalidate: TMDB_REVALIDATE_MODERATE,
-      }).catch(() => null),
-      tmdbFetch<TmdbPaginated<TmdbRawMedia>>(
-        `/tv/${id}/similar`,
-        { page: '1' },
-        {
-          revalidate: TMDB_REVALIDATE_MODERATE,
-        }
-      ).catch(() => null),
-      tmdbFetch<{
-        backdrops?: Array<{
-          file_path: string
-          vote_average: number
-          width?: number
-          height?: number
-        }>
-      }>(`/tv/${id}/images`, undefined, {
         revalidate: TMDB_REVALIDATE_MODERATE,
       }).catch(() => null),
       tmdbFetch<TmdbTvContentRatingsPayload>(`/tv/${id}/content_ratings`, undefined, {
@@ -2029,23 +2217,25 @@ export async function getTvPageData(id: number): Promise<MoviePageDetail | null>
       tmdbFetch<{ titles?: Array<{ iso_3166_1: string; title: string }> }>(
         `/tv/${id}/alternative_titles`,
         undefined,
-        { revalidate: TMDB_REVALIDATE_MODERATE }
+        { revalidate: TMDB_REVALIDATE_MODERATE },
       ).catch(() => null),
       tmdbFetch<TmdbVideosResponse>(
         `/tv/${id}/videos`,
         { language: 'en-US' },
         {
           revalidate: TMDB_REVALIDATE_MODERATE,
-        }
+        },
       ).catch(() => ({ results: [] as TmdbVideosResponse['results'] })),
       fetchOrigVideos
         ? tmdbFetch<TmdbVideosResponse>(
             `/tv/${id}/videos`,
             { language: d.original_language!.trim() },
-            { revalidate: TMDB_REVALIDATE_MODERATE }
+            { revalidate: TMDB_REVALIDATE_MODERATE },
           ).catch(() => ({ results: [] as TmdbVideosResponse['results'] }))
         : Promise.resolve({ results: [] as TmdbVideosResponse['results'] }),
-      rawImdbId ? fetchOmdbImdbRating(rawImdbId).catch(() => null) : Promise.resolve(null),
+      tmdbFetch<{ backdrops?: TmdbBackdropImageRow[] }>(`/tv/${id}/images`, undefined, {
+        revalidate: TMDB_REVALIDATE_MODERATE,
+      }).catch(() => null),
     ])
 
     const crew = d.credits?.crew ?? []
@@ -2115,60 +2305,41 @@ export async function getTvPageData(id: number): Promise<MoviePageDetail | null>
     const mergedVideos = mergeTmdbMovieVideoResults(videosEnUs.results, videosOriginalLang.results)
     const primary = pickPrimaryYoutubeVideo(mergedVideos)
 
-    const backdrops: MovieBackdropStill[] = (imagesPayload?.backdrops ?? [])
-      .sort((a, b) => b.vote_average - a.vote_average)
-      .map((b) => ({
-        filePath: b.file_path,
-        width: typeof b.width === 'number' && b.width > 0 ? b.width : 1280,
-        height: typeof b.height === 'number' && b.height > 0 ? b.height : 720,
-      }))
-
-    const currentGenreIds = new Set(
-      (d.genres ?? [])
-        .map((g) => g.id)
-        .filter((gid): gid is number => typeof gid === 'number' && Number.isFinite(gid))
-    )
-    const currentYear =
-      d.first_air_date && d.first_air_date.length >= 4 ? Number(d.first_air_date.slice(0, 4)) : null
-
-    const discoverSimilarRaw =
-      Number.isFinite(currentYear) && currentGenreIds.size > 0
-        ? await fetchDiscoverTvByGenresAndYears(
-            [...currentGenreIds],
-            [currentYear as number, (currentYear as number) - 1],
-            id,
-            TMDB_REVALIDATE_MODERATE
-          )
-        : []
-
-    const combinedSimilarRaw: TmdbRawMedia[] = (() => {
-      const out: TmdbRawMedia[] = []
-      const seen = new Set<number>()
-      for (const m of [...(similarPage?.results ?? []), ...discoverSimilarRaw]) {
-        if (!m?.id || m.id === id || seen.has(m.id)) continue
-        seen.add(m.id)
-        out.push(m)
-      }
-      return out
-    })()
-
-    const relevantSimilarRaw = pickRelevantSimilarItems(
-      combinedSimilarRaw,
-      currentGenreIds,
-      Number.isFinite(currentYear) ? currentYear : null,
-      16
-    )
-    const similarBase = relevantSimilarRaw.map(mapRawToCardItem)
-    const similar = await enrichTvPageCardItemsWithDetails(similarBase, TMDB_REVALIDATE_MODERATE)
-
     const originalForAlt = d.original_name?.trim() || titleForWatch
     const alternateDisplayTitle = pickAlternateDisplayTitle(
       altTitlesPayload?.titles,
       titleForWatch,
-      originalForAlt
+      originalForAlt,
     )
 
     const runtime = await tvRuntimeWithEpisodeFallback(id, d, TMDB_REVALIDATE_MODERATE)
+
+    const tvSeasonSummaries = (d.seasons ?? [])
+      .filter(
+        (s): s is {
+          season_number: number
+          name?: string
+          episode_count?: number
+          air_date?: string | null
+        } => typeof s?.season_number === 'number' && s.season_number > 0,
+      )
+      .map((s) => ({
+        seasonNumber: s.season_number,
+        name: (() => {
+          const raw = s.name?.trim() ?? ''
+          const fallback = `Season ${s.season_number}`
+          if (!raw || raw.toLowerCase() === fallback.toLowerCase()) return fallback
+          return raw
+        })(),
+        episodeCount: typeof s.episode_count === 'number' ? s.episode_count : 0,
+        airDate: s.air_date?.trim() ? s.air_date.trim() : null,
+      }))
+      .slice(0, 50)
+
+    const heroBackdropStills = pickHeroBackdropStillsForShell(
+      tvImagesPayload?.backdrops,
+      d.backdrop_path,
+    )
 
     return {
       id: d.id,
@@ -2187,7 +2358,6 @@ export async function getTvPageData(id: number): Promise<MoviePageDetail | null>
         .map((g) => ({ id: g.id, name: g.name.trim() })),
       homepage: d.homepage?.trim() ? d.homepage.trim() : null,
       imdbId: rawImdbId,
-      imdbRating,
       budget: 0,
       revenue: 0,
       status: d.status?.trim() ? d.status.trim() : null,
@@ -2214,11 +2384,13 @@ export async function getTvPageData(id: number): Promise<MoviePageDetail | null>
       watchNowUrl,
       watchNowLogoUrl,
       watchNowProviderName: watchNowProvider?.provider_name ?? null,
-      similar,
+      similar: [],
       collection: null,
-      backdropGallery: backdrops,
+      backdropGallery: [],
+      heroBackdropStills,
       watchProvidersUs,
       alternateDisplayTitle,
+      tvSeasonSummaries,
     }
   } catch {
     return null
@@ -2274,33 +2446,64 @@ export async function getHeroItems(): Promise<HeroItem[]> {
   let page = 1
   let totalPages = 1
 
-  while (
-    picked.length < HERO_MOVIE_COUNT &&
-    page <= totalPages &&
-    page <= HERO_DISCOVER_MAX_PAGES
-  ) {
-    const res = await tmdbFetch<TmdbDiscoverPage<TmdbRawMedia>>(
-      '/discover/movie',
-      {
-        primary_release_year: String(year),
-        'primary_release_date.gte': `${year}-01-01`,
-        'primary_release_date.lte': endIso,
-        sort_by: 'primary_release_date.desc',
-        'vote_count.gte': '120',
-        without_genres: SHELF_EXCLUDE,
-        page: String(page),
-      },
-      { revalidate: TMDB_REVALIDATE_FAST }
-    )
-    totalPages = Math.max(1, res.total_pages)
+  try {
+    while (
+      picked.length < HERO_MOVIE_COUNT &&
+      page <= totalPages &&
+      page <= HERO_DISCOVER_MAX_PAGES
+    ) {
+      const res = await tmdbFetch<TmdbDiscoverPage<TmdbRawMedia>>(
+        '/discover/movie',
+        {
+          primary_release_year: String(year),
+          'primary_release_date.gte': `${year}-01-01`,
+          'primary_release_date.lte': endIso,
+          sort_by: 'primary_release_date.desc',
+          'vote_count.gte': '120',
+          without_genres: SHELF_EXCLUDE,
+          page: String(page),
+        },
+        { revalidate: TMDB_REVALIDATE_FAST }
+      )
+      totalPages = Math.max(1, res.total_pages)
 
-    for (const m of filterHero(res.results)) {
-      if (picked.length >= HERO_MOVIE_COUNT) break
-      if (seen.has(m.id)) continue
-      seen.add(m.id)
-      picked.push(m)
+      for (const m of filterHero(res.results)) {
+        if (picked.length >= HERO_MOVIE_COUNT) break
+        if (seen.has(m.id)) continue
+        seen.add(m.id)
+        picked.push(m)
+      }
+      page++
     }
-    page++
+  } catch {
+    /* Auth/network/TMDB errors — leave picked as-is; trending fallback below may recover. */
+  }
+
+  /**
+   * Curated year-window discover can legitimately return zero rows (TMDB catalog gaps,
+   * strict blockbuster gate, transient API errors). Trending week keeps the homepage hero
+   * from disappearing entirely.
+   */
+  if (picked.length === 0) {
+    try {
+      const trending = await tmdbFetch<TmdbPaginated<TmdbRawMedia>>(
+        '/trending/movie/week',
+        {},
+        { revalidate: TMDB_REVALIDATE_FAST, tags: [CACHE_TAG_TRENDING] }
+      )
+      for (const m of trending.results) {
+        if (picked.length >= HERO_MOVIE_COUNT) break
+        if (!m.backdrop_path?.trim() || !m.poster_path) continue
+        if (isCombatSportsOrWrestlingProgram(m)) continue
+        if (!passesShelfGenreFilter(m)) continue
+        if (m.genre_ids?.includes(TV_MOVIE_GENRE_ID)) continue
+        if (seen.has(m.id)) continue
+        seen.add(m.id)
+        picked.push(m)
+      }
+    } catch {
+      /* keep picked empty — caller treats [] as no hero */
+    }
   }
 
   if (picked.length === 0) {
@@ -2369,7 +2572,7 @@ export async function getBestOf2026(): Promise<ShelfItem[]> {
       'vote_count.gte': '120',
       without_genres: SHELF_EXCLUDE,
     },
-    { revalidate: TMDB_REVALIDATE_MODERATE }
+    { revalidate: TMDB_REVALIDATE_MODERATE, tags: [CACHE_TAG_HOME_MODERATE] }
   )
   const items = res.results.slice(0, 20).map((m) => mapToShelfItem(m, 'movie'))
   return enrichShelfItemsWithDetails(items, TMDB_REVALIDATE_MODERATE)
@@ -2384,7 +2587,7 @@ export async function getTrendingNow(): Promise<ShelfItem[]> {
     const res = await tmdbFetch<TmdbPaginated<TmdbRawMedia>>(
       '/trending/movie/day',
       { page: String(page) },
-      { revalidate: TMDB_REVALIDATE_FAST }
+      { revalidate: TMDB_REVALIDATE_FAST, tags: [CACHE_TAG_TRENDING] }
     )
     for (const row of res.results) {
       if (collected.length >= 20) break
@@ -2413,7 +2616,7 @@ export async function getNewReleases(): Promise<ShelfItem[]> {
         'vote_count.gte': '5',
         without_genres: SHELF_EXCLUDE,
       },
-      { revalidate: TMDB_REVALIDATE_FAST }
+      { revalidate: TMDB_REVALIDATE_FAST, tags: [CACHE_TAG_TRENDING] }
     ),
     tmdbFetch<TmdbPaginated<TmdbRawMedia>>(
       '/discover/tv',
@@ -2426,7 +2629,7 @@ export async function getNewReleases(): Promise<ShelfItem[]> {
         with_type: '2|4',
         without_genres: SHELF_EXCLUDE,
       },
-      { revalidate: TMDB_REVALIDATE_FAST }
+      { revalidate: TMDB_REVALIDATE_FAST, tags: [CACHE_TAG_TRENDING] }
     ),
   ])
   const items = [
@@ -2686,103 +2889,12 @@ export async function getAcclaimedRecentMovies(limit = 20): Promise<ShelfItem[]>
   return enrichShelfItemsWithDetails(items, TMDB_REVALIDATE_MODERATE)
 }
 
-export interface ExpectedInNextMonthRail {
-  items: ShelfItem[]
-  /** e.g. "Expected in May" */
-  heading: string
-  viewAllHref: string
-}
 
-/**
- * Homepage fallback when the next-calendar-month rail is empty: theatrical upcoming + discover
- * through **end of the current UTC year** (same family as `/movies?coming={year}`), movies only.
- */
-export async function getComingSoonMoviesHomeRail(limit = 20): Promise<ExpectedInNextMonthRail> {
-  const todayIso = new Date().toISOString().slice(0, 10)
-  const year = new Date().getUTCFullYear()
-  const end = `${year}-12-31`
-  const cap = Math.min(Math.max(1, limit), 20)
-  const [fromUpcoming, fromDiscover] = await Promise.all([
-    fetchTheatricalUpcomingInWindow(todayIso, end, () => true, COMING_UPCOMING_ENDPOINT_MAX_PAGES),
-    collectBlockbusterComingMovies(todayIso, end, cap),
-  ])
-  const items = mergeComingShelfByDate(fromUpcoming, fromDiscover, cap)
-  return {
-    items: await enrichShelfItemsWithDetails(items),
-    heading: 'Coming soon',
-    viewAllHref: `/movies?coming=${year}`,
-  }
-}
-
-/**
- * Homepage rail: **wide-release** movies in the **next** calendar month (UTC).
- * Hype-first discover + strict vote-date tiers + theatrical upcoming (all gated the same way).
- */
-export async function getExpectedInNextMonthRail(
-  limit = EXPECTED_MONTH_HOME_RAIL_CAP
-): Promise<ExpectedInNextMonthRail> {
-  const todayIso = new Date().toISOString().slice(0, 10)
-  const { year: sy, month: sm } = nextUtcCalendarMonth()
-  const heading = `Expected in ${monthNameEn(sm)}`
-  const viewAllHref = `/movies?expected=${sy}-${String(sm).padStart(2, '0')}`
-  const win = expectedMonthReleaseWindow(sy, sm, todayIso)
-  if (win == null) {
-    return { items: [], heading, viewAllHref }
-  }
-  const cap = Math.min(Math.max(1, limit), 20)
-  const poolTarget = Math.max(cap * 3, 24)
-  const [byPopularity, byDateTiers, fromUpcoming] = await Promise.all([
-    discoverExpectedMonthMoviesByPopularity(
-      win.dateGte,
-      win.dateLte,
-      120,
-      EXPECTED_MONTH_POPULARITY_DISCOVER_PAGES,
-      poolTarget
-    ),
-    collectBlockbusterMoviesForExpectedMonthRail(win.dateGte, win.dateLte, cap),
-    fetchTheatricalUpcomingInWindow(win.dateGte, win.dateLte, passesExpectedMonthBlockbusterRaw, 8),
-  ])
-  let items = mergeExpectedMonthShelfPools([byPopularity, byDateTiers, fromUpcoming], cap)
-  if (items.length < cap) {
-    const missing = cap - items.length
-    const relaxedTarget = Math.max(cap * 3, 24, items.length + missing * 2)
-    const [fallbackByPopularity, fallbackByDateTiers, fallbackUpcoming] = await Promise.all([
-      discoverExpectedMonthMoviesByPopularity(
-        win.dateGte,
-        win.dateLte,
-        60,
-        EXPECTED_MONTH_POPULARITY_DISCOVER_PAGES + 6,
-        relaxedTarget,
-        passesExpectedMonthBlockbusterFallbackRaw
-      ),
-      collectBlockbusterMoviesForExpectedMonthRail(
-        win.dateGte,
-        win.dateLte,
-        cap + missing,
-        passesExpectedMonthBlockbusterFallbackRaw
-      ),
-      fetchTheatricalUpcomingInWindow(
-        win.dateGte,
-        win.dateLte,
-        passesExpectedMonthBlockbusterFallbackRaw,
-        10
-      ),
-    ])
-    items = mergeExpectedMonthShelfPools(
-      [items, fallbackByPopularity, fallbackByDateTiers, fallbackUpcoming],
-      cap
-    )
-  }
-  return {
-    items: await enrichShelfItemsWithDetails(items),
-    heading,
-    viewAllHref,
-  }
-}
 
 export async function getBestMoviesAllTime(): Promise<ShelfItem[]> {
   const res = await tmdbFetch<TmdbPaginated<TmdbRawMedia>>('/movie/top_rated', undefined, {
     revalidate: TMDB_REVALIDATE_ALL_TIME,
+    tags: [CACHE_TAG_ALL_TIME],
   })
   const items = res.results.slice(0, 20).map((m) => mapToShelfItem(m, 'movie'))
   return enrichShelfItemsWithDetails(items, TMDB_REVALIDATE_ALL_TIME)
@@ -2797,7 +2909,7 @@ export async function getBestSeriesAllTime(): Promise<ShelfItem[]> {
       with_type: '4',
       without_genres: SHELF_EXCLUDE,
     },
-    { revalidate: TMDB_REVALIDATE_ALL_TIME }
+    { revalidate: TMDB_REVALIDATE_ALL_TIME, tags: [CACHE_TAG_ALL_TIME] }
   )
   const items = res.results
     .filter((m) => m.vote_average >= 8.0)
@@ -2836,7 +2948,7 @@ export async function getPopularActors(limit = 100): Promise<PopularActorItem[]>
           page: String(page),
           language: 'en-US',
         },
-        { revalidate: TMDB_REVALIDATE_PEOPLE }
+        { revalidate: TMDB_REVALIDATE_PEOPLE, tags: [CACHE_TAG_PEOPLE] }
       ).catch(
         (): TmdbDiscoverPage<TmdbRawPerson> => ({
           results: [],
@@ -2869,86 +2981,218 @@ export async function getPopularActors(limit = 100): Promise<PopularActorItem[]>
   }))
 }
 
-// ── Movies browse (`/movies` + query) ─────────────────────
-
-const BROWSE_MOVIES_LIMIT = 28
-
-export type MoviesBrowseVariant =
-  | { kind: 'popular' }
-  | { kind: 'trending' }
-  | { kind: 'top' }
-  | { kind: 'year'; year: number }
-  | { kind: 'coming'; year: number }
-
-function clampBrowseYear(raw: string, fallback: number): number {
-  const y = Number.parseInt(raw, 10)
-  if (!Number.isFinite(y)) return fallback
-  return Math.min(2035, Math.max(1950, y))
+export interface PersonPageDetail {
+  id: number
+  name: string
+  biography: string
+  knownForDepartment: string | null
+  alsoKnownAs: string[]
+  gender: number | null
+  popularity: number | null
+  birthday: string | null
+  deathday: string | null
+  placeOfBirth: string | null
+  profilePath: string | null
+  homepage: string | null
+  imdbId: string | null
+  facebookId: string | null
+  instagramId: string | null
+  xId: string | null
+  tiktokId: string | null
+  youtubeId: string | null
 }
 
-function qp(sp: Record<string, string | string[] | undefined>, key: string): string | undefined {
-  const v = sp[key]
-  if (v == null) return undefined
-  return Array.isArray(v) ? v[0] : v
+export async function getPersonPageData(id: number): Promise<PersonPageDetail | null> {
+  if (!Number.isFinite(id) || id <= 0) return null
+  try {
+    const d = await tmdbFetch<{
+      id: number
+      name?: string
+      biography?: string | null
+      known_for_department?: string | null
+      also_known_as?: string[] | null
+      gender?: number | null
+      popularity?: number | null
+      birthday?: string | null
+      deathday?: string | null
+      place_of_birth?: string | null
+      profile_path?: string | null
+      homepage?: string | null
+      external_ids?: {
+        imdb_id?: string | null
+        facebook_id?: string | null
+        instagram_id?: string | null
+        twitter_id?: string | null
+        tiktok_id?: string | null
+        youtube_id?: string | null
+      }
+    }>(
+      `/person/${id}`,
+      { append_to_response: 'external_ids', language: 'en-US' },
+      { revalidate: TMDB_REVALIDATE_PEOPLE },
+    )
+    const name = d.name?.trim() ? d.name.trim() : `Person ${d.id}`
+    const imdbRaw = d.external_ids?.imdb_id?.trim() ? d.external_ids.imdb_id.trim() : null
+    const facebookRaw = d.external_ids?.facebook_id?.trim() ? d.external_ids.facebook_id.trim() : null
+    const instagramRaw = d.external_ids?.instagram_id?.trim() ? d.external_ids.instagram_id.trim() : null
+    const xRaw = d.external_ids?.twitter_id?.trim() ? d.external_ids.twitter_id.trim() : null
+    const tiktokRaw = d.external_ids?.tiktok_id?.trim() ? d.external_ids.tiktok_id.trim() : null
+    const youtubeRaw = d.external_ids?.youtube_id?.trim() ? d.external_ids.youtube_id.trim() : null
+    return {
+      id: d.id,
+      name,
+      biography: (d.biography ?? '').trim(),
+      knownForDepartment: d.known_for_department?.trim() || null,
+      alsoKnownAs: (d.also_known_as ?? []).map((item) => item.trim()).filter(Boolean),
+      gender: Number.isFinite(d.gender) ? d.gender ?? null : null,
+      popularity: Number.isFinite(d.popularity) ? d.popularity ?? null : null,
+      birthday: d.birthday?.trim() || null,
+      deathday: d.deathday?.trim() || null,
+      placeOfBirth: d.place_of_birth?.trim() || null,
+      profilePath: d.profile_path?.trim() ? d.profile_path : null,
+      homepage: d.homepage?.trim() || null,
+      imdbId: imdbRaw,
+      facebookId: facebookRaw,
+      instagramId: instagramRaw,
+      xId: xRaw,
+      tiktokId: tiktokRaw,
+      youtubeId: youtubeRaw,
+    }
+  } catch {
+    return null
+  }
 }
 
-/** Maps `/movies` search params to a TMDB-backed browse mode (homepage “See all” links). */
-export function parseMoviesBrowseSearchParams(
-  sp: Record<string, string | string[] | undefined>
-): MoviesBrowseVariant {
-  const nowYear = new Date().getFullYear()
-  const sort = (qp(sp, 'sort') ?? '').toLowerCase()
-  if (sort === 'trending') return { kind: 'trending' }
-  if (sort === 'top') return { kind: 'top' }
-  const coming = qp(sp, 'coming')
-  if (coming != null && coming !== '')
-    return { kind: 'coming', year: clampBrowseYear(coming, nowYear) }
-  const year = qp(sp, 'year')
-  if (year != null && year !== '') return { kind: 'year', year: clampBrowseYear(year, nowYear) }
-  return { kind: 'popular' }
+export interface PersonCreditRowRaw {
+  kind: 'movie' | 'tv'
+  workId: number
+  title: string
+  character: string | null
+  releaseDate: string | null
+  popularity: number
+  posterPath: string | null
+  genreIds: number[]
 }
 
-export async function getMoviesBrowseList(v: MoviesBrowseVariant): Promise<ShelfItem[]> {
-  const take = (items: ShelfItem[]) => items.slice(0, BROWSE_MOVIES_LIMIT)
+export interface PersonImageRow {
+  filePath: string
+  width: number
+  height: number
+  voteAverage: number
+  voteCount: number
+}
 
-  switch (v.kind) {
-    case 'popular': {
-      const res = await tmdbFetch<TmdbPaginated<TmdbRawMedia>>('/movie/popular')
-      const items = res.results
-        .filter(passesShelfGenreFilter)
-        .map((m) => mapToShelfItem(m, 'movie'))
-      return enrichShelfItemsWithDetails(take(items))
-    }
-    case 'trending': {
-      const res = await tmdbFetch<TmdbPaginated<TmdbRawMedia>>('/trending/movie/day')
-      const todayIso = new Date().toISOString().slice(0, 10)
-      const items = applyTrendingRecencyBias(
-        res.results.filter((m) => isMainstreamTrendingMovie(m, todayIso)),
-        todayIso
-      ).map((m) => mapToShelfItem(m, 'movie'))
-      return enrichShelfItemsWithDetails(take(items))
-    }
-    case 'top': {
-      const res = await tmdbFetch<TmdbPaginated<TmdbRawMedia>>('/movie/top_rated')
-      const items = res.results.map((m) => mapToShelfItem(m, 'movie'))
-      return enrichShelfItemsWithDetails(take(items))
-    }
-    case 'year': {
-      const res = await tmdbFetch<TmdbPaginated<TmdbRawMedia>>('/discover/movie', {
-        primary_release_year: String(v.year),
-        sort_by: 'popularity.desc',
-        'vote_count.gte': '120',
-        without_genres: SHELF_EXCLUDE,
+/** Profile photos from TMDB person images endpoint. */
+export async function getPersonImages(personId: number): Promise<PersonImageRow[]> {
+  if (!Number.isFinite(personId) || personId <= 0) return []
+  try {
+    const d = await tmdbFetch<{
+      profiles?: Array<{
+        file_path?: string | null
+        width?: number
+        height?: number
+        vote_average?: number
+        vote_count?: number
+      }>
+    }>(`/person/${personId}/images`, undefined, { revalidate: TMDB_REVALIDATE_PEOPLE })
+
+    const rows: PersonImageRow[] = []
+    for (const row of d.profiles ?? []) {
+      const filePath = row.file_path?.trim() ?? ''
+      if (!filePath) continue
+      const width = Number.isFinite(row.width) ? Number(row.width) : 0
+      const height = Number.isFinite(row.height) ? Number(row.height) : 0
+      if (width <= 0 || height <= 0) continue
+      rows.push({
+        filePath,
+        width,
+        height,
+        voteAverage: typeof row.vote_average === 'number' ? row.vote_average : 0,
+        voteCount: typeof row.vote_count === 'number' ? row.vote_count : 0,
       })
-      const items = res.results.map((m) => mapToShelfItem(m, 'movie'))
-      return enrichShelfItemsWithDetails(take(items))
     }
-    case 'coming': {
-      const today = new Date().toISOString().slice(0, 10)
-      const end = `${v.year}-12-31`
-      const picked = await collectBlockbusterComingMovies(today, end, BROWSE_MOVIES_LIMIT)
-      return enrichShelfItemsWithDetails(take(picked))
+
+    const unique = new Map<string, PersonImageRow>()
+    for (const row of rows) {
+      unique.set(row.filePath, row)
     }
+    return [...unique.values()].sort((a, b) => {
+      if (b.voteCount !== a.voteCount) return b.voteCount - a.voteCount
+      if (b.voteAverage !== a.voteAverage) return b.voteAverage - a.voteAverage
+      return (b.width * b.height) - (a.width * a.height)
+    })
+  } catch {
+    return []
+  }
+}
+
+/** Cast credits from TMDB (sorted by popularity, capped). Paths are built in `@/lib/personCredits`. */
+export async function getPersonCombinedCredits(personId: number): Promise<PersonCreditRowRaw[]> {
+  if (!Number.isFinite(personId) || personId <= 0) return []
+  try {
+    const d = await tmdbFetch<{
+      cast?: Array<{
+        id: number
+        title?: string
+        name?: string
+        character?: string
+        release_date?: string | null
+        first_air_date?: string | null
+        media_type?: string
+        popularity?: number
+        poster_path?: string | null
+        genre_ids?: number[]
+      }>
+    }>(`/person/${personId}/combined_credits`, { language: 'en-US' }, { revalidate: TMDB_REVALIDATE_PEOPLE })
+
+    const rows: PersonCreditRowRaw[] = []
+    for (const c of d.cast ?? []) {
+      if (c.media_type !== 'movie' && c.media_type !== 'tv') continue
+      const title = (c.media_type === 'movie' ? c.title : c.name)?.trim() ?? ''
+      if (!title) continue
+      const releaseDate =
+        c.media_type === 'movie'
+          ? (c.release_date?.trim() || null)
+          : (c.first_air_date?.trim() || null)
+      const kind = c.media_type
+      rows.push({
+        kind,
+        workId: c.id,
+        title,
+        character: c.character?.trim() || null,
+        releaseDate,
+        popularity: typeof c.popularity === 'number' ? c.popularity : 0,
+        posterPath: c.poster_path?.trim() || null,
+        genreIds: Array.isArray(c.genre_ids)
+          ? c.genre_ids.filter((item): item is number => Number.isFinite(item))
+          : [],
+      })
+    }
+    rows.sort((a, b) => b.popularity - a.popularity)
+    return rows.slice(0, 72)
+  } catch {
+    return []
+  }
+}
+
+/** Trending people for sitemap union (dedupe with popular pool by id). */
+export async function getTrendingPeopleForSitemap(limit = 48): Promise<PopularActorItem[]> {
+  if (!getTmdbApiKey()) return []
+  try {
+    const res = await tmdbFetch<TmdbDiscoverPage<TmdbRawPerson>>(
+      '/trending/person/week',
+      { language: 'en-US' },
+      { revalidate: TMDB_REVALIDATE_PEOPLE },
+    )
+    return res.results.slice(0, limit).map((p) => ({
+      id: p.id,
+      name: p.name,
+      profilePath: p.profile_path,
+      popularity: p.popularity,
+      department: p.known_for_department ?? null,
+    }))
+  } catch {
+    return []
   }
 }
 
@@ -3197,6 +3441,18 @@ const DISCOVER_SORT_WHITELIST = new Set([
   'revenue.desc',
 ])
 
+function clampBrowseYear(raw: string, fallback: number): number {
+  const y = Number.parseInt(raw, 10)
+  if (!Number.isFinite(y)) return fallback
+  return Math.min(2035, Math.max(1950, y))
+}
+
+function qp(sp: Record<string, string | string[] | undefined>, key: string): string | undefined {
+  const v = sp[key]
+  if (v == null) return undefined
+  return Array.isArray(v) ? v[0] : v
+}
+
 function sanitizeDiscoverSortParam(raw: string | undefined): string {
   if (raw == null || raw === '') return 'popularity.desc'
   const s = raw.trim()
@@ -3380,7 +3636,7 @@ export function seriesDiscoverActiveFilterKeys(state: SeriesDiscoverState): stri
   return keys
 }
 
-export interface DiscoverMoviesBrowseInput {
+interface DiscoverMoviesBrowseInput {
   genre?: string
   year?: string
   primary_release_date_gte?: string
@@ -3441,6 +3697,13 @@ export async function discoverMoviesBrowse(
     results: rankByYearThenHypeDesc(pageData.results),
   })
 
+  const parsedLteYear = Number.parseInt((input.primary_release_date_lte ?? '').slice(0, 4), 10)
+  const parsedGteYear = Number.parseInt((input.primary_release_date_gte ?? '').slice(0, 4), 10)
+  const yearBucketCurrentYear = Number.isFinite(parsedLteYear)
+    ? parsedLteYear
+    : new Date().getFullYear()
+  const yearBucketMinYear = Number.isFinite(parsedGteYear) ? parsedGteYear : 1900
+
   const getYearFeedStats = async (year: number): Promise<YearFeedStats> => {
     const cached = yearFeedStatsCache.get(year)
     if (cached != null && Date.now() - cached.at < YEAR_FEED_STATS_TTL_MS) return cached
@@ -3450,6 +3713,12 @@ export async function discoverMoviesBrowse(
       'vote_count.gte': '0',
       without_genres: input.without_genres,
       ...(input.genre != null ? { with_genres: input.genre } : {}),
+      ...(input.primary_release_date_lte != null && year === yearBucketCurrentYear
+        ? { 'primary_release_date.lte': input.primary_release_date_lte }
+        : {}),
+      ...(input.primary_release_date_gte != null && year === yearBucketMinYear
+        ? { 'primary_release_date.gte': input.primary_release_date_gte }
+        : {}),
       page: '1',
     })
     const stats: YearFeedStats = {
@@ -3465,9 +3734,10 @@ export async function discoverMoviesBrowse(
     globalPage: number
   ): Promise<TmdbDiscoverPage<TmdbRawMedia>> => {
     let remaining = globalPage
-    const parsedLteYear = Number.parseInt((input.primary_release_date_lte ?? '').slice(0, 4), 10)
-    const currentYear = Number.isFinite(parsedLteYear) ? parsedLteYear : new Date().getFullYear()
-    const minYear = 1900
+    const currentYear = yearBucketCurrentYear
+    const minYear = yearBucketMinYear
+    const upperDate = input.primary_release_date_lte
+    const lowerDate = input.primary_release_date_gte
     let knownResults = 0
 
     for (let year = currentYear; year >= minYear; year -= 1) {
@@ -3485,6 +3755,8 @@ export async function discoverMoviesBrowse(
         'vote_count.gte': '0',
         without_genres: input.without_genres,
         ...(input.genre != null ? { with_genres: input.genre } : {}),
+        ...(upperDate != null && year === currentYear ? { 'primary_release_date.lte': upperDate } : {}),
+        ...(lowerDate != null && year === minYear ? { 'primary_release_date.gte': lowerDate } : {}),
         page: String(remaining),
       })
       return {
@@ -3587,6 +3859,19 @@ export function discoverStateToBrowseInput(
   state: MoviesDiscoverState,
   page: number
 ): { input: DiscoverMoviesBrowseInput; mode: 'discover' | 'trending'; comingYear?: number } {
+  const isGenreOnlyFeed =
+    state.sortParam === 'popularity.desc' &&
+    state.genre != null &&
+    state.comingYear == null &&
+    (state.expectedYear == null || state.expectedMonth == null) &&
+    state.year == null &&
+    state.provider == null &&
+    state.studio == null &&
+    state.rating == null &&
+    state.language == null &&
+    state.country == null &&
+    state.runtime == null
+
   const isDefaultMoviesFeed =
     state.sortParam === 'popularity.desc' &&
     state.comingYear == null &&
@@ -3612,6 +3897,12 @@ export function discoverStateToBrowseInput(
     const y = new Date().getFullYear()
     input.sort_by = 'primary_release_date.desc'
     input.primary_release_date_lte = `${y}-12-31`
+    input.vote_count_gte = '0'
+  }
+  if (isGenreOnlyFeed) {
+    // Genre category default: start from 2026 and go down by date (2026 -> older), no unreleased items.
+    input.sort_by = 'primary_release_date.desc'
+    input.primary_release_date_lte = new Date().toISOString().slice(0, 10)
     input.vote_count_gte = '0'
   }
 
@@ -3775,7 +4066,7 @@ export function parseSeriesDiscoverSearchParams(
   return out
 }
 
-export interface DiscoverSeriesBrowseInput {
+interface DiscoverSeriesBrowseInput {
   genre?: string
   year?: string
   first_air_date_lte?: string
@@ -4313,7 +4604,14 @@ export async function discoverTvShowsBrowse(
 }
 
 export function mapTmdbTvShowRowToShelfItem(m: TmdbRawMedia): ShelfItem {
-  return stripShelfGenreIds(mapToShelfItem(m, 'tvshow'))
+  const base = stripShelfGenreIds(mapToShelfItem(m, 'tvshow'))
+  const tvTitle = (m.name ?? m.original_name ?? '').trim()
+  const tvDateRaw = (m.first_air_date ?? '').trim()
+  return {
+    ...base,
+    title: tvTitle.length > 0 ? tvTitle : base.title,
+    releaseDate: tvDateRaw.length > 0 ? new Date(tvDateRaw) : null,
+  }
 }
 
 export async function enrichTvShowsShelfRuntime(items: ShelfItem[]): Promise<ShelfItem[]> {
@@ -4366,12 +4664,39 @@ export async function getTopMovies2026MosaicPosterUrls(maxUrls: number): Promise
   const y = String(MOSAIC_HERO_MOVIE_YEAR)
   const highPages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
   const midPages = [1, 2, 3, 4, 5, 6, 7, 8]
+  const emptyDiscoverPage = (): TmdbDiscoverPage<TmdbRawMedia> => ({
+    page: 1,
+    total_pages: 0,
+    total_results: 0,
+    results: [],
+  })
+  const safeDiscoverMoviesBrowse = async (
+    input: DiscoverMoviesBrowseInput,
+    mode: 'discover' | 'trending',
+    comingYear?: number
+  ): Promise<TmdbDiscoverPage<TmdbRawMedia>> => {
+    try {
+      return await discoverMoviesBrowse(input, mode, comingYear)
+    } catch {
+      return emptyDiscoverPage()
+    }
+  }
+  const safeTmdbPageFetch = async (
+    endpoint: string,
+    params: Record<string, string>
+  ): Promise<TmdbDiscoverPage<TmdbRawMedia>> => {
+    try {
+      return await tmdbFetch<TmdbDiscoverPage<TmdbRawMedia>>(endpoint, params)
+    } catch {
+      return emptyDiscoverPage()
+    }
+  }
 
   const [discoverHigh, discoverMid, trendW1, trendW2, trendW3, nowPlaying, upcoming, upcomingP2] =
     await Promise.all([
       Promise.all(
         highPages.map((page) =>
-          discoverMoviesBrowse(
+          safeDiscoverMoviesBrowse(
             {
               year: y,
               sort_by: 'popularity.desc',
@@ -4386,7 +4711,7 @@ export async function getTopMovies2026MosaicPosterUrls(maxUrls: number): Promise
       ),
       Promise.all(
         midPages.map((page) =>
-          discoverMoviesBrowse(
+          safeDiscoverMoviesBrowse(
             {
               year: y,
               sort_by: 'popularity.desc',
@@ -4399,12 +4724,12 @@ export async function getTopMovies2026MosaicPosterUrls(maxUrls: number): Promise
           )
         )
       ),
-      tmdbFetch<TmdbDiscoverPage<TmdbRawMedia>>('/trending/movie/week', { page: '1' }),
-      tmdbFetch<TmdbDiscoverPage<TmdbRawMedia>>('/trending/movie/week', { page: '2' }),
-      tmdbFetch<TmdbDiscoverPage<TmdbRawMedia>>('/trending/movie/week', { page: '3' }),
-      tmdbFetch<TmdbDiscoverPage<TmdbRawMedia>>('/movie/now_playing', { page: '1' }),
-      tmdbFetch<TmdbDiscoverPage<TmdbRawMedia>>('/movie/upcoming', { page: '1' }),
-      tmdbFetch<TmdbDiscoverPage<TmdbRawMedia>>('/movie/upcoming', { page: '2' }),
+      safeTmdbPageFetch('/trending/movie/week', { page: '1' }),
+      safeTmdbPageFetch('/trending/movie/week', { page: '2' }),
+      safeTmdbPageFetch('/trending/movie/week', { page: '3' }),
+      safeTmdbPageFetch('/movie/now_playing', { page: '1' }),
+      safeTmdbPageFetch('/movie/upcoming', { page: '1' }),
+      safeTmdbPageFetch('/movie/upcoming', { page: '2' }),
     ])
 
   const pool = new Map<number, TmdbRawMedia>()
@@ -4438,7 +4763,7 @@ export async function getTopMovies2026MosaicPosterUrls(maxUrls: number): Promise
     for (const year of backfillYears) {
       const backfill = await Promise.all(
         [1, 2, 3, 4, 5, 6].map((page) =>
-          discoverMoviesBrowse(
+          safeDiscoverMoviesBrowse(
             {
               year,
               sort_by: 'popularity.desc',
@@ -4687,4 +5012,91 @@ export async function enrichMovieShelfRuntime(items: ShelfItem[]): Promise<Shelf
   }
 
   return out
+}
+
+// ── generateStaticParams helpers ─────────────────────────────────────────────
+// Pre-render the most popular movie and series detail pages at build time.
+// This converts them from Dynamic (ƒ) to Static (○/ISR), eliminating cold-start
+// TTFB for the titles users are most likely to visit.
+//
+// Strategy: fetch top_rated + popular pages 1–5 (100 items each), dedupe by id,
+// sort by popularity desc, return top N ids as slug strings.
+// Cached at TMDB_REVALIDATE_ALL_TIME — these lists change slowly.
+
+const STATIC_PARAMS_PAGES = 5 // pages 1–5 = up to 100 items per endpoint
+const STATIC_PARAMS_LIMIT = 200 // final cap after dedup + sort
+
+/**
+ * Returns the top `limit` movie IDs (by popularity) for `generateStaticParams`.
+ * Merges `/movie/top_rated` and `/movie/popular` to cover both critical acclaim
+ * and current traffic — the union gives the best pre-render ROI.
+ */
+export async function getTopMovieIdsForStaticParams(
+  limit = STATIC_PARAMS_LIMIT
+): Promise<number[]> {
+  const seen = new Set<number>()
+  const items: Array<{ id: number; popularity: number }> = []
+
+  const endpoints = ['/movie/top_rated', '/movie/popular'] as const
+  for (const endpoint of endpoints) {
+    for (let page = 1; page <= STATIC_PARAMS_PAGES; page++) {
+      try {
+        const res = await tmdbFetch<TmdbPaginated<TmdbRawMedia>>(
+          endpoint,
+          { page: String(page) },
+          { revalidate: TMDB_REVALIDATE_ALL_TIME }
+        )
+        for (const m of res.results) {
+          if (!seen.has(m.id)) {
+            seen.add(m.id)
+            items.push({ id: m.id, popularity: m.popularity })
+          }
+        }
+      } catch {
+        // partial failure — continue with what we have
+      }
+    }
+  }
+
+  return items
+    .sort((a, b) => b.popularity - a.popularity)
+    .slice(0, limit)
+    .map((m) => m.id)
+}
+
+/**
+ * Returns the top `limit` TV series IDs (by popularity) for `generateStaticParams`.
+ * Merges `/tv/top_rated` and `/tv/popular`.
+ */
+export async function getTopSeriesIdsForStaticParams(
+  limit = STATIC_PARAMS_LIMIT
+): Promise<number[]> {
+  const seen = new Set<number>()
+  const items: Array<{ id: number; popularity: number }> = []
+
+  const endpoints = ['/tv/top_rated', '/tv/popular'] as const
+  for (const endpoint of endpoints) {
+    for (let page = 1; page <= STATIC_PARAMS_PAGES; page++) {
+      try {
+        const res = await tmdbFetch<TmdbPaginated<TmdbRawMedia>>(
+          endpoint,
+          { page: String(page) },
+          { revalidate: TMDB_REVALIDATE_ALL_TIME }
+        )
+        for (const m of res.results) {
+          if (!seen.has(m.id)) {
+            seen.add(m.id)
+            items.push({ id: m.id, popularity: m.popularity })
+          }
+        }
+      } catch {
+        // partial failure — continue with what we have
+      }
+    }
+  }
+
+  return items
+    .sort((a, b) => b.popularity - a.popularity)
+    .slice(0, limit)
+    .map((m) => m.id)
 }

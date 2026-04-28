@@ -62,6 +62,3 @@ export function clearUser() {
   }
 }
 
-function isAuthenticated(): boolean {
-  return getUser() !== null
-}

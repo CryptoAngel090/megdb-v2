@@ -2,14 +2,17 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Stage 1 cleanup batch #2 completed: removed knip-reported unused dependencies/devDependencies across root/apps/packages, refreshed `.reports/knip-baseline.json`, and re-verified `type-check` + `knip`.
+**Last focus:** Ultra stabilization pass: fixed `MovieComments` submit-flow lint blocker, resolved residual web lint errors from export-cleanup fallout, restored green `knip`, and re-verified full root `pnpm run build`.
 
-**Next:** Continue Stage 1 with low-risk cleanup of knip `unused exports/types` in small atomic batches, with verification and commit after each batch.
+**Next:** Continue Stage 2 modernization prep from a green baseline (`web lint` + `knip` + root `build`), then begin toolchain migration slices (Node/TS/Next/Biome CI gates) in atomic batches.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-28 — Ultra stabilization: fixed `MovieComments` submit handler pattern, resolved residual `tmdb` helper lint fallout, recovered green `knip`, and validated full monorepo build after clearing stale `apps/web/.next` artifacts.
+- 2026-04-28 — Movie detail primary summary polish: split dense meta line (box office now secondary), toned down TMDB lockup against MegDB rating focus, softened icon-action contrast, and improved synopsis width/line-height for cleaner readability.
+- 2026-04-28 — Stage 1 cleanup batch #3: removed residual knip unused exports/types in API+web modules (`tmdb`/discover/entity helpers) and reached green `pnpm run knip -- --reporter compact --max-show-issues=200` with `turbo type-check` still passing.
 - 2026-04-28 — Stage 1 cleanup batch #2: removed all knip-reported unused deps/devDeps (`apps/web`, `apps/admin`, `apps/api`, `packages/db`, `packages/ui`, root); refreshed `.reports/knip-baseline.json`; current knip payload is export/type-heavy.
 - 2026-04-28 — Stage 1 baseline report finalized: fixed workflow YAML parse blocker for `knip` and exported `.reports/knip-baseline.json` for cleanup planning.
 - 2026-04-28 — Cleared all active local host servers (`:3000/:3100/:5000`), pruned pnpm cache, and launched a clean new web host on `:3000` for fresh Lighthouse/perf runs.

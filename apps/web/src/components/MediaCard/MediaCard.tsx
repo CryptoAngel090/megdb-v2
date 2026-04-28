@@ -23,12 +23,6 @@ const POSTER_IMAGE_SIZES_SHELF =
 /** Discover grids — TMDB `w500`; column widths from CSS grid `minmax`. */
 const POSTER_IMAGE_SIZES_GRID =
   '(max-width: 639px) min(92vw, 240px), (max-width: 1023px) min(48vw, 240px), min(280px, 24vw)'
-const TYPE_LABELS: Record<MediaType, string> = {
-  movie: 'Movie',
-  series: 'Series',
-  cartoon: 'Cartoon',
-  tvshow: 'TV Show',
-}
 /** Tiny neutral blur for TMDB posters (perceived load, stable layout). */
 const TMDB_POSTER_BLUR_DATA_URL =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
