@@ -2,14 +2,15 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Began Stage 2 TypeScript strict+ESM baseline: updated root `tsconfig.json` to NodeNext strict set, upgraded root TypeScript, and normalized root `tsc --noEmit` reporting flow.
+**Last focus:** Completed Stage 3 platform upgrade: moved `apps/web` + `apps/admin` to Next.js 16.2.4 / React 19.2.5, enabled `reactCompiler` + `viewTransition` + `inlineCss`, migrated Next configs to `.mts`, and fixed Next 16/Turbopack blockers (`twitter-image` runtime export and `revalidateTag` signature).
 
-**Next:** Continue Stage 2 by migrating workspace package tsconfigs/package.json to true ESM+NodeNext compatibility (without placeholder root-only check) and then drive package-level type errors to zero.
+**Next:** Run targeted cleanup for remaining manual `useMemo`/`useCallback` in `apps/web` to align with React Compiler-first style, then profile build/runtime deltas after the Next 16 migration.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-28 — Stage 3 executed end-to-end: upgraded web/admin to Next 16 + React 19.2, added React Compiler plugin, enabled new Next experiments in config, resolved Next 16 type/runtime migration breakages, and verified green root `npm run build` on Turbopack.
 - 2026-04-28 — Stage 2 TS strict kickoff: root `tsconfig` switched to NodeNext strict baseline (`verbatimModuleSyntax`, `noImplicitOverride`), TypeScript upgraded to latest, and `npx tsc --noEmit` now emits clean report at `reports/ts-errors.txt`.
 - 2026-04-28 — Stage 1 foundation executed end-to-end: snapshot tag + dead-code report, `knip --fix` cleanup commit, Biome migration commit, and final knip/build verification green.
 - 2026-04-28 — Fixed "styles collapsed" regression: `apps/web/src/styles/design-tokens.generated.css` was not imported, so `--ds-*` tokens used by `globals.css` were unresolved; restored import in `app/layout.tsx` and confirmed `pnpm --filter @repo/web type-check` passes.

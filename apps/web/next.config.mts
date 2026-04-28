@@ -51,10 +51,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 const config: NextConfig = {
   transpilePackages: ['@repo/ui'],
-  eslint: {
-    /** `pnpm lint` must pass; build-time lint re-enabled after fixing ESLint debt (level-1). */
-    ignoreDuringBuilds: false,
-  },
+  reactCompiler: true,
   headers() {
     const base = [
       { key: 'X-DNS-Prefetch-Control', value: 'on' },
@@ -80,8 +77,11 @@ const config: NextConfig = {
       { protocol: 'https', hostname: 'imagedelivery.net' },
     ],
     formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 31_536_000,
   },
   experimental: {
+    viewTransition: true,
+    inlineCss: true,
     optimizePackageImports: ['framer-motion'],
   },
 }
