@@ -1,18 +1,21 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
-    "target": "ES2022",
-    "lib": ["ES2022"],
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "noImplicitOverride": true,
+    "verbatimModuleSyntax": true,
+    "lib": ["ES2023"],
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true
   },
+  "files": ["tsconfig.root-check.ts"],
   "exclude": ["node_modules", "**/.next/**", "**/dist/**"]
 }

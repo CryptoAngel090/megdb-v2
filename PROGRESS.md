@@ -2,14 +2,16 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Stabilized style regression investigation: restored generated token import and removed root-layout `next/dynamic` bailout path in deferred app chrome to prevent CSR fallback side-effects during startup.
+**Last focus:** Began Stage 2 TypeScript strict+ESM baseline: updated root `tsconfig.json` to NodeNext strict set, upgraded root TypeScript, and normalized root `tsc --noEmit` reporting flow.
 
-**Next:** Reboot dev server/session and re-check static asset delivery in-browser (`/_next/static/*` MIME/404) on the active port before continuing Stage 2 modernization prep.
+**Next:** Continue Stage 2 by migrating workspace package tsconfigs/package.json to true ESM+NodeNext compatibility (without placeholder root-only check) and then drive package-level type errors to zero.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-28 — Stage 2 TS strict kickoff: root `tsconfig` switched to NodeNext strict baseline (`verbatimModuleSyntax`, `noImplicitOverride`), TypeScript upgraded to latest, and `npx tsc --noEmit` now emits clean report at `reports/ts-errors.txt`.
+- 2026-04-28 — Stage 1 foundation executed end-to-end: snapshot tag + dead-code report, `knip --fix` cleanup commit, Biome migration commit, and final knip/build verification green.
 - 2026-04-28 — Fixed "styles collapsed" regression: `apps/web/src/styles/design-tokens.generated.css` was not imported, so `--ds-*` tokens used by `globals.css` were unresolved; restored import in `app/layout.tsx` and confirmed `pnpm --filter @repo/web type-check` passes.
 - 2026-04-28 — Removed `next/dynamic` usage from `DeferredAppChrome` (root layout client chrome) to eliminate server `BAILOUT_TO_CLIENT_SIDE_RENDERING: next/dynamic` path while keeping ripple/progress/back-to-top behavior; web type-check and lints for touched file are green.
 - 2026-04-28 — Ultra stabilization: fixed `MovieComments` submit handler pattern, resolved residual `tmdb` helper lint fallout, recovered green `knip`, and validated full monorepo build after clearing stale `apps/web/.next` artifacts.
