@@ -43,7 +43,7 @@
   }
 
   .btn-primary::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     background: linear-gradient(
@@ -87,7 +87,7 @@
   }
 
   .btn-secondary::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     background: var(--primary-muted);
@@ -150,7 +150,7 @@
   }
 
   .btn-icon::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     border-radius: inherit;
@@ -199,7 +199,7 @@
 
   /* Native buttons / links with button role */
   button:not(.btn-primary):not(.btn-secondary):not(.btn-ghost):not(.btn-icon),
-  a[role='button']:not(.btn-primary):not(.btn-secondary):not(.btn-ghost) {
+  a[role="button"]:not(.btn-primary):not(.btn-secondary):not(.btn-ghost) {
     transition:
       transform 0.3s cubic-bezier(0.25, 0.1, 0, 1),
       box-shadow 0.3s cubic-bezier(0.25, 0.1, 0, 1),
@@ -214,7 +214,7 @@
    0.35–0.45 keeps disabled controls visible but clearly inactive.
    ============================================ */
   [disabled],
-  [aria-disabled='true'],
+  [aria-disabled="true"],
   .disabled {
     opacity: 0.4;
     cursor: not-allowed !important;
@@ -530,9 +530,9 @@
   }
 
   /**
- * Auto-fit cards / tiles — use in page modules for fluid columns without breakpoint math.
- * min(100%, N) lets a single column use full width on narrow containers.
- */
+   * Auto-fit cards / tiles — use in page modules for fluid columns without breakpoint math.
+   * min(100%, N) lets a single column use full width on narrow containers.
+   */
   .grid-auto-fit {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--grid-item-min, 10.5rem)), 1fr));

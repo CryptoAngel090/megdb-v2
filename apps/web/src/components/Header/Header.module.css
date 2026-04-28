@@ -19,8 +19,11 @@
 .breadcrumb {
   position: fixed;
   inset-block-start: calc(
-    env(safe-area-inset-top, 0px) + var(--layout-header-top-gutter) + var(--layout-pill-inner-min) +
-      calc(2 * var(--border-width-ui)) + var(--space-2)
+    env(safe-area-inset-top, 0px) +
+    var(--layout-header-top-gutter) +
+    var(--layout-pill-inner-min) +
+    calc(2 * var(--border-width-ui)) +
+    var(--space-2)
   );
   inset-inline: 0;
   z-index: calc(var(--z-header) - 1);
@@ -252,8 +255,11 @@
 .searchPanel {
   position: fixed;
   top: calc(
-    env(safe-area-inset-top, 0px) + var(--layout-header-top-gutter) + var(--layout-pill-inner-min) +
-      calc(2 * var(--border-width-ui)) + var(--space-2)
+    env(safe-area-inset-top, 0px) +
+    var(--layout-header-top-gutter) +
+    var(--layout-pill-inner-min) +
+    calc(2 * var(--border-width-ui)) +
+    var(--space-2)
   );
   left: 0;
   right: 0;
@@ -266,8 +272,11 @@
 @media (min-width: 768px) {
   .searchPanel {
     top: calc(
-      env(safe-area-inset-top, 0px) + var(--layout-header-top-gutter) +
-        var(--layout-pill-inner-min-lg) + calc(2 * var(--border-width-ui)) + var(--space-2)
+      env(safe-area-inset-top, 0px) +
+      var(--layout-header-top-gutter) +
+      var(--layout-pill-inner-min-lg) +
+      calc(2 * var(--border-width-ui)) +
+      var(--space-2)
     );
   }
 }
@@ -326,7 +335,6 @@
 .watchlistBtn {
   display: none;
 }
-
 
 /* Random — hidden on mobile */
 .randomBtn {
@@ -1234,7 +1242,9 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 16px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
   padding: 20px 20px 16px;
   z-index: var(--z-dropdown);
   pointer-events: auto;
@@ -1288,7 +1298,9 @@
   color: var(--color-text-secondary);
   font-size: 15px;
   font-weight: 500;
-  transition: background 120ms ease, color 120ms ease;
+  transition:
+    background 120ms ease,
+    color 120ms ease;
   white-space: nowrap;
 }
 
@@ -1313,7 +1325,9 @@
   color: var(--color-text-secondary);
   font-size: 15px;
   font-weight: 500;
-  transition: background 120ms ease, color 120ms ease;
+  transition:
+    background 120ms ease,
+    color 120ms ease;
   white-space: nowrap;
 }
 

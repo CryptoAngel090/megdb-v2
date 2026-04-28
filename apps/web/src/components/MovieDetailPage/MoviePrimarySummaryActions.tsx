@@ -50,9 +50,7 @@ export function MoviePrimarySummaryActions({
     el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }, [])
 
-  const watchLabel = watchNowProviderName
-    ? `Watch on ${watchNowProviderName}`
-    : 'Watch now'
+  const watchLabel = watchNowProviderName ? `Watch on ${watchNowProviderName}` : 'Watch now'
 
   return (
     <div className={styles.actionRow}>
@@ -72,7 +70,12 @@ export function MoviePrimarySummaryActions({
               className={styles.watchFreeIcon}
             />
           ) : (
-            <svg className={styles.watchFreeIcon} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+            <svg
+              className={styles.watchFreeIcon}
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden
+            >
               <path d="M8 5v14l11-7z" />
             </svg>
           )}

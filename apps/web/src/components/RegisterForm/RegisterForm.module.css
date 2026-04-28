@@ -13,35 +13,61 @@
 
 /* Animated gradient background */
 .root::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: -50%;
   background:
-    radial-gradient(circle at 20% 50%, color-mix(in oklab, var(--color-primary) 15%, transparent) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, color-mix(in oklab, var(--color-primary) 10%, transparent) 0%, transparent 50%),
-    radial-gradient(circle at 40% 20%, color-mix(in oklab, var(--color-blue) 8%, transparent) 0%, transparent 50%);
+    radial-gradient(
+      circle at 20% 50%,
+      color-mix(in oklab, var(--color-primary) 15%, transparent) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      color-mix(in oklab, var(--color-primary) 10%, transparent) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 20%,
+      color-mix(in oklab, var(--color-blue) 8%, transparent) 0%,
+      transparent 50%
+    );
   animation: gradientShift 20s ease infinite;
   pointer-events: none;
 }
 
 @keyframes gradientShift {
   0%,
-  100% { transform: translate(0, 0) rotate(0deg); }
-  33%   { transform: translate(5%, -5%) rotate(120deg); }
-  66%   { transform: translate(-5%, 5%) rotate(240deg); }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(5%, -5%) rotate(120deg);
+  }
+  66% {
+    transform: translate(-5%, 5%) rotate(240deg);
+  }
 }
 
 /* Floating particles */
 .root::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background-image:
     radial-gradient(2px 2px at 20% 30%, var(--border-strong), transparent),
-    radial-gradient(2px 2px at 60% 70%, color-mix(in oklab, var(--color-primary) 20%, transparent), transparent),
+    radial-gradient(
+      2px 2px at 60% 70%,
+      color-mix(in oklab, var(--color-primary) 20%, transparent),
+      transparent
+    ),
     radial-gradient(1px 1px at 50% 50%, var(--border), transparent),
     radial-gradient(1px 1px at 80% 10%, var(--border-strong), transparent),
-    radial-gradient(2px 2px at 90% 60%, color-mix(in oklab, var(--color-primary) 15%, transparent), transparent),
+    radial-gradient(
+      2px 2px at 90% 60%,
+      color-mix(in oklab, var(--color-primary) 15%, transparent),
+      transparent
+    ),
     radial-gradient(1px 1px at 33% 80%, var(--border), transparent);
   background-size: 200% 200%;
   background-position: 0% 0%;
@@ -52,8 +78,12 @@
 
 @keyframes particleFloat {
   0%,
-  100% { background-position: 0% 0%; }
-  50%   { background-position: 100% 100%; }
+  100% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
 }
 
 .container {
@@ -65,8 +95,14 @@
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(40px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .card {
@@ -87,21 +123,31 @@
 
 /* Glow effect on card */
 .card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -50%;
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, color-mix(in oklab, var(--color-primary) 8%, transparent) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--color-primary) 8%, transparent) 0%,
+    transparent 70%
+  );
   animation: cardGlow 8s ease-in-out infinite;
   pointer-events: none;
 }
 
 @keyframes cardGlow {
   0%,
-  100% { transform: translate(0, 0); opacity: 0.5; }
-  50%   { transform: translate(10%, 10%); opacity: 0.8; }
+  100% {
+    transform: translate(0, 0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(10%, 10%);
+    opacity: 0.8;
+  }
 }
 
 .header {
@@ -128,14 +174,20 @@
 .logoIcon {
   font-size: var(--text-h3);
   color: var(--primary);
-  text-shadow: 0 0 30px var(--color-primary-glow), 0 0 60px color-mix(in oklab, var(--color-primary) 40%, transparent);
+  text-shadow:
+    0 0 30px var(--color-primary-glow),
+    0 0 60px color-mix(in oklab, var(--color-primary) 40%, transparent);
   animation: pulse 2s ease-in-out infinite;
 }
 
 @keyframes pulse {
   0%,
-  100% { transform: scale(1); }
-  50%   { transform: scale(1.1); }
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 .logoText {
@@ -194,7 +246,7 @@
 }
 
 .progressFill::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -210,8 +262,12 @@
 }
 
 @keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 .progressText {
@@ -244,13 +300,21 @@
   gap: var(--space-2);
 }
 
-.error svg { flex-shrink: 0; }
+.error svg {
+  flex-shrink: 0;
+}
 
 @keyframes shake {
   0%,
-  100% { transform: translateX(0); }
-  25%   { transform: translateX(-10px); }
-  75%   { transform: translateX(10px); }
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
 }
 
 .field {
@@ -445,7 +509,7 @@
 
 .divider::before,
 .divider::after {
-  content: '';
+  content: "";
   flex: 1;
   height: 1px;
   background: linear-gradient(90deg, transparent 0%, var(--border-strong) 50%, transparent 100%);
@@ -521,7 +585,7 @@
 }
 
 .link::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -2px;
   left: 0;
@@ -610,8 +674,12 @@
 
 @keyframes strengthPulse {
   0%,
-  100% { transform: scaleY(1); }
-  50%   { transform: scaleY(1.5); }
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1.5);
+  }
 }
 
 .strengthLabel {
@@ -649,7 +717,7 @@
   margin: var(--space-2) 0;
 }
 
-.checkbox input[type='checkbox'] {
+.checkbox input[type="checkbox"] {
   position: absolute;
   opacity: 0;
   pointer-events: none;
@@ -684,17 +752,17 @@
   transform: scale(1.1);
 }
 
-.checkbox input[type='checkbox']:checked + .checkboxCustom {
+.checkbox input[type="checkbox"]:checked + .checkboxCustom {
   border-color: var(--primary);
   background: var(--primary);
 }
 
-.checkbox input[type='checkbox']:checked + .checkboxCustom svg {
+.checkbox input[type="checkbox"]:checked + .checkboxCustom svg {
   opacity: 1;
   transform: scale(1);
 }
 
-.checkbox input[type='checkbox']:focus-visible + .checkboxCustom {
+.checkbox input[type="checkbox"]:focus-visible + .checkboxCustom {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
@@ -725,12 +793,22 @@
   animation: iconPop var(--duration-slow) var(--ease-out);
 }
 
-.validIcon  { color: var(--color-primary); }
-.invalidIcon { color: var(--color-error); }
+.validIcon {
+  color: var(--color-primary);
+}
+.invalidIcon {
+  color: var(--color-error);
+}
 
 @keyframes iconPop {
-  0%   { opacity: 0; transform: translateY(-50%) scale(0); }
-  100% { opacity: 1; transform: translateY(-50%) scale(1); }
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scale(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
 }
 
 .passwordWrapper .validIcon,
@@ -750,8 +828,14 @@
 }
 
 @keyframes slideDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .fieldHelp {
@@ -775,8 +859,12 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .successCard {
@@ -794,8 +882,14 @@
 }
 
 @keyframes successPop {
-  0%   { opacity: 0; transform: scale(0.8) translateY(40px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .successIcon {
@@ -828,8 +922,14 @@
 }
 
 @keyframes checkDraw {
-  0%   { stroke-dasharray: 100; stroke-dashoffset: 100; }
-  100% { stroke-dasharray: 100; stroke-dashoffset: 0; }
+  0% {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+  }
+  100% {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 0;
+  }
 }
 
 .successTitle {

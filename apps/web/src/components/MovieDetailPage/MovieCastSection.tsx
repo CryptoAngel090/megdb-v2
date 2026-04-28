@@ -54,7 +54,10 @@ export function MovieCastSection({ cast, title = 'Cast' }: Props) {
         <div className={styles.head}>
           <h2 className={styles.title}>
             <span className={styles.bar} aria-hidden />
-            <Users className={[iconSlot.block, iconSlot.sm, styles.castIcon].filter(Boolean).join(' ')} aria-hidden />
+            <Users
+              className={[iconSlot.block, iconSlot.sm, styles.castIcon].filter(Boolean).join(' ')}
+              aria-hidden
+            />
             {title}
             <span className={styles.count}>{castWithPhoto.length}</span>
           </h2>

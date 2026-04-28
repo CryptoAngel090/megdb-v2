@@ -18,12 +18,18 @@ type TvShowsDiscoverCopyContext = {
   studios?: TmdbStudioListItem[]
 }
 
-function providerName(state: TvShowsDiscoverState, ctx?: TvShowsDiscoverCopyContext): string | undefined {
+function providerName(
+  state: TvShowsDiscoverState,
+  ctx?: TvShowsDiscoverCopyContext
+): string | undefined {
   if (!state.provider || !ctx?.providers?.length) return undefined
   return ctx.providers.find((p) => String(p.provider_id) === state.provider)?.provider_name
 }
 
-function studioName(state: TvShowsDiscoverState, ctx?: TvShowsDiscoverCopyContext): string | undefined {
+function studioName(
+  state: TvShowsDiscoverState,
+  ctx?: TvShowsDiscoverCopyContext
+): string | undefined {
   if (!state.studio || !ctx?.studios?.length) return undefined
   return ctx.studios.find((s) => String(s.id) === state.studio)?.name
 }
@@ -37,7 +43,7 @@ export function getTvShowsDiscoverHeroLead(
   state: TvShowsDiscoverState,
   genres: TmdbGenreListItem[],
   ctx?: TvShowsDiscoverCopyContext
- ): string {
+): string {
   const keys = moviesDiscoverActiveFilterKeys(state)
   const y = new Date().getFullYear()
 
@@ -118,7 +124,7 @@ export function getTvShowsDiscoverDescription(
   state: TvShowsDiscoverState,
   genres: TmdbGenreListItem[],
   ctx?: TvShowsDiscoverCopyContext
- ): string {
+): string {
   const keys = moviesDiscoverActiveFilterKeys(state)
   const y = new Date().getFullYear()
 
@@ -199,7 +205,7 @@ export function getTvShowsDiscoverTitle(
   state: TvShowsDiscoverState,
   genres: TmdbGenreListItem[],
   ctx?: TvShowsDiscoverCopyContext
- ): string {
+): string {
   const keys = moviesDiscoverActiveFilterKeys(state)
   const y = new Date().getFullYear()
   const genreOnly = state.genre && keys.length === 1 && keys[0] === 'genre'
@@ -265,7 +271,7 @@ export function getTvShowsDiscoverCanonicalPath(
   state: TvShowsDiscoverState,
   _genres: TmdbGenreListItem[],
   _ctx?: TvShowsDiscoverCopyContext
- ): string {
+): string {
   void _genres
   void _ctx
   const keys = moviesDiscoverActiveFilterKeys(state)

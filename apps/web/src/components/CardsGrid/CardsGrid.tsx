@@ -13,12 +13,7 @@ interface CardsGridProps {
  * Semantic grid wrapper for card layouts.
  * Example defaults: `gap-md` + `grid-cols-layout-md`.
  */
-export function CardsGrid({
-  children,
-  columns = 'md',
-  gap = 'md',
-  className,
-}: CardsGridProps) {
+export function CardsGrid({ children, columns = 'md', gap = 'md', className }: CardsGridProps) {
   const classes = ['grid', gridGapClasses[gap], gridColumnClasses[columns], className]
     .filter(Boolean)
     .join(' ')

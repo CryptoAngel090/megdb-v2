@@ -64,7 +64,7 @@
 }
 
 .page::after {
-  content: '';
+  content: "";
   position: fixed;
   inset: 0;
   background: linear-gradient(
@@ -204,7 +204,7 @@
 }
 
 .heroVignette::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   right: 0;
@@ -825,14 +825,13 @@
   display: block;
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(
-      to bottom,
-      color-mix(in oklab, #080a0b 62%, var(--poster-solid-tone, #101820) 38%) 0%,
-      color-mix(in oklab, #080a0b 40%, var(--poster-solid-tone, #101820) 60%) 30%,
-      color-mix(in oklab, #080a0b 24%, var(--poster-solid-tone, #101820) 76%) 56%,
-      var(--poster-solid-tone, #101820) 100%
-    );
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklab, #080a0b 62%, var(--poster-solid-tone, #101820) 38%) 0%,
+    color-mix(in oklab, #080a0b 40%, var(--poster-solid-tone, #101820) 60%) 30%,
+    color-mix(in oklab, #080a0b 24%, var(--poster-solid-tone, #101820) 76%) 56%,
+    var(--poster-solid-tone, #101820) 100%
+  );
   filter: none;
   opacity: 1;
 }
@@ -1210,7 +1209,7 @@
 }
 
 .inlineBreadcrumbItem:not(:last-child)::after {
-  content: '›';
+  content: "›";
   margin-inline: 0.45em;
   color: var(--text-muted);
   flex-shrink: 0;
@@ -1615,7 +1614,7 @@
   scroll-snap-align: start;
   width: calc(
     (100cqi - (var(--rail-tile-columns) - 1) * var(--rail-tile-gap)) /
-      var(--rail-tile-columns)
+    var(--rail-tile-columns)
   );
 }
 
@@ -1643,7 +1642,7 @@
   flex: 0 0 auto;
   width: calc(
     (100cqi - (var(--rail-tile-columns) - 1) * var(--rail-tile-gap)) /
-      var(--rail-tile-columns)
+    var(--rail-tile-columns)
   );
   scroll-snap-align: start;
 }
@@ -2036,7 +2035,7 @@
 
   /* ── Hero desktop: left scrim only (metadata column) — poster stays clear on the right ── */
   .heroBackdropReveal::after {
-    content: '';
+    content: "";
     background:
       linear-gradient(
         to right,

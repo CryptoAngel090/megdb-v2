@@ -67,9 +67,7 @@
         "categories_slug_unique": {
           "name": "categories_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -169,12 +167,8 @@
           "name": "comments_media_id_media_id_fk",
           "tableFrom": "comments",
           "tableTo": "media",
-          "columnsFrom": [
-            "media_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["media_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -182,12 +176,8 @@
           "name": "comments_user_id_users_id_fk",
           "tableFrom": "comments",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -234,16 +224,12 @@
         "genres_tmdb_id_unique": {
           "name": "genres_tmdb_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "tmdb_id"
-          ]
+          "columns": ["tmdb_id"]
         },
         "genres_slug_unique": {
           "name": "genres_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -446,9 +432,7 @@
         "media_tmdb_id_unique": {
           "name": "media_tmdb_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "tmdb_id"
-          ]
+          "columns": ["tmdb_id"]
         }
       },
       "policies": {},
@@ -500,12 +484,8 @@
           "name": "media_genres_media_id_media_id_fk",
           "tableFrom": "media_genres",
           "tableTo": "media",
-          "columnsFrom": [
-            "media_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["media_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -513,12 +493,8 @@
           "name": "media_genres_genre_id_genres_id_fk",
           "tableFrom": "media_genres",
           "tableTo": "genres",
-          "columnsFrom": [
-            "genre_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["genre_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -599,12 +575,8 @@
           "name": "media_persons_media_id_media_id_fk",
           "tableFrom": "media_persons",
           "tableTo": "media",
-          "columnsFrom": [
-            "media_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["media_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -612,12 +584,8 @@
           "name": "media_persons_person_id_persons_id_fk",
           "tableFrom": "media_persons",
           "tableTo": "persons",
-          "columnsFrom": [
-            "person_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["person_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -684,12 +652,8 @@
           "name": "media_videos_media_id_media_id_fk",
           "tableFrom": "media_videos",
           "tableTo": "media",
-          "columnsFrom": [
-            "media_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["media_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -850,9 +814,7 @@
         "persons_tmdb_id_unique": {
           "name": "persons_tmdb_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "tmdb_id"
-          ]
+          "columns": ["tmdb_id"]
         }
       },
       "policies": {},
@@ -924,12 +886,8 @@
           "name": "reactions_media_id_media_id_fk",
           "tableFrom": "reactions",
           "tableTo": "media",
-          "columnsFrom": [
-            "media_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["media_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -937,12 +895,8 @@
           "name": "reactions_user_id_users_id_fk",
           "tableFrom": "reactions",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1023,16 +977,12 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         },
         "users_username_unique": {
           "name": "users_username_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "username"
-          ]
+          "columns": ["username"]
         }
       },
       "policies": {},
@@ -1127,12 +1077,8 @@
           "name": "watchlist_user_id_users_id_fk",
           "tableFrom": "watchlist",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1140,12 +1086,8 @@
           "name": "watchlist_media_id_media_id_fk",
           "tableFrom": "watchlist",
           "tableTo": "media",
-          "columnsFrom": [
-            "media_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["media_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1161,37 +1103,22 @@
     "public.media_type": {
       "name": "media_type",
       "schema": "public",
-      "values": [
-        "movie",
-        "series",
-        "cartoon",
-        "tvshow"
-      ]
+      "values": ["movie", "series", "cartoon", "tvshow"]
     },
     "public.reaction_type": {
       "name": "reaction_type",
       "schema": "public",
-      "values": [
-        "like",
-        "dislike"
-      ]
+      "values": ["like", "dislike"]
     },
     "public.user_role": {
       "name": "user_role",
       "schema": "public",
-      "values": [
-        "user",
-        "admin"
-      ]
+      "values": ["user", "admin"]
     },
     "public.watch_status": {
       "name": "watch_status",
       "schema": "public",
-      "values": [
-        "watching",
-        "completed",
-        "planned"
-      ]
+      "values": ["watching", "completed", "planned"]
     }
   },
   "schemas": {},

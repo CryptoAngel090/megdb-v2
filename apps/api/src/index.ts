@@ -59,7 +59,11 @@ app.all('/trpc/*', (c) => {
 
 const registerSchema = z.object({
   email: z.string().email(),
-  username: z.string().min(3).max(50).regex(/^[a-zA-Z0-9_]+$/),
+  username: z
+    .string()
+    .min(3)
+    .max(50)
+    .regex(/^[a-zA-Z0-9_]+$/),
   password: z.string().min(8),
 })
 
@@ -320,10 +324,9 @@ app.post('/api/movie-comments/:tmdbMovieId', async (c) => {
 
   const created = createdRows[0]
   const adminEmail = process.env.COMMENT_MODERATION_EMAIL ?? 'vkkoder@gmail.com'
-  const publicApiUrl = (process.env.API_URL ?? `http://localhost:${process.env.PORT ?? 5000}`).replace(
-    /\/+$/,
-    ''
-  )
+  const publicApiUrl = (
+    process.env.API_URL ?? `http://localhost:${process.env.PORT ?? 5000}`
+  ).replace(/\/+$/, '')
 
   if (resend) {
     try {

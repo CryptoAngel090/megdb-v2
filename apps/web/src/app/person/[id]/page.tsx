@@ -71,7 +71,10 @@ function extractYear(input: string | null): number | null {
   return Number.isFinite(y) ? y : null
 }
 
-function getReasonableCareerRange(years: number[], birthYear: number | null): { start: number | null; end: number | null } {
+function getReasonableCareerRange(
+  years: number[],
+  birthYear: number | null
+): { start: number | null; end: number | null } {
   if (years.length === 0) return { start: null, end: null }
   const currentYear = new Date().getFullYear()
   const maxYear = currentYear + 2
@@ -150,7 +153,14 @@ function socialIcon(kind: 'facebook' | 'instagram' | 'youtube' | 'website'): Rea
     )
   }
   return (
-    <svg viewBox="0 0 24 24" aria-hidden fill="none" stroke="currentColor" strokeWidth="2" className={styles.socialSvg}>
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      className={styles.socialSvg}
+    >
       <circle cx="12" cy="12" r="9" />
       <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
     </svg>
@@ -160,10 +170,7 @@ function socialIcon(kind: 'facebook' | 'instagram' | 'youtube' | 'website'): Rea
 function leadDescription(person: PersonPageDetail, creditCount: number): string {
   const dept = person.knownForDepartment ? `${person.knownForDepartment}. ` : ''
   const bio = person.biography.trim()
-  const creditLine =
-    creditCount > 0
-      ? `Film and TV credits: ${creditCount}+ roles (TMDB). `
-      : ''
+  const creditLine = creditCount > 0 ? `Film and TV credits: ${creditCount}+ roles (TMDB). ` : ''
   if (bio && !containsCyrillic(bio)) {
     const short = bio.length > 320 ? `${bio.slice(0, 317)}…` : bio
     return `${creditLine}${dept}${short}`
@@ -237,9 +244,15 @@ export default async function PersonPage({ params }: Props) {
   const ageLabel = getAgeLabel(data.birthday, data.deathday)
   const zodiacLabel = getZodiacSignLabel(data.birthday)
   const genderLabel = getGenderLabel(data.gender)
-  const movieWorksCount = new Set(credits.filter((item) => item.kind === 'movie').map((item) => item.workId)).size
-  const tvWorksCount = new Set(credits.filter((item) => item.kind === 'tv').map((item) => item.workId)).size
-  const years = credits.map((item) => extractYear(item.releaseDate)).filter((item): item is number => item != null)
+  const movieWorksCount = new Set(
+    credits.filter((item) => item.kind === 'movie').map((item) => item.workId)
+  ).size
+  const tvWorksCount = new Set(
+    credits.filter((item) => item.kind === 'tv').map((item) => item.workId)
+  ).size
+  const years = credits
+    .map((item) => extractYear(item.releaseDate))
+    .filter((item): item is number => item != null)
   const birthYear = extractYear(data.birthday)
   const careerRange = getReasonableCareerRange(years, birthYear)
   const firstKnownYear = careerRange.start
@@ -272,7 +285,7 @@ export default async function PersonPage({ params }: Props) {
         .filter((item) => item.posterPath)
         .slice()
         .sort((a, b) => b.popularity - a.popularity)
-        .map((item) => [`${item.kind}-${item.workId}`, item]),
+        .map((item) => [`${item.kind}-${item.workId}`, item])
     ).values(),
   ].slice(0, 6)
   const faqLd = {
@@ -320,7 +333,7 @@ export default async function PersonPage({ params }: Props) {
       data.popularity != null ||
       knownAsList.length > 0 ||
       movieWorksCount > 0 ||
-      tvWorksCount > 0,
+      tvWorksCount > 0
   )
   const hasExternalLinks = Boolean(data.imdbId || data.homepage)
   const hasLongBiography = biographyText.length > 520
@@ -334,37 +347,88 @@ export default async function PersonPage({ params }: Props) {
   if (zodiacLabel) personalFacts.push({ label: 'Zodiac', value: zodiacLabel })
   if (genderLabel) personalFacts.push({ label: 'Gender', value: genderLabel })
 
-  if (movieWorksCount > 0) careerFacts.push({ label: 'Movies', value: formatInteger(movieWorksCount) })
+  if (movieWorksCount > 0)
+    careerFacts.push({ label: 'Movies', value: formatInteger(movieWorksCount) })
   if (tvWorksCount > 0) careerFacts.push({ label: 'TV shows', value: formatInteger(tvWorksCount) })
-  if (firstKnownYear != null) careerFacts.push({ label: 'Career start', value: String(firstKnownYear) })
-  if (latestKnownYear != null) careerFacts.push({ label: 'Latest known work', value: String(latestKnownYear) })
+  if (firstKnownYear != null)
+    careerFacts.push({ label: 'Career start', value: String(firstKnownYear) })
+  if (latestKnownYear != null)
+    careerFacts.push({ label: 'Latest known work', value: String(latestKnownYear) })
   if (yearsActive) careerFacts.push({ label: 'Years active', value: yearsActive })
   careerFacts.push({ label: 'Total works', value: formatInteger(credits.length) })
-  if (data.popularity != null) careerFacts.push({ label: 'TMDB popularity', value: data.popularity.toFixed(1) })
+  if (data.popularity != null)
+    careerFacts.push({ label: 'TMDB popularity', value: data.popularity.toFixed(1) })
   const balancedFactsCount = Math.min(personalFacts.length, careerFacts.length)
   const personalFactsVisible = personalFacts.slice(0, balancedFactsCount)
   const careerFactsVisible = careerFacts.slice(0, balancedFactsCount)
   const socialLinks: Array<{ id: string; label: string; href: string; icon: ReactNode }> = []
   if (data.facebookId) {
-    socialLinks.push({ id: 'facebook', label: 'Facebook', href: `https://www.facebook.com/${data.facebookId}`, icon: socialIcon('facebook') })
+    socialLinks.push({
+      id: 'facebook',
+      label: 'Facebook',
+      href: `https://www.facebook.com/${data.facebookId}`,
+      icon: socialIcon('facebook'),
+    })
   }
   if (data.instagramId) {
-    socialLinks.push({ id: 'instagram', label: 'Instagram', href: `https://www.instagram.com/${data.instagramId}`, icon: socialIcon('instagram') })
+    socialLinks.push({
+      id: 'instagram',
+      label: 'Instagram',
+      href: `https://www.instagram.com/${data.instagramId}`,
+      icon: socialIcon('instagram'),
+    })
   }
   if (data.xId) {
-    socialLinks.push({ id: 'x', label: 'X', href: `https://x.com/${data.xId}`, icon: <span className={styles.xMark} aria-hidden>X</span> })
+    socialLinks.push({
+      id: 'x',
+      label: 'X',
+      href: `https://x.com/${data.xId}`,
+      icon: (
+        <span className={styles.xMark} aria-hidden>
+          X
+        </span>
+      ),
+    })
   }
   if (data.youtubeId) {
-    socialLinks.push({ id: 'youtube', label: 'YouTube', href: `https://www.youtube.com/${data.youtubeId}`, icon: socialIcon('youtube') })
+    socialLinks.push({
+      id: 'youtube',
+      label: 'YouTube',
+      href: `https://www.youtube.com/${data.youtubeId}`,
+      icon: socialIcon('youtube'),
+    })
   }
   if (data.tiktokId) {
-    socialLinks.push({ id: 'tiktok', label: 'TikTok', href: `https://www.tiktok.com/@${data.tiktokId}`, icon: <span className={styles.xMark} aria-hidden>TT</span> })
+    socialLinks.push({
+      id: 'tiktok',
+      label: 'TikTok',
+      href: `https://www.tiktok.com/@${data.tiktokId}`,
+      icon: (
+        <span className={styles.xMark} aria-hidden>
+          TT
+        </span>
+      ),
+    })
   }
   if (data.homepage) {
-    socialLinks.push({ id: 'website', label: 'Website', href: data.homepage, icon: socialIcon('website') })
+    socialLinks.push({
+      id: 'website',
+      label: 'Website',
+      href: data.homepage,
+      icon: socialIcon('website'),
+    })
   }
   if (data.imdbId) {
-    socialLinks.push({ id: 'imdb', label: 'IMDb', href: `https://www.imdb.com/name/${data.imdbId}/`, icon: <span className={styles.imdbMark} aria-hidden>IMDb</span> })
+    socialLinks.push({
+      id: 'imdb',
+      label: 'IMDb',
+      href: `https://www.imdb.com/name/${data.imdbId}/`,
+      icon: (
+        <span className={styles.imdbMark} aria-hidden>
+          IMDb
+        </span>
+      ),
+    })
   }
   const hasSocialLinks = socialLinks.length > 0
   const exploreLinks = [
@@ -406,11 +470,21 @@ export default async function PersonPage({ params }: Props) {
               </div>
             )}
             <nav className={styles.personBreadcrumb} aria-label="Breadcrumb">
-              <Link href="/" className={styles.personBreadcrumbItem}>Home</Link>
-              <span className={styles.personBreadcrumbSep} aria-hidden>›</span>
-              <Link href="/person" className={styles.personBreadcrumbItem}>People</Link>
-              <span className={styles.personBreadcrumbSep} aria-hidden>›</span>
-              <span className={styles.personBreadcrumbCurrent} aria-current="page">{data.name}</span>
+              <Link href="/" className={styles.personBreadcrumbItem}>
+                Home
+              </Link>
+              <span className={styles.personBreadcrumbSep} aria-hidden>
+                ›
+              </span>
+              <Link href="/person" className={styles.personBreadcrumbItem}>
+                People
+              </Link>
+              <span className={styles.personBreadcrumbSep} aria-hidden>
+                ›
+              </span>
+              <span className={styles.personBreadcrumbCurrent} aria-current="page">
+                {data.name}
+              </span>
             </nav>
           </div>
           <div className={styles.contentCol}>
@@ -495,7 +569,9 @@ export default async function PersonPage({ params }: Props) {
                 <span className={styles.shareLabel}>Share profile</span>
               </div>
             ) : null}
-            {!hasSocialLinks ? <p className={styles.sectionHint}>No official social links available.</p> : null}
+            {!hasSocialLinks ? (
+              <p className={styles.sectionHint}>No official social links available.</p>
+            ) : null}
             {knownAsList.length > 0 ? (
               <div className={styles.aliasesBlock}>
                 <p className={styles.aliasesLabel}>Also known as</p>
@@ -507,7 +583,9 @@ export default async function PersonPage({ params }: Props) {
                   ))}
                 </ul>
               </div>
-            ) : <p className={styles.sectionHint}>No alternative names listed.</p>}
+            ) : (
+              <p className={styles.sectionHint}>No alternative names listed.</p>
+            )}
             {topGenres.length > 0 ? (
               <div className={styles.aliasesBlock}>
                 <p className={styles.aliasesLabel}>Top genres</p>
@@ -521,7 +599,9 @@ export default async function PersonPage({ params }: Props) {
                   ))}
                 </ul>
               </div>
-            ) : <p className={styles.sectionHint}>Not enough data to infer top genres.</p>}
+            ) : (
+              <p className={styles.sectionHint}>Not enough data to infer top genres.</p>
+            )}
             {knownForItems.length > 0 ? (
               <div className={styles.knownForBlock}>
                 <p className={styles.aliasesLabel}>Known for</p>
@@ -531,8 +611,19 @@ export default async function PersonPage({ params }: Props) {
                     const poster = getImageUrl(item.posterPath, 'w342')
                     const year = item.releaseDate?.slice(0, 4) ?? null
                     return (
-                      <Link key={`${item.kind}-${item.workId}-${item.title}`} href={href} className={styles.knownForCard}>
-                        <Image src={poster} alt={item.title} width={342} height={513} className={styles.knownForPoster} sizes="(max-width: 767px) 28vw, 120px" />
+                      <Link
+                        key={`${item.kind}-${item.workId}-${item.title}`}
+                        href={href}
+                        className={styles.knownForCard}
+                      >
+                        <Image
+                          src={poster}
+                          alt={item.title}
+                          width={342}
+                          height={513}
+                          className={styles.knownForPoster}
+                          sizes="(max-width: 767px) 28vw, 120px"
+                        />
                         <span className={styles.knownForTitle}>{item.title}</span>
                         <span className={styles.knownForMeta}>
                           {item.kind === 'movie' ? 'Movie' : 'TV'}

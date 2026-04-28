@@ -40,8 +40,7 @@ export function MoviePrimarySummaryPanel({
   genreQueryPrefix = '/movies?genre=',
 }: MoviePrimarySummaryPanelProps) {
   const tmdbReliable = movie.voteCount >= 10
-  const tmdbDisplay =
-    movie.voteAverage > 0 && tmdbReliable ? movie.voteAverage.toFixed(1) : '—'
+  const tmdbDisplay = movie.voteAverage > 0 && tmdbReliable ? movie.voteAverage.toFixed(1) : '—'
 
   const hasTrailer = Boolean(trailerKey)
 
@@ -58,10 +57,7 @@ export function MoviePrimarySummaryPanel({
   const showMetaLine = metaPieces.length > 0 || hasGenreLinks
 
   return (
-    <section
-      className={styles.bleed}
-      aria-labelledby="movie-primary-summary-title"
-    >
+    <section className={styles.bleed} aria-labelledby="movie-primary-summary-title">
       <div className={styles.inner}>
         <h2 id="movie-primary-summary-title" className={styles.title}>
           {movie.title.replace(/["""''«»]/g, '')}
@@ -70,7 +66,10 @@ export function MoviePrimarySummaryPanel({
         {movie.director ? (
           <p className={styles.director}>
             Directed by{' '}
-            <Link href={personPath(movie.director.id, movie.director.name)} className={styles.directorLink}>
+            <Link
+              href={personPath(movie.director.id, movie.director.name)}
+              className={styles.directorLink}
+            >
               {movie.director.name}
             </Link>
           </p>

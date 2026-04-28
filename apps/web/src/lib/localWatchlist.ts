@@ -101,7 +101,9 @@ function setLocalWatchlistItems(items: LocalWatchlistItem[]): void {
 }
 
 export function isInLocalWatchlist(mediaType: MediaType, mediaId: number): boolean {
-  return getLocalWatchlistItems().some((item) => item.mediaType === mediaType && item.mediaId === mediaId)
+  return getLocalWatchlistItems().some(
+    (item) => item.mediaType === mediaType && item.mediaId === mediaId
+  )
 }
 
 export function toggleLocalWatchlistItem(input: {
@@ -111,9 +113,13 @@ export function toggleLocalWatchlistItem(input: {
   releaseDate?: string | null
 }): boolean {
   const current = getLocalWatchlistItems()
-  const has = current.some((item) => item.mediaType === input.mediaType && item.mediaId === input.mediaId)
+  const has = current.some(
+    (item) => item.mediaType === input.mediaType && item.mediaId === input.mediaId
+  )
   const next = has
-    ? current.filter((item) => !(item.mediaType === input.mediaType && item.mediaId === input.mediaId))
+    ? current.filter(
+        (item) => !(item.mediaType === input.mediaType && item.mediaId === input.mediaId)
+      )
     : [
         ...current,
         {
@@ -130,10 +136,14 @@ export function toggleLocalWatchlistItem(input: {
   return !has
 }
 
-export function removeLocalWatchlistItems(keys: Array<{ mediaType: MediaType; mediaId: number }>): void {
+export function removeLocalWatchlistItems(
+  keys: Array<{ mediaType: MediaType; mediaId: number }>
+): void {
   if (keys.length === 0) return
   const removal = new Set(keys.map((k) => `${k.mediaType}:${k.mediaId}`))
-  const next = getLocalWatchlistItems().filter((item) => !removal.has(`${item.mediaType}:${item.mediaId}`))
+  const next = getLocalWatchlistItems().filter(
+    (item) => !removal.has(`${item.mediaType}:${item.mediaId}`)
+  )
   setLocalWatchlistItems(next)
 }
 
@@ -156,7 +166,7 @@ export function toggleLocalWatchlistPinned(mediaType: MediaType, mediaId: number
 export function moveLocalWatchlistItem(
   mediaType: MediaType,
   mediaId: number,
-  direction: 'up' | 'down',
+  direction: 'up' | 'down'
 ): void {
   const current = getLocalWatchlistItems()
   const key = `${mediaType}:${mediaId}`

@@ -19,12 +19,18 @@ type MoviesDiscoverCopyContext = {
   studios?: TmdbStudioListItem[]
 }
 
-function providerName(state: MoviesDiscoverState, ctx?: MoviesDiscoverCopyContext): string | undefined {
+function providerName(
+  state: MoviesDiscoverState,
+  ctx?: MoviesDiscoverCopyContext
+): string | undefined {
   if (!state.provider || !ctx?.providers?.length) return undefined
   return ctx.providers.find((p) => String(p.provider_id) === state.provider)?.provider_name
 }
 
-function studioName(state: MoviesDiscoverState, ctx?: MoviesDiscoverCopyContext): string | undefined {
+function studioName(
+  state: MoviesDiscoverState,
+  ctx?: MoviesDiscoverCopyContext
+): string | undefined {
   if (!state.studio || !ctx?.studios?.length) return undefined
   return ctx.studios.find((s) => String(s.id) === state.studio)?.name
 }

@@ -17,8 +17,10 @@ function isStrictTvShowRow(row: {
   release_date?: string | null
 }): boolean {
   const hasTvSignals =
-    (typeof row.name === 'string' && row.name.trim().length > 0) &&
-    (typeof row.first_air_date === 'string' && row.first_air_date.trim().length > 0)
+    typeof row.name === 'string' &&
+    row.name.trim().length > 0 &&
+    typeof row.first_air_date === 'string' &&
+    row.first_air_date.trim().length > 0
   const hasMovieSignals =
     (typeof row.title === 'string' && row.title.trim().length > 0) ||
     (typeof row.release_date === 'string' && row.release_date.trim().length > 0)
@@ -26,7 +28,10 @@ function isStrictTvShowRow(row: {
 }
 
 function ensureTwoTvShowGenres(genres: string[] | undefined): string[] {
-  const normalized = (genres ?? []).map((g) => String(g).trim()).filter(Boolean).slice(0, 2)
+  const normalized = (genres ?? [])
+    .map((g) => String(g).trim())
+    .filter(Boolean)
+    .slice(0, 2)
   if (normalized.length === 0) return ['TV SHOW', 'TV SHOW']
   if (normalized.length === 1) return [normalized[0]!, 'TV SHOW']
   return normalized
@@ -82,7 +87,9 @@ export async function GET(request: NextRequest) {
   try {
     const data = await discoverTvShowsBrowse(input, mode, comingYear)
     const strictTvRows = data.results.filter(isStrictTvShowRow)
-    const withRuntime = await enrichTvShowsShelfRuntime(strictTvRows.map(mapTmdbTvShowRowToShelfItem))
+    const withRuntime = await enrichTvShowsShelfRuntime(
+      strictTvRows.map(mapTmdbTvShowRowToShelfItem)
+    )
     const results = withRuntime.map((item) => ({
       ...item,
       genres: ensureTwoTvShowGenres(item.genres),

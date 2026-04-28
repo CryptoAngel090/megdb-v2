@@ -1,9 +1,7 @@
 const BASE83_CHARS =
   '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz#$%*+,-.:;=?@[]^_{|}~'
 
-const BASE83_LOOKUP = new Map<string, number>(
-  [...BASE83_CHARS].map((char, index) => [char, index]),
-)
+const BASE83_LOOKUP = new Map<string, number>([...BASE83_CHARS].map((char, index) => [char, index]))
 
 function decodeBase83(value: string): number {
   let result = 0
@@ -51,11 +49,7 @@ function decodeAc(value: number, maxAc: number): [number, number, number] {
   ]
 }
 
-function decodeBlurhash(
-  blurHash: string,
-  width: number,
-  height: number,
-): Uint8ClampedArray | null {
+function decodeBlurhash(blurHash: string, width: number, height: number): Uint8ClampedArray | null {
   if (blurHash.length < 6) return null
 
   let sizeFlag = 0
@@ -97,8 +91,7 @@ function decodeBlurhash(
       let b = 0
       for (let j = 0; j < componentsY; j += 1) {
         for (let i = 0; i < componentsX; i += 1) {
-          const basis =
-            Math.cos((Math.PI * x * i) / width) * Math.cos((Math.PI * y * j) / height)
+          const basis = Math.cos((Math.PI * x * i) / width) * Math.cos((Math.PI * y * j) / height)
           const color = colors[i + j * componentsX]
           if (!color) continue
           r += color[0] * basis
@@ -117,11 +110,7 @@ function decodeBlurhash(
   return pixels
 }
 
-function blurHashToDataURL(
-  hash: string,
-  width = 32,
-  height = 18,
-): string | null {
+function blurHashToDataURL(hash: string, width = 32, height = 18): string | null {
   if (typeof document === 'undefined') return null
   const pixels = decodeBlurhash(hash, width, height)
   if (!pixels) return null
@@ -139,7 +128,7 @@ function blurHashToDataURL(
 export function blurHashToDataUrl(
   blurHash: string | null | undefined,
   width = 32,
-  height = 18,
+  height = 18
 ): string | null {
   if (!blurHash) return null
   const hash = blurHash.trim()

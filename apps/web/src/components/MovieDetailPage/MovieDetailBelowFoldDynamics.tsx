@@ -15,25 +15,25 @@ export function MovieDetailBelowFoldSuspenseFallback() {
 
 export const MovieTrailerBlockLazy = dynamic(
   () => import('./MovieTrailerBlock').then((m) => m.MovieTrailerBlock),
-  { loading: DetailLazyFallback },
+  { loading: DetailLazyFallback }
 )
 export const MoviePhotosSectionLazy = dynamic(
   () => import('./MoviePhotosSection').then((m) => m.MoviePhotosSection),
-  { loading: DetailLazyFallback },
+  { loading: DetailLazyFallback }
 )
 export const MovieCastSectionLazy = dynamic(
   () => import('./MovieCastSection').then((m) => m.MovieCastSection),
-  { loading: DetailLazyFallback },
+  { loading: DetailLazyFallback }
 )
 export const MovieFaqAccordionLazy = dynamic(
   () => import('./MovieFaqAccordion').then((m) => m.MovieFaqAccordion),
-  { loading: DetailLazyFallback },
+  { loading: DetailLazyFallback }
 )
 export const MovieCollectionSectionLazy = dynamic(
   () => import('./MovieCollectionSection').then((m) => m.MovieCollectionSection),
-  { loading: DetailLazyFallback },
+  { loading: DetailLazyFallback }
 )
 export const TvSeriesEpisodesLazy = dynamic(
   () => import('@/components/TvSeriesEpisodes/TvSeriesEpisodes').then((m) => m.TvSeriesEpisodes),
-  { loading: DetailLazyFallback },
+  { loading: DetailLazyFallback }
 )

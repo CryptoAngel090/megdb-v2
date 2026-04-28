@@ -306,14 +306,26 @@ export function HeroSection({ slides }: HeroSectionProps) {
                       className={styles.btnPrimary}
                       onClick={() => openTrailer(currentSlide.trailerKey!)}
                     >
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        aria-hidden
+                      >
                         <path d="M8 5v14l11-7z" />
                       </svg>
                       Watch Trailer
                     </button>
                   ) : (
                     <Link href={href} className={styles.btnPrimary}>
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        aria-hidden
+                      >
                         <path d="M8 5v14l11-7z" />
                       </svg>
                       Watch Now

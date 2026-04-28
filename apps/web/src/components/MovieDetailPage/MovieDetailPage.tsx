@@ -35,7 +35,7 @@ const MOVIE_HERO_CAROUSEL_SLIDE_CAP = 10
 function buildMovieHeroCarouselPaths(
   stills: MoviePageDetail['heroBackdropStills'],
   primaryBackdropPath: string | null,
-  maxSlides: number,
+  maxSlides: number
 ): string[] {
   const seen = new Set<string>()
   const paths: string[] = []
@@ -235,7 +235,7 @@ export function MovieDetailPage({
   const heroCarouselFilePaths = buildMovieHeroCarouselPaths(
     movie.heroBackdropStills,
     movie.backdropPath,
-    MOVIE_HERO_CAROUSEL_SLIDE_CAP,
+    MOVIE_HERO_CAROUSEL_SLIDE_CAP
   )
   const heroCarouselUrls = heroCarouselFilePaths.map((p) => getImageUrl(p, 'w1280'))
   const heroCarouselEnabled = heroCarouselUrls.length >= 2
@@ -370,9 +370,9 @@ export function MovieDetailPage({
 
   const hasWatchProvidersPanel = Boolean(
     movie.watchProvidersUs &&
-    (movie.watchProvidersUs.stream.length > 0 ||
-      movie.watchProvidersUs.rent.length > 0 ||
-      movie.watchProvidersUs.buy.length > 0)
+      (movie.watchProvidersUs.stream.length > 0 ||
+        movie.watchProvidersUs.rent.length > 0 ||
+        movie.watchProvidersUs.buy.length > 0)
   )
   const similarOthers = movie.similar.filter((m) => m.id !== movie.id)
   const collectionOthers =
@@ -429,7 +429,9 @@ export function MovieDetailPage({
                 )}
                 {/* Desktop/tablet: keep backdrop carousel */}
                 <div className={`${styles.heroMediaFill} ${styles.heroDesktopBg}`}>
-                  <MovieHeroCarouselBackdrop slideImageClassName={styles.heroImgCarouselSlide ?? ''} />
+                  <MovieHeroCarouselBackdrop
+                    slideImageClassName={styles.heroImgCarouselSlide ?? ''}
+                  />
                 </div>
               </>
             ) : (
@@ -463,7 +465,10 @@ export function MovieDetailPage({
                       priority
                       fetchPriority="high"
                       sizes="100vw"
-                      style={{ objectPosition: '100% 20%', transform: 'scale(1.08) translateX(12%)' }}
+                      style={{
+                        objectPosition: '100% 20%',
+                        transform: 'scale(1.08) translateX(12%)',
+                      }}
                       className={styles.heroImgCover}
                       placeholder="blur"
                       blurDataURL={heroBlurDataURL}
@@ -478,116 +483,116 @@ export function MovieDetailPage({
           </div>
 
           <div className={styles.heroForeground}>
-          <div className={styles.heroNav}>
-            <Link href={backHref} className={styles.backLink}>
-              <IconChevronLeft />
-              {backLabel}
-            </Link>
-          </div>
+            <div className={styles.heroNav}>
+              <Link href={backHref} className={styles.backLink}>
+                <IconChevronLeft />
+                {backLabel}
+              </Link>
+            </div>
 
-          <div className={styles.heroLayoutNoPoster}>
-            <div className={styles.heroCopy}>
-              {posterBlurSrc && !heroCarouselEnabled && (
-                <Image
-                  src={posterBlurSrc}
-                  alt={`${movie.title} poster`}
-                  width={420}
-                  height={630}
-                  sizes="(max-width: 768px) 72vw, 420px"
-                  className={styles.heroOnlyPoster}
-                  placeholder="blur"
-                  blurDataURL={POSTER_BLUR}
-                />
-              )}
-              <div className={styles.heroInfoHidden}>
-                {genreLinks != null && <div className={styles.heroGenresAbove}>{genreLinks}</div>}
-                <h1 className={styles.heroTitle}>{movie.title.replace(/["""''«»]/g, '')}</h1>
-                {heroQuotedLine && <p className={styles.heroTagline}>“{heroQuotedLine}”</p>}
-                {mutedSecondTitle && <p className={styles.heroOriginal}>{mutedSecondTitle}</p>}
-                <div className={styles.heroMeta}>
-                  <div
-                    className={styles.heroMetaPanel}
-                    role="group"
-                    aria-label="Release year, runtime, user score, age rating, and genres"
-                  >
-                    <div className={styles.heroMetaTrack}>
-                      {yearLabel && <span className={styles.heroYear}>{yearLabel}</span>}
-                      {runtimeLabel && (
-                        <>
-                          {yearLabel && (
-                            <span className={styles.metaDot} aria-hidden>
-                              ·
-                            </span>
-                          )}
-                          <span className={styles.metaIconRow}>
-                            <IconClock />
-                            {runtimeLabel}
-                          </span>
-                        </>
-                      )}
-                      {movie.voteAverage > 0 && (
-                        <>
-                          {(yearLabel || runtimeLabel) && (
-                            <span className={styles.metaDot} aria-hidden>
-                              ·
-                            </span>
-                          )}
-                          <span className={styles.metaIconRow}>
-                            <IconStar className={styles.starGold ?? ''} />
-                            <strong>{movie.voteAverage.toFixed(1)}</strong>
-                            <span className={styles.rateTen}>/ 10</span>
-                          </span>
-                        </>
-                      )}
-                      {movie.ageRatingBadge && (
-                        <>
-                          {(yearLabel || runtimeLabel || movie.voteAverage > 0) && (
-                            <span className={styles.metaDot} aria-hidden>
-                              ·
-                            </span>
-                          )}
-                          <span className={styles.heroAgeText}>{movie.ageRatingBadge}</span>
-                        </>
-                      )}
-                      {genreLinks != null && (
-                        <>
-                          {(yearLabel ||
-                            runtimeLabel ||
-                            movie.voteAverage > 0 ||
-                            movie.ageRatingBadge) && (
-                            <span className={styles.metaDot} aria-hidden>
-                              ·
-                            </span>
-                          )}
-                          <div className={styles.heroGenresInline}>{genreLinks}</div>
-                        </>
-                      )}
-                      {movie.status && movie.status !== 'Released' && (
-                        <>
-                          <span className={styles.metaDot}>·</span>
-                          <span className={styles.statusPill}>{movie.status}</span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  <MovieHeroTrailerActions
-                    movieId={movie.id}
-                    mediaType={similarMediaKind}
-                    movieTitle={movie.title}
-                    releaseDate={movie.releaseDate}
-                    hasTrailer={Boolean(trailerKey)}
-                    embedTitle={
-                      movie.trailer
-                        ? `${movie.title} — ${movie.trailer.name}`
-                        : `${movie.title} trailer`
-                    }
+            <div className={styles.heroLayoutNoPoster}>
+              <div className={styles.heroCopy}>
+                {posterBlurSrc && !heroCarouselEnabled && (
+                  <Image
+                    src={posterBlurSrc}
+                    alt={`${movie.title} poster`}
+                    width={420}
+                    height={630}
+                    sizes="(max-width: 768px) 72vw, 420px"
+                    className={styles.heroOnlyPoster}
+                    placeholder="blur"
+                    blurDataURL={POSTER_BLUR}
                   />
+                )}
+                <div className={styles.heroInfoHidden}>
+                  {genreLinks != null && <div className={styles.heroGenresAbove}>{genreLinks}</div>}
+                  <h1 className={styles.heroTitle}>{movie.title.replace(/["""''«»]/g, '')}</h1>
+                  {heroQuotedLine && <p className={styles.heroTagline}>“{heroQuotedLine}”</p>}
+                  {mutedSecondTitle && <p className={styles.heroOriginal}>{mutedSecondTitle}</p>}
+                  <div className={styles.heroMeta}>
+                    <div
+                      className={styles.heroMetaPanel}
+                      role="group"
+                      aria-label="Release year, runtime, user score, age rating, and genres"
+                    >
+                      <div className={styles.heroMetaTrack}>
+                        {yearLabel && <span className={styles.heroYear}>{yearLabel}</span>}
+                        {runtimeLabel && (
+                          <>
+                            {yearLabel && (
+                              <span className={styles.metaDot} aria-hidden>
+                                ·
+                              </span>
+                            )}
+                            <span className={styles.metaIconRow}>
+                              <IconClock />
+                              {runtimeLabel}
+                            </span>
+                          </>
+                        )}
+                        {movie.voteAverage > 0 && (
+                          <>
+                            {(yearLabel || runtimeLabel) && (
+                              <span className={styles.metaDot} aria-hidden>
+                                ·
+                              </span>
+                            )}
+                            <span className={styles.metaIconRow}>
+                              <IconStar className={styles.starGold ?? ''} />
+                              <strong>{movie.voteAverage.toFixed(1)}</strong>
+                              <span className={styles.rateTen}>/ 10</span>
+                            </span>
+                          </>
+                        )}
+                        {movie.ageRatingBadge && (
+                          <>
+                            {(yearLabel || runtimeLabel || movie.voteAverage > 0) && (
+                              <span className={styles.metaDot} aria-hidden>
+                                ·
+                              </span>
+                            )}
+                            <span className={styles.heroAgeText}>{movie.ageRatingBadge}</span>
+                          </>
+                        )}
+                        {genreLinks != null && (
+                          <>
+                            {(yearLabel ||
+                              runtimeLabel ||
+                              movie.voteAverage > 0 ||
+                              movie.ageRatingBadge) && (
+                              <span className={styles.metaDot} aria-hidden>
+                                ·
+                              </span>
+                            )}
+                            <div className={styles.heroGenresInline}>{genreLinks}</div>
+                          </>
+                        )}
+                        {movie.status && movie.status !== 'Released' && (
+                          <>
+                            <span className={styles.metaDot}>·</span>
+                            <span className={styles.statusPill}>{movie.status}</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <MovieHeroTrailerActions
+                      movieId={movie.id}
+                      mediaType={similarMediaKind}
+                      movieTitle={movie.title}
+                      releaseDate={movie.releaseDate}
+                      hasTrailer={Boolean(trailerKey)}
+                      embedTitle={
+                        movie.trailer
+                          ? `${movie.title} — ${movie.trailer.name}`
+                          : `${movie.title} trailer`
+                      }
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
       </MovieDetailHeroCarouselShell>
 
       <div id="movie-page-primary" className={styles.container}>
@@ -606,7 +611,6 @@ export function MovieDetailPage({
                 blurDataURL={POSTER_BLUR}
               />
             )}
-
           </aside>
 
           <div className={styles.main}>
@@ -632,88 +636,89 @@ export function MovieDetailPage({
               </FadeInView>
             )}
             <FadeInView delay={0.1}>
-            <div className={styles.pageTools} aria-label="Watch and share">
-              <div className={styles.pageToolsBtns}>
-                <MovieShareButton title={movie.title} className={styles.shareFull ?? ''} />
-              </div>
-              {hasWatchProvidersPanel && movie.watchProvidersUs && (
-                <div className={styles.sidebarProviders}>
-                  <MovieWatchProvidersPanel
-                    providers={movie.watchProvidersUs}
-                    movieTitle={movie.title}
-                    className={styles.providersSidebar ?? ''}
-                  />
+              <div className={styles.pageTools} aria-label="Watch and share">
+                <div className={styles.pageToolsBtns}>
+                  <MovieShareButton title={movie.title} className={styles.shareFull ?? ''} />
                 </div>
-              )}
-            </div>
+                {hasWatchProvidersPanel && movie.watchProvidersUs && (
+                  <div className={styles.sidebarProviders}>
+                    <MovieWatchProvidersPanel
+                      providers={movie.watchProvidersUs}
+                      movieTitle={movie.title}
+                      className={styles.providersSidebar ?? ''}
+                    />
+                  </div>
+                )}
+              </div>
             </FadeInView>
 
             {trailerKey && (
               <FadeInView delay={0.05}>
-              <section
-                id="trailer"
-                className={styles.trailerSection}
-                aria-labelledby="movie-trailer-heading"
-              >
-                <h2 id="movie-trailer-heading" className={styles.overviewTitle}>
-                  Trailer
-                </h2>
-                <MovieTrailerBlockLazy
-                  videoKey={trailerKey}
-                  embedTitle={
-                    movie.trailer
-                      ? `${movie.title} — ${movie.trailer.name}`
-                      : `${movie.title} trailer`
-                  }
-                  boxClassName={styles.trailerBox}
-                />
-              </section>
+                <section
+                  id="trailer"
+                  className={styles.trailerSection}
+                  aria-labelledby="movie-trailer-heading"
+                >
+                  <h2 id="movie-trailer-heading" className={styles.overviewTitle}>
+                    Trailer
+                  </h2>
+                  <MovieTrailerBlockLazy
+                    videoKey={trailerKey}
+                    embedTitle={
+                      movie.trailer
+                        ? `${movie.title} — ${movie.trailer.name}`
+                        : `${movie.title} trailer`
+                    }
+                    boxClassName={styles.trailerBox}
+                  />
+                </section>
               </FadeInView>
             )}
 
-
             {movie.watchRows.length > 0 && (
               <FadeInView delay={0.05}>
-              <section className={styles.watchTableSection} aria-labelledby="where-heading">
-                <h2 id="where-heading" className={styles.sectionHeading}>
-                  <span className={styles.sectionBar} aria-hidden />
-                  Where to Watch {movie.title}
-                </h2>
-                <p className={styles.watchLead}>
-                  {tableLead}
-                  {movie.watchRows.some((r) => r.type === 'Rent')
-                    ? ' Also available for digital rental.'
-                    : ''}
-                  {movie.watchRows.some((r) => r.type === 'Buy') ? ' Available for purchase.' : ''}
-                </p>
-                <div className={styles.tableScroll}>
-                  <table className={styles.table}>
-                    <thead>
-                      <tr>
-                        <th scope="col">Service</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Quality</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {movie.watchRows.map((row, i) => (
-                        <tr
-                          key={`${row.name}-${row.type}-${i}`}
-                          className={i % 2 === 1 ? (styles.trAlt ?? '') : ''}
-                        >
-                          <td>{row.name}</td>
-                          <td>
-                            <span className={`${styles.typePill} ${watchTypeClass(row.type)}`}>
-                              {row.type}
-                            </span>
-                          </td>
-                          <td>{row.quality}</td>
+                <section className={styles.watchTableSection} aria-labelledby="where-heading">
+                  <h2 id="where-heading" className={styles.sectionHeading}>
+                    <span className={styles.sectionBar} aria-hidden />
+                    Where to Watch {movie.title}
+                  </h2>
+                  <p className={styles.watchLead}>
+                    {tableLead}
+                    {movie.watchRows.some((r) => r.type === 'Rent')
+                      ? ' Also available for digital rental.'
+                      : ''}
+                    {movie.watchRows.some((r) => r.type === 'Buy')
+                      ? ' Available for purchase.'
+                      : ''}
+                  </p>
+                  <div className={styles.tableScroll}>
+                    <table className={styles.table}>
+                      <thead>
+                        <tr>
+                          <th scope="col">Service</th>
+                          <th scope="col">Type</th>
+                          <th scope="col">Quality</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </section>
+                      </thead>
+                      <tbody>
+                        {movie.watchRows.map((row, i) => (
+                          <tr
+                            key={`${row.name}-${row.type}-${i}`}
+                            className={i % 2 === 1 ? (styles.trAlt ?? '') : ''}
+                          >
+                            <td>{row.name}</td>
+                            <td>
+                              <span className={`${styles.typePill} ${watchTypeClass(row.type)}`}>
+                                {row.type}
+                              </span>
+                            </td>
+                            <td>{row.quality}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </section>
               </FadeInView>
             )}
 
@@ -780,7 +785,11 @@ export function MovieDetailPage({
           />
         )}
         {!streamedBelowFold && (
-          <MovieComments tmdbMovieId={movie.id} movieTitle={movie.title} mediaKind={similarMediaKind} />
+          <MovieComments
+            tmdbMovieId={movie.id}
+            movieTitle={movie.title}
+            mediaKind={similarMediaKind}
+          />
         )}
       </div>
     </div>

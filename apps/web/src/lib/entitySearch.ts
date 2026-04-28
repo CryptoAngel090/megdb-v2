@@ -66,4 +66,3 @@ export function buildEntityCanonicalHref(raw: string): string | null {
   const slug = entityCanonicalSlug(raw)
   return slug ? `/entity/${slug}` : null
 }
-

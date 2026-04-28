@@ -51,7 +51,10 @@ export function MoviePhotosSection({ images, title }: Props) {
       <div className={styles.head}>
         <h2 className={styles.title}>
           <span className={styles.bar} aria-hidden />
-          <ImageIcon className={[iconSlot.block, iconSlot.sm, styles.galleryIcon].filter(Boolean).join(' ')} aria-hidden />
+          <ImageIcon
+            className={[iconSlot.block, iconSlot.sm, styles.galleryIcon].filter(Boolean).join(' ')}
+            aria-hidden
+          />
           Photos
           <span className={styles.count}>{validImages.length}</span>
         </h2>

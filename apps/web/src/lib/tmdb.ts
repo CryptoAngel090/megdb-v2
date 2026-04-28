@@ -1236,7 +1236,7 @@ type TmdbBackdropImageRow = {
 
 function pickHeroBackdropStillsForShell(
   rows: TmdbBackdropImageRow[] | undefined,
-  preferredFilePath: string | null | undefined,
+  preferredFilePath: string | null | undefined
 ): MovieBackdropStill[] {
   const normalized = (rows ?? [])
     .map((b) => ({
@@ -1270,7 +1270,7 @@ function pickHeroBackdropStillsForShell(
 
 function mergeMovieDetailShellAndTail(
   shell: MoviePageDetail,
-  tail: MoviePageDetailTailPatch,
+  tail: MoviePageDetailTailPatch
 ): MoviePageDetail {
   const { belongsToCollectionMeta: shellMeta, ...shellBase } = shell
   return {
@@ -1284,7 +1284,7 @@ function mergeMovieDetailShellAndTail(
 
 /** TMDB tail for movie detail: gallery, similar, collection rails (used by streamed below-fold RSC). */
 export async function getMoviePageDataTailMovie(
-  input: MoviePageDetailTailInput,
+  input: MoviePageDetailTailInput
 ): Promise<MoviePageDetailTailPatch> {
   const id = input.mediaId
   if (!Number.isFinite(id) || id <= 0) {
@@ -1295,7 +1295,7 @@ export async function getMoviePageDataTailMovie(
       tmdbFetch<TmdbPaginated<TmdbRawMedia>>(
         `/movie/${id}/similar`,
         { page: '1' },
-        { revalidate: TMDB_REVALIDATE_MODERATE },
+        { revalidate: TMDB_REVALIDATE_MODERATE }
       ).catch(() => null),
       tmdbFetch<{
         backdrops?: Array<{
@@ -1311,7 +1311,7 @@ export async function getMoviePageDataTailMovie(
         ? tmdbFetch<{ id: number; name: string; parts?: TmdbRawMedia[] }>(
             `/collection/${input.collectionTmdbId}`,
             undefined,
-            { revalidate: TMDB_REVALIDATE_MODERATE },
+            { revalidate: TMDB_REVALIDATE_MODERATE }
           ).catch(() => null)
         : Promise.resolve(null),
     ])
@@ -1325,7 +1325,7 @@ export async function getMoviePageDataTailMovie(
       }))
 
     const currentGenreIds = new Set(
-      input.genreIds.filter((gid): gid is number => typeof gid === 'number' && Number.isFinite(gid)),
+      input.genreIds.filter((gid): gid is number => typeof gid === 'number' && Number.isFinite(gid))
     )
     const currentYear = input.releaseYear
 
@@ -1348,7 +1348,7 @@ export async function getMoviePageDataTailMovie(
                 [...currentGenreIds],
                 [currentYear as number, (currentYear as number) - 1],
                 id,
-                TMDB_REVALIDATE_MODERATE,
+                TMDB_REVALIDATE_MODERATE
               )
             : []
 
@@ -1367,7 +1367,7 @@ export async function getMoviePageDataTailMovie(
           combinedSimilarRaw,
           currentGenreIds,
           Number.isFinite(currentYear) ? currentYear : null,
-          16,
+          16
         )
         const similarBase = relevantSimilarRaw.map(mapRawToCardItem)
         return enrichMoviePageCardItemsWithDetails(similarBase, TMDB_REVALIDATE_MODERATE)
@@ -1382,7 +1382,7 @@ export async function getMoviePageDataTailMovie(
 
 /** TMDB tail for TV detail: backdrop gallery + similar (no collection on TV template). */
 export async function getTvPageDataTailTv(
-  input: MoviePageDetailTailInput,
+  input: MoviePageDetailTailInput
 ): Promise<MoviePageDetailTailPatch> {
   const id = input.mediaId
   if (!Number.isFinite(id) || id <= 0) {
@@ -1393,7 +1393,7 @@ export async function getTvPageDataTailTv(
       tmdbFetch<TmdbPaginated<TmdbRawMedia>>(
         `/tv/${id}/similar`,
         { page: '1' },
-        { revalidate: TMDB_REVALIDATE_MODERATE },
+        { revalidate: TMDB_REVALIDATE_MODERATE }
       ).catch(() => null),
       tmdbFetch<{
         backdrops?: Array<{
@@ -1416,7 +1416,7 @@ export async function getTvPageDataTailTv(
       }))
 
     const currentGenreIds = new Set(
-      input.genreIds.filter((gid): gid is number => typeof gid === 'number' && Number.isFinite(gid)),
+      input.genreIds.filter((gid): gid is number => typeof gid === 'number' && Number.isFinite(gid))
     )
     const currentYear = input.releaseYear
 
@@ -1426,7 +1426,7 @@ export async function getTvPageDataTailTv(
             [...currentGenreIds],
             [currentYear as number, (currentYear as number) - 1],
             id,
-            TMDB_REVALIDATE_MODERATE,
+            TMDB_REVALIDATE_MODERATE
           )
         : []
 
@@ -1445,7 +1445,7 @@ export async function getTvPageDataTailTv(
       combinedSimilarRaw,
       currentGenreIds,
       Number.isFinite(currentYear) ? currentYear : null,
-      16,
+      16
     )
     const similarBase = relevantSimilarRaw.map(mapRawToCardItem)
     const similar = await enrichTvPageCardItemsWithDetails(similarBase, TMDB_REVALIDATE_MODERATE)
@@ -1983,20 +1983,20 @@ export async function getMoviePageDataShell(id: number): Promise<MoviePageDetail
       tmdbFetch<{ titles?: Array<{ iso_3166_1: string; title: string }> }>(
         `/movie/${id}/alternative_titles`,
         undefined,
-        { revalidate: TMDB_REVALIDATE_MODERATE },
+        { revalidate: TMDB_REVALIDATE_MODERATE }
       ).catch(() => null),
       tmdbFetch<TmdbVideosResponse>(
         `/movie/${id}/videos`,
         { language: 'en-US' },
         {
           revalidate: TMDB_REVALIDATE_MODERATE,
-        },
+        }
       ).catch(() => ({ results: [] as TmdbVideosResponse['results'] })),
       fetchOrigVideos
         ? tmdbFetch<TmdbVideosResponse>(
             `/movie/${id}/videos`,
             { language: d.original_language!.trim() },
-            { revalidate: TMDB_REVALIDATE_MODERATE },
+            { revalidate: TMDB_REVALIDATE_MODERATE }
           ).catch(() => ({ results: [] as TmdbVideosResponse['results'] }))
         : Promise.resolve({ results: [] as TmdbVideosResponse['results'] }),
       tmdbFetch<{ backdrops?: TmdbBackdropImageRow[] }>(`/movie/${id}/images`, undefined, {
@@ -2073,7 +2073,7 @@ export async function getMoviePageDataShell(id: number): Promise<MoviePageDetail
 
     const heroBackdropStills = pickHeroBackdropStillsForShell(
       imagesPayload?.backdrops,
-      d.backdrop_path,
+      d.backdrop_path
     )
 
     const originalForAlt = d.original_title?.trim() || titleForWatch
@@ -2217,20 +2217,20 @@ export async function getTvPageDataShell(id: number): Promise<MoviePageDetail | 
       tmdbFetch<{ titles?: Array<{ iso_3166_1: string; title: string }> }>(
         `/tv/${id}/alternative_titles`,
         undefined,
-        { revalidate: TMDB_REVALIDATE_MODERATE },
+        { revalidate: TMDB_REVALIDATE_MODERATE }
       ).catch(() => null),
       tmdbFetch<TmdbVideosResponse>(
         `/tv/${id}/videos`,
         { language: 'en-US' },
         {
           revalidate: TMDB_REVALIDATE_MODERATE,
-        },
+        }
       ).catch(() => ({ results: [] as TmdbVideosResponse['results'] })),
       fetchOrigVideos
         ? tmdbFetch<TmdbVideosResponse>(
             `/tv/${id}/videos`,
             { language: d.original_language!.trim() },
-            { revalidate: TMDB_REVALIDATE_MODERATE },
+            { revalidate: TMDB_REVALIDATE_MODERATE }
           ).catch(() => ({ results: [] as TmdbVideosResponse['results'] }))
         : Promise.resolve({ results: [] as TmdbVideosResponse['results'] }),
       tmdbFetch<{ backdrops?: TmdbBackdropImageRow[] }>(`/tv/${id}/images`, undefined, {
@@ -2309,19 +2309,21 @@ export async function getTvPageDataShell(id: number): Promise<MoviePageDetail | 
     const alternateDisplayTitle = pickAlternateDisplayTitle(
       altTitlesPayload?.titles,
       titleForWatch,
-      originalForAlt,
+      originalForAlt
     )
 
     const runtime = await tvRuntimeWithEpisodeFallback(id, d, TMDB_REVALIDATE_MODERATE)
 
     const tvSeasonSummaries = (d.seasons ?? [])
       .filter(
-        (s): s is {
+        (
+          s
+        ): s is {
           season_number: number
           name?: string
           episode_count?: number
           air_date?: string | null
-        } => typeof s?.season_number === 'number' && s.season_number > 0,
+        } => typeof s?.season_number === 'number' && s.season_number > 0
       )
       .map((s) => ({
         seasonNumber: s.season_number,
@@ -2338,7 +2340,7 @@ export async function getTvPageDataShell(id: number): Promise<MoviePageDetail | 
 
     const heroBackdropStills = pickHeroBackdropStillsForShell(
       tvImagesPayload?.backdrops,
-      d.backdrop_path,
+      d.backdrop_path
     )
 
     return {
@@ -2889,8 +2891,6 @@ export async function getAcclaimedRecentMovies(limit = 20): Promise<ShelfItem[]>
   return enrichShelfItemsWithDetails(items, TMDB_REVALIDATE_MODERATE)
 }
 
-
-
 export async function getBestMoviesAllTime(): Promise<ShelfItem[]> {
   const res = await tmdbFetch<TmdbPaginated<TmdbRawMedia>>('/movie/top_rated', undefined, {
     revalidate: TMDB_REVALIDATE_ALL_TIME,
@@ -3029,12 +3029,16 @@ export async function getPersonPageData(id: number): Promise<PersonPageDetail | 
     }>(
       `/person/${id}`,
       { append_to_response: 'external_ids', language: 'en-US' },
-      { revalidate: TMDB_REVALIDATE_PEOPLE },
+      { revalidate: TMDB_REVALIDATE_PEOPLE }
     )
     const name = d.name?.trim() ? d.name.trim() : `Person ${d.id}`
     const imdbRaw = d.external_ids?.imdb_id?.trim() ? d.external_ids.imdb_id.trim() : null
-    const facebookRaw = d.external_ids?.facebook_id?.trim() ? d.external_ids.facebook_id.trim() : null
-    const instagramRaw = d.external_ids?.instagram_id?.trim() ? d.external_ids.instagram_id.trim() : null
+    const facebookRaw = d.external_ids?.facebook_id?.trim()
+      ? d.external_ids.facebook_id.trim()
+      : null
+    const instagramRaw = d.external_ids?.instagram_id?.trim()
+      ? d.external_ids.instagram_id.trim()
+      : null
     const xRaw = d.external_ids?.twitter_id?.trim() ? d.external_ids.twitter_id.trim() : null
     const tiktokRaw = d.external_ids?.tiktok_id?.trim() ? d.external_ids.tiktok_id.trim() : null
     const youtubeRaw = d.external_ids?.youtube_id?.trim() ? d.external_ids.youtube_id.trim() : null
@@ -3044,8 +3048,8 @@ export async function getPersonPageData(id: number): Promise<PersonPageDetail | 
       biography: (d.biography ?? '').trim(),
       knownForDepartment: d.known_for_department?.trim() || null,
       alsoKnownAs: (d.also_known_as ?? []).map((item) => item.trim()).filter(Boolean),
-      gender: Number.isFinite(d.gender) ? d.gender ?? null : null,
-      popularity: Number.isFinite(d.popularity) ? d.popularity ?? null : null,
+      gender: Number.isFinite(d.gender) ? (d.gender ?? null) : null,
+      popularity: Number.isFinite(d.popularity) ? (d.popularity ?? null) : null,
       birthday: d.birthday?.trim() || null,
       deathday: d.deathday?.trim() || null,
       placeOfBirth: d.place_of_birth?.trim() || null,
@@ -3119,7 +3123,7 @@ export async function getPersonImages(personId: number): Promise<PersonImageRow[
     return [...unique.values()].sort((a, b) => {
       if (b.voteCount !== a.voteCount) return b.voteCount - a.voteCount
       if (b.voteAverage !== a.voteAverage) return b.voteAverage - a.voteAverage
-      return (b.width * b.height) - (a.width * a.height)
+      return b.width * b.height - a.width * a.height
     })
   } catch {
     return []
@@ -3143,7 +3147,11 @@ export async function getPersonCombinedCredits(personId: number): Promise<Person
         poster_path?: string | null
         genre_ids?: number[]
       }>
-    }>(`/person/${personId}/combined_credits`, { language: 'en-US' }, { revalidate: TMDB_REVALIDATE_PEOPLE })
+    }>(
+      `/person/${personId}/combined_credits`,
+      { language: 'en-US' },
+      { revalidate: TMDB_REVALIDATE_PEOPLE }
+    )
 
     const rows: PersonCreditRowRaw[] = []
     for (const c of d.cast ?? []) {
@@ -3151,9 +3159,7 @@ export async function getPersonCombinedCredits(personId: number): Promise<Person
       const title = (c.media_type === 'movie' ? c.title : c.name)?.trim() ?? ''
       if (!title) continue
       const releaseDate =
-        c.media_type === 'movie'
-          ? (c.release_date?.trim() || null)
-          : (c.first_air_date?.trim() || null)
+        c.media_type === 'movie' ? c.release_date?.trim() || null : c.first_air_date?.trim() || null
       const kind = c.media_type
       rows.push({
         kind,
@@ -3182,7 +3188,7 @@ export async function getTrendingPeopleForSitemap(limit = 48): Promise<PopularAc
     const res = await tmdbFetch<TmdbDiscoverPage<TmdbRawPerson>>(
       '/trending/person/week',
       { language: 'en-US' },
-      { revalidate: TMDB_REVALIDATE_PEOPLE },
+      { revalidate: TMDB_REVALIDATE_PEOPLE }
     )
     return res.results.slice(0, limit).map((p) => ({
       id: p.id,
@@ -3755,7 +3761,9 @@ export async function discoverMoviesBrowse(
         'vote_count.gte': '0',
         without_genres: input.without_genres,
         ...(input.genre != null ? { with_genres: input.genre } : {}),
-        ...(upperDate != null && year === currentYear ? { 'primary_release_date.lte': upperDate } : {}),
+        ...(upperDate != null && year === currentYear
+          ? { 'primary_release_date.lte': upperDate }
+          : {}),
         ...(lowerDate != null && year === minYear ? { 'primary_release_date.gte': lowerDate } : {}),
         page: String(remaining),
       })

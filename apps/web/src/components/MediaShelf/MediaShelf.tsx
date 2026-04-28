@@ -139,7 +139,9 @@ export function MediaShelf({
             title={`Previous titles — ${title}`}
             disabled={!canScrollLeft}
             onClick={() => scrollRow(-1)}
-            {...(!reduceMotion ? { whileTap: { scale: 0.9 }, transition: { type: 'tween', duration: 0.15 } } : {})}
+            {...(!reduceMotion
+              ? { whileTap: { scale: 0.9 }, transition: { type: 'tween', duration: 0.15 } }
+              : {})}
             // transition: explicit tween — no spring physics
           >
             <ChevronIcon dir="left" />
@@ -151,7 +153,9 @@ export function MediaShelf({
             title={`More titles — ${title}`}
             disabled={!canScrollRight}
             onClick={() => scrollRow(1)}
-            {...(!reduceMotion ? { whileTap: { scale: 0.9 }, transition: { type: 'tween', duration: 0.15 } } : {})}
+            {...(!reduceMotion
+              ? { whileTap: { scale: 0.9 }, transition: { type: 'tween', duration: 0.15 } }
+              : {})}
             // transition: explicit tween — no spring physics
           >
             <ChevronIcon dir="right" />
@@ -163,8 +167,14 @@ export function MediaShelf({
               href={viewAllHref}
               className={styles.viewAll}
               aria-label={`See all titles in ${title}`}
-              {...(!reduceMotion ? { whileHover: { scale: 1.03 }, whileTap: { scale: 0.96 }, transition: { type: 'tween', duration: 0.15 } } : {})}
-            // transition: explicit tween — no spring physics
+              {...(!reduceMotion
+                ? {
+                    whileHover: { scale: 1.03 },
+                    whileTap: { scale: 0.96 },
+                    transition: { type: 'tween', duration: 0.15 },
+                  }
+                : {})}
+              // transition: explicit tween — no spring physics
             >
               <span className={styles.viewAllLabel}>See all</span>
               <span className={styles.viewAllIcon} aria-hidden="true">

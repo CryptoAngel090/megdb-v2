@@ -59,7 +59,11 @@
 }
 
 .seasonTabActive {
-  background: linear-gradient(135deg, color-mix(in oklab, var(--primary) 15%, transparent) 0%, color-mix(in oklab, var(--primary) 8%, transparent) 100%);
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--primary) 15%, transparent) 0%,
+    color-mix(in oklab, var(--primary) 8%, transparent) 100%
+  );
   border-color: var(--primary);
   color: var(--text-primary);
   box-shadow:

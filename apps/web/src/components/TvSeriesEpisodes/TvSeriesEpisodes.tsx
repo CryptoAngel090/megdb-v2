@@ -181,7 +181,9 @@ export function TvSeriesEpisodes({ seriesId, seriesTitle }: TvSeriesEpisodesProp
             key={season.id}
             className={`${styles.seasonTab} ${selectedSeason === season.seasonNumber ? styles.seasonTabActive : ''}`}
             onClick={() =>
-              setSelectedSeason((prev) => (prev === season.seasonNumber ? null : season.seasonNumber))
+              setSelectedSeason((prev) =>
+                prev === season.seasonNumber ? null : season.seasonNumber
+              )
             }
             aria-pressed={selectedSeason === season.seasonNumber}
           >
@@ -265,7 +267,9 @@ export function TvSeriesEpisodes({ seriesId, seriesTitle }: TvSeriesEpisodesProp
                         })}
                       </div>
                     )}
-                    {episode.overview && <p className={styles.episodeOverview}>{episode.overview}</p>}
+                    {episode.overview && (
+                      <p className={styles.episodeOverview}>{episode.overview}</p>
+                    )}
                   </div>
                 </div>
               )}

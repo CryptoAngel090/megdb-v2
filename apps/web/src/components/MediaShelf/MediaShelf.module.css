@@ -309,14 +309,14 @@
   scroll-snap-align: start;
   width: calc(
     (100cqi - (var(--rail-tile-columns) - 1) * var(--rail-tile-gap)) /
-      var(--rail-tile-columns)
+    var(--rail-tile-columns)
   );
 }
 
 /* ── Edge fade (left) ───────────────────────── */
 .rowWrap::before,
 .rowWrap::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   bottom: 0;

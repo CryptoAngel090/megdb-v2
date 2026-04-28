@@ -3,17 +3,16 @@ import { Suspense } from 'react'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import { Header } from '@/components/Header/Header'
 import { Footer } from '@/components/Footer/Footer'
-import { DeferredBackToTop, DeferredRippleScroll } from '@/components/DeferredAppChrome/DeferredAppChrome'
+import {
+  DeferredBackToTop,
+  DeferredRippleScroll,
+} from '@/components/DeferredAppChrome/DeferredAppChrome'
 import { NavigationProgress } from '@/components/NavigationProgress/NavigationProgress'
 import { ToastProvider } from '@/components/Toast/Toast'
 import { PerformanceMonitor } from '@/components/PerformanceMonitor/PerformanceMonitor'
 import { DesignThemeProvider } from '@/components/DesignThemeProvider/DesignThemeProvider'
 import { SessionProvider } from '@/components/Providers/SessionProvider'
-import {
-  SEO_CONTACT_EMAIL,
-  SEO_LAST_REVIEWED_AT,
-  SEO_PUBLISHER_NAME,
-} from '@/lib/seoFreshness'
+import { SEO_CONTACT_EMAIL, SEO_LAST_REVIEWED_AT, SEO_PUBLISHER_NAME } from '@/lib/seoFreshness'
 import { SITE_URL } from '@/lib/site'
 import '@/styles/globals.css'
 import '@/styles/design-tokens.generated.css'

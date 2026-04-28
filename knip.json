@@ -42,10 +42,6 @@
     "**/*.test.ts",
     "**/*.test.tsx"
   ],
-  "ignoreDependencies": [
-    "lint-staged"
-  ],
-  "ignoreBinaries": [
-    "lint-staged"
-  ]
+  "ignoreDependencies": ["lint-staged"],
+  "ignoreBinaries": ["lint-staged"]
 }

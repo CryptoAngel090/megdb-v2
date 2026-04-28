@@ -233,7 +233,7 @@ export function RegisterForm() {
     try {
       // Use environment variable or fallback to localhost
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
-      
+
       const response = await fetch(`${apiUrl}/api/auth/register`, {
         method: 'POST',
         headers: {
@@ -259,7 +259,7 @@ export function RegisterForm() {
       }
 
       setShowSuccess(true)
-      
+
       // Show email verification message
       setTimeout(() => {
         window.location.href = '/login?registered=true'
@@ -316,7 +316,8 @@ export function RegisterForm() {
             </Link>
             <h1 className={styles.title}>Create Account</h1>
             <p className={styles.subtitle}>
-              Free account — rate movies, build your watchlist, and get personalized recommendations across 850,000+ titles.
+              Free account — rate movies, build your watchlist, and get personalized recommendations
+              across 850,000+ titles.
             </p>
           </div>
 
@@ -327,7 +328,9 @@ export function RegisterForm() {
               disabled={isLoading || !googleOAuthEnabled}
               onClick={() => {
                 if (!googleOAuthEnabled) {
-                  setError('Google sign-in is not configured yet. Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in apps/web/.env.local and restart web dev server.')
+                  setError(
+                    'Google sign-in is not configured yet. Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in apps/web/.env.local and restart web dev server.'
+                  )
                   return
                 }
                 void signIn('google', { callbackUrl: '/profile' })
@@ -353,7 +356,9 @@ export function RegisterForm() {
               disabled={isLoading || !githubOAuthEnabled}
               onClick={() => {
                 if (!githubOAuthEnabled) {
-                  setError('GitHub sign-in is not configured yet. Add GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET in apps/web/.env.local and restart web dev server.')
+                  setError(
+                    'GitHub sign-in is not configured yet. Add GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET in apps/web/.env.local and restart web dev server.'
+                  )
                   return
                 }
                 void signIn('github', { callbackUrl: '/profile' })
@@ -547,9 +552,7 @@ export function RegisterForm() {
             </div>
 
             <div className={styles.field}>
-              <label className={styles.label}>
-                Country
-              </label>
+              <label className={styles.label}>Country</label>
               <CountrySelect
                 value={country}
                 onChange={setCountry}
@@ -627,7 +630,9 @@ export function RegisterForm() {
                           className={`${styles.strengthBar} ${i < passwordStrength ? styles.strengthBarActive : ''}`}
                           style={{
                             backgroundColor:
-                              i < passwordStrength ? strengthColors[passwordStrength - 1] : undefined,
+                              i < passwordStrength
+                                ? strengthColors[passwordStrength - 1]
+                                : undefined,
                           }}
                         />
                       ))}

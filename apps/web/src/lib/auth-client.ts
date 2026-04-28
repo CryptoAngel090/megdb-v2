@@ -61,4 +61,3 @@ export function clearUser() {
     localStorage.removeItem(USER_STORAGE_KEY)
   }
 }
-

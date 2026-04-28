@@ -106,17 +106,17 @@
   border: 1px solid var(--color-primary-border);
 }
 .ghost:hover:not(:disabled) {
-  background: rgba(192,132,252,0.18);
+  background: rgba(192, 132, 252, 0.18);
   transform: translateY(-1px);
 }
 
 .subtle {
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
   color: var(--color-text-muted);
   border: 1px solid var(--color-border);
 }
 .subtle:hover:not(:disabled) {
-  background: rgba(255,255,255,0.09);
+  background: rgba(255, 255, 255, 0.09);
   color: var(--color-text);
   transform: translateY(-1px);
 }
@@ -194,7 +194,7 @@
   pointer-events: none;
 }
 .loading::after {
-  content: '';
+  content: "";
   position: absolute;
   width: var(--space-3, 16px);
   height: var(--space-3, 16px);

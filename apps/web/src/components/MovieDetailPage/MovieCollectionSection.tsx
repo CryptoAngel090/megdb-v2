@@ -33,10 +33,20 @@ export function MovieCollectionSection({ title, parts, mediaKind = 'movie' }: Pr
           {title}
         </h2>
         <div className={styles.nav}>
-          <button type="button" className={styles.navBtn} aria-label="Scroll left" onClick={() => scroll('left')}>
+          <button
+            type="button"
+            className={styles.navBtn}
+            aria-label="Scroll left"
+            onClick={() => scroll('left')}
+          >
             <ChevronLeft className={`${iconSlot.block} ${iconSlot.sm}`} aria-hidden />
           </button>
-          <button type="button" className={styles.navBtn} aria-label="Scroll right" onClick={() => scroll('right')}>
+          <button
+            type="button"
+            className={styles.navBtn}
+            aria-label="Scroll right"
+            onClick={() => scroll('right')}
+          >
             <ChevronRight className={`${iconSlot.block} ${iconSlot.sm}`} aria-hidden />
           </button>
         </div>

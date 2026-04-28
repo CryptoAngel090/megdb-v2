@@ -115,7 +115,9 @@ export default async function MoviesPage({ searchParams }: PageProps) {
     getTopMovies2026MosaicPosterUrls(MOSAIC_POSTER_CAP),
   ])
 
-  const initialItems = await enrichMovieShelfRuntime(results.results.map(mapTmdbMovieRowToShelfItem))
+  const initialItems = await enrichMovieShelfRuntime(
+    results.results.map(mapTmdbMovieRowToShelfItem)
+  )
   const moviesCopyCtx = { providers, studios }
   const heroDescription = getMoviesDiscoverHeroLead(state, genres, moviesCopyCtx)
   const hubStructured =

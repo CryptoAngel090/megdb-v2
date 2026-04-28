@@ -73,7 +73,11 @@
   border-radius: var(--radius-xl, 1rem);
   border: 1px solid color-mix(in oklch, var(--color-border, oklch(30% 0 0)) 76%, transparent);
   background:
-    radial-gradient(circle at 24% 15%, color-mix(in oklch, var(--color-primary, oklch(55% 0.18 30)) 34%, transparent), transparent 62%),
+    radial-gradient(
+      circle at 24% 15%,
+      color-mix(in oklch, var(--color-primary, oklch(55% 0.18 30)) 34%, transparent),
+      transparent 62%
+    ),
     color-mix(in oklch, var(--color-surface, oklch(16% 0 0)) 94%, black);
   display: grid;
   place-items: center;
@@ -153,7 +157,7 @@
 }
 
 .factsGroupTitle::before {
-  content: '';
+  content: "";
   inline-size: 0.45rem;
   block-size: 0.45rem;
   border-radius: 999px;
@@ -173,7 +177,8 @@
   column-gap: 0.8rem;
   row-gap: 0.12rem;
   padding-block: 0.5rem;
-  border-block-end: 1px solid color-mix(in oklch, var(--color-border, oklch(30% 0 0)) 52%, transparent);
+  border-block-end: 1px solid
+    color-mix(in oklch, var(--color-border, oklch(30% 0 0)) 52%, transparent);
 }
 
 .factRow:first-child {
@@ -261,7 +266,12 @@
   padding-block: 0.34rem;
   padding-inline: 0.62rem;
   border-radius: 0.6rem;
-  border: 1px solid color-mix(in oklch, var(--color-primary, oklch(55% 0.18 30)) 70%, var(--color-border, oklch(30% 0 0)));
+  border: 1px solid
+    color-mix(
+      in oklch,
+      var(--color-primary, oklch(55% 0.18 30)) 70%,
+      var(--color-border, oklch(30% 0 0))
+    );
   background: color-mix(in oklch, var(--color-primary, oklch(55% 0.18 30)) 14%, transparent);
   font-size: 0.84rem;
   font-weight: 600;
@@ -279,15 +289,23 @@
 }
 
 .biographyToggle::before {
-  content: '+';
+  content: "+";
   inline-size: 1rem;
   text-align: center;
-  color: color-mix(in oklch, var(--color-primary, oklch(55% 0.18 30)) 72%, var(--color-text, oklch(96% 0 0)));
+  color: color-mix(
+    in oklch,
+    var(--color-primary, oklch(55% 0.18 30)) 72%,
+    var(--color-text, oklch(96% 0 0))
+  );
 }
 
 .biographyToggle:hover {
   background: color-mix(in oklch, var(--color-primary, oklch(55% 0.18 30)) 20%, transparent);
-  border-color: color-mix(in oklch, var(--color-primary, oklch(55% 0.18 30)) 84%, var(--color-border, oklch(30% 0 0)));
+  border-color: color-mix(
+    in oklch,
+    var(--color-primary, oklch(55% 0.18 30)) 84%,
+    var(--color-border, oklch(30% 0 0))
+  );
 }
 
 .biographyToggle:active {
@@ -316,7 +334,7 @@
 }
 
 .biographyExpand[open] .biographyToggle::before {
-  content: '-';
+  content: "-";
 }
 
 .biographyExpand[open] .biographyToggleMore {
@@ -359,7 +377,11 @@
 
 .socialLink:hover,
 .shareButton:hover {
-  border-color: color-mix(in oklch, var(--color-primary, oklch(55% 0.18 30)) 60%, var(--color-border, oklch(30% 0 0)));
+  border-color: color-mix(
+    in oklch,
+    var(--color-primary, oklch(55% 0.18 30)) 60%,
+    var(--color-border, oklch(30% 0 0))
+  );
   background: color-mix(in oklch, var(--color-surface-raised, oklch(20% 0 0)) 85%, black);
 }
 

@@ -31,7 +31,10 @@ import styles from './page.module.css'
 export const revalidate = 600
 
 function ensureTwoSeriesGenres(genres: string[] | undefined): string[] {
-  const normalized = (genres ?? []).map((g) => String(g).trim()).filter(Boolean).slice(0, 2)
+  const normalized = (genres ?? [])
+    .map((g) => String(g).trim())
+    .filter(Boolean)
+    .slice(0, 2)
   if (normalized.length === 0) return ['SERIES', 'TV']
   if (normalized.length === 1) return [normalized[0]!, 'SERIES']
   return normalized

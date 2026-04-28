@@ -227,8 +227,7 @@ export function MediaCard({
   const releaseLabel = formatReleaseLabel(releaseDate, releaseDateDisplay)
   const rating = voteAverage > 0 ? voteAverage.toFixed(1) : null
   const href =
-    hrefOverride ??
-    detailPathForShelfItem({ type, title, releaseDate: releaseDate ?? null })
+    hrefOverride ?? detailPathForShelfItem({ type, title, releaseDate: releaseDate ?? null })
   const tmdbPosterProfile = posterContext === 'shelf' ? 'w780' : 'w500'
   const imgSrc = posterPath ? `${TMDB_IMAGE}/${tmdbPosterProfile}${posterPath}` : null
   const posterImageSizes =
@@ -269,7 +268,6 @@ export function MediaCard({
   const targetRy = rawRy
   const targetSc = rawSc
 
-
   const flushCardMotion = useCallback(() => {
     const L = cardMotionLatestRef.current
     if (!L) return
@@ -279,16 +277,7 @@ export function MediaCard({
     rawRx.set(m.rx)
     rawRy.set(m.ry)
     rawSc.set(m.sc)
-  }, [
-    prefersReducedMotion,
-    allowMagnetic,
-    allowTilt,
-    rawTx,
-    rawTy,
-    rawRx,
-    rawRy,
-    rawSc,
-  ])
+  }, [prefersReducedMotion, allowMagnetic, allowTilt, rawTx, rawTy, rawRx, rawRy, rawSc])
 
   const handleCardPointerMove = useCallback(
     (e: ReactPointerEvent<HTMLDivElement>) => {
@@ -543,9 +532,7 @@ export function MediaCard({
             {cardBody}
           </motion.div>
         ) : (
-          <div className={`${styles.magneticRoot} ${styles.cardMotionLayer}`}>
-            {cardBody}
-          </div>
+          <div className={`${styles.magneticRoot} ${styles.cardMotionLayer}`}>{cardBody}</div>
         )}
       </div>
     </Link>

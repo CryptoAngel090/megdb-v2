@@ -36,7 +36,10 @@ function ProviderLink({
         )}
       </div>
       <span className={styles.name}>{name}</span>
-      <ExternalLink className={[iconSlot.block, iconSlot.inline12, styles.ext].filter(Boolean).join(' ')} aria-hidden />
+      <ExternalLink
+        className={[iconSlot.block, iconSlot.inline12, styles.ext].filter(Boolean).join(' ')}
+        aria-hidden
+      />
     </a>
   )
 }

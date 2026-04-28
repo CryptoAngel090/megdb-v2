@@ -36,8 +36,10 @@ function isStrictTvShowRow(row: {
   release_date?: string | null
 }): boolean {
   const hasTvSignals =
-    (typeof row.name === 'string' && row.name.trim().length > 0) &&
-    (typeof row.first_air_date === 'string' && row.first_air_date.trim().length > 0)
+    typeof row.name === 'string' &&
+    row.name.trim().length > 0 &&
+    typeof row.first_air_date === 'string' &&
+    row.first_air_date.trim().length > 0
   const hasMovieSignals =
     (typeof row.title === 'string' && row.title.trim().length > 0) ||
     (typeof row.release_date === 'string' && row.release_date.trim().length > 0)
@@ -45,7 +47,10 @@ function isStrictTvShowRow(row: {
 }
 
 function ensureTwoTvShowGenres(genres: string[] | undefined): string[] {
-  const normalized = (genres ?? []).map((g) => String(g).trim()).filter(Boolean).slice(0, 2)
+  const normalized = (genres ?? [])
+    .map((g) => String(g).trim())
+    .filter(Boolean)
+    .slice(0, 2)
   if (normalized.length === 0) return ['TV SHOW', 'TV SHOW']
   if (normalized.length === 1) return [normalized[0]!, 'TV SHOW']
   return normalized
@@ -70,9 +75,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
     needsProviders ? getWatchProvidersTvList().catch(() => []) : Promise.resolve([]),
     needsStudios ? getSeriesStudiosList().catch(() => []) : Promise.resolve([]),
   ])
-  const genres = needsGenres
-    ? allGenresRaw.filter((g) => tvShowOnlyGenreIds.has(String(g.id)))
-    : []
+  const genres = needsGenres ? allGenresRaw.filter((g) => tvShowOnlyGenreIds.has(String(g.id))) : []
 
   const ctx = { providers, studios }
   const description = getTvShowsDiscoverDescription(state, genres, ctx)

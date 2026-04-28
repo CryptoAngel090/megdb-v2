@@ -60,12 +60,7 @@ export function MovieUserRatingCard({
       <div className={rootClass}>
         <div className={styles.stripRow}>
           <div className={styles.megdbBrand} aria-hidden>
-            <svg
-              className={styles.megdbPlay}
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              aria-hidden
-            >
+            <svg className={styles.megdbPlay} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
               <path d="M5 3l14 9-14 9V3z" />
             </svg>
             <span className={styles.megdbWordmark}>

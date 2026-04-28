@@ -59,7 +59,9 @@ export async function MovieDetailStreamedBelowFold({
     <>
       <MoviePhotosSectionLazy images={tail.backdropGallery} title={movieTitle} />
       <MovieCastSectionLazy cast={cast} />
-      {variant === 'tv' && <TvSeriesEpisodesLazy seriesId={tailInput.mediaId} seriesTitle={movieTitle} />}
+      {variant === 'tv' && (
+        <TvSeriesEpisodesLazy seriesId={tailInput.mediaId} seriesTitle={movieTitle} />
+      )}
       {collectionOthers && collectionOthers.parts.length > 0 && (
         <MovieCollectionSectionLazy
           title={collectionOthers.name}

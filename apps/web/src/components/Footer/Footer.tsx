@@ -91,20 +91,31 @@ const SOCIALS = [
 ] as const
 
 const MARQUEE_ITEMS = [
-  'Action', 'Drama', 'Thriller', 'Sci-Fi', 'Horror', 'Comedy',
-  'Romance', 'Animation', 'Documentary', 'Crime', 'Fantasy', 'Mystery',
-  'Adventure', 'Family', 'History', 'War', 'Western', 'Music',
+  'Action',
+  'Drama',
+  'Thriller',
+  'Sci-Fi',
+  'Horror',
+  'Comedy',
+  'Romance',
+  'Animation',
+  'Documentary',
+  'Crime',
+  'Fantasy',
+  'Mystery',
+  'Adventure',
+  'Family',
+  'History',
+  'War',
+  'Western',
+  'Music',
 ]
 
 // ── Icons ─────────────────────────────────────────────────
 
 function IconPlay() {
   return (
-    <Play
-      className={`${iconSlot.block} ${iconSlot.sm}`}
-      fill="currentColor"
-      aria-hidden={true}
-    />
+    <Play className={`${iconSlot.block} ${iconSlot.sm}`} fill="currentColor" aria-hidden={true} />
   )
 }
 
@@ -129,103 +140,109 @@ export function Footer() {
       <div className={styles.topDivider} aria-hidden="true" />
 
       <div className={styles.inner}>
-
         {/* ── Stats bar ── */}
         <FadeInView delay={0.05}>
-        <div className={styles.statsBar} aria-label="MegDB statistics">
-          <div className={styles.statItem}>
-            <span className={styles.statNumber}><CountUp target={850000} suffix="+" /></span>
-            <span className={styles.statLabel}>Movies &amp; Shows</span>
+          <div className={styles.statsBar} aria-label="MegDB statistics">
+            <div className={styles.statItem}>
+              <span className={styles.statNumber}>
+                <CountUp target={850000} suffix="+" />
+              </span>
+              <span className={styles.statLabel}>Movies &amp; Shows</span>
+            </div>
+            <div className={styles.statDivider} aria-hidden="true" />
+            <div className={styles.statItem}>
+              <span className={styles.statNumber}>
+                <CountUp target={18} suffix=" genres" />
+              </span>
+              <span className={styles.statLabel}>Categories</span>
+            </div>
+            <div className={styles.statDivider} aria-hidden="true" />
+            <div className={styles.statItem}>
+              <span className={styles.statNumber}>
+                <CountUp target={195} suffix=" countries" />
+              </span>
+              <span className={styles.statLabel}>Worldwide</span>
+            </div>
+            <div className={styles.statDivider} aria-hidden="true" />
+            <div className={styles.statItem}>
+              <span className={styles.statusRow}>
+                <span className={styles.statusDot} aria-hidden="true" />
+                <span className={styles.statusText}>All systems operational</span>
+              </span>
+              <span className={styles.statLabel}>System status</span>
+            </div>
           </div>
-          <div className={styles.statDivider} aria-hidden="true" />
-          <div className={styles.statItem}>
-            <span className={styles.statNumber}><CountUp target={18} suffix=" genres" /></span>
-            <span className={styles.statLabel}>Categories</span>
-          </div>
-          <div className={styles.statDivider} aria-hidden="true" />
-          <div className={styles.statItem}>
-            <span className={styles.statNumber}><CountUp target={195} suffix=" countries" /></span>
-            <span className={styles.statLabel}>Worldwide</span>
-          </div>
-          <div className={styles.statDivider} aria-hidden="true" />
-          <div className={styles.statItem}>
-            <span className={styles.statusRow}>
-              <span className={styles.statusDot} aria-hidden="true" />
-              <span className={styles.statusText}>All systems operational</span>
-            </span>
-            <span className={styles.statLabel}>System status</span>
-          </div>
-        </div>
         </FadeInView>
 
         {/* ── Main row ── */}
         <FadeInView delay={0.1}>
-        <div className={styles.mainRow}>
+          <div className={styles.mainRow}>
+            {/* Brand + newsletter */}
+            <div className={styles.brand}>
+              <Link href="/" className={styles.logo} aria-label="MegDB — Home">
+                <span className={styles.logoIcon}>
+                  <IconPlay />
+                </span>
+                Meg<span className={styles.logoAccent}>DB</span>
+              </Link>
 
-          {/* Brand + newsletter */}
-          <div className={styles.brand}>
-            <Link href="/" className={styles.logo} aria-label="MegDB — Home">
-              <span className={styles.logoIcon}><IconPlay /></span>
-              Meg<span className={styles.logoAccent}>DB</span>
-            </Link>
+              <p className={styles.tagline}>
+                Discover movies and TV series. Browse, compare ratings, and find what to watch next
+                — powered by TMDB.
+              </p>
 
-            <p className={styles.tagline}>
-              Discover movies and TV series. Browse, compare ratings, and find what to watch next — powered by TMDB.
-            </p>
+              <ul className={styles.socials} aria-label="Social media">
+                {SOCIALS.map(({ label, href, icon }) => (
+                  <li key={label}>
+                    <MagneticLink href={href} label={label} className={styles.socialLink ?? ''}>
+                      {icon}
+                    </MagneticLink>
+                  </li>
+                ))}
+              </ul>
 
-            <ul className={styles.socials} aria-label="Social media">
-              {SOCIALS.map(({ label, href, icon }) => (
-                <li key={label}>
-                  <MagneticLink href={href} label={label} className={styles.socialLink ?? ''}>
-                    {icon}
-                  </MagneticLink>
-                </li>
-              ))}
-            </ul>
-
-            {/* Newsletter */}
-            <NewsletterForm />
-          </div>
-
-          {/* Nav with column dividers */}
-          <nav className={styles.navOuter} aria-label="Footer navigation">
-            <div className={styles.navGrid}>
-              {FOOTER_SECTIONS.map((section, idx) => {
-                const headingId = `footer-nav-${section.id}`
-                return (
-                  <div key={section.id} className={styles.navCol}>
-                    {/* Vertical divider before each column except first */}
-                    {idx > 0 && <div className={styles.colDivider} aria-hidden="true" />}
-                    <section className={styles.navSection} aria-labelledby={headingId}>
-                      <p
-                        id={headingId}
-                        className={styles.navTitle}
-                      >
-                        {section.title}
-                      </p>
-                      <ul className={styles.navList}>
-                        {section.links.map(({ href, label }) => (
-                          <li key={href}>
-                            <ActiveNavLink
-                              href={href}
-                              className={styles.navLink ?? ''}
-                              activeClassName={styles.navLinkActive ?? ''}
-                            >
-                              <span className={styles.navLinkInner}>
-                                <span className={styles.navLinkText}>{label}</span>
-                                <span className={styles.navLinkTextHover} aria-hidden="true">{label}</span>
-                              </span>
-                            </ActiveNavLink>
-                          </li>
-                        ))}
-                      </ul>
-                    </section>
-                  </div>
-                )
-              })}
+              {/* Newsletter */}
+              <NewsletterForm />
             </div>
-          </nav>
-        </div>
+
+            {/* Nav with column dividers */}
+            <nav className={styles.navOuter} aria-label="Footer navigation">
+              <div className={styles.navGrid}>
+                {FOOTER_SECTIONS.map((section, idx) => {
+                  const headingId = `footer-nav-${section.id}`
+                  return (
+                    <div key={section.id} className={styles.navCol}>
+                      {/* Vertical divider before each column except first */}
+                      {idx > 0 && <div className={styles.colDivider} aria-hidden="true" />}
+                      <section className={styles.navSection} aria-labelledby={headingId}>
+                        <p id={headingId} className={styles.navTitle}>
+                          {section.title}
+                        </p>
+                        <ul className={styles.navList}>
+                          {section.links.map(({ href, label }) => (
+                            <li key={href}>
+                              <ActiveNavLink
+                                href={href}
+                                className={styles.navLink ?? ''}
+                                activeClassName={styles.navLinkActive ?? ''}
+                              >
+                                <span className={styles.navLinkInner}>
+                                  <span className={styles.navLinkText}>{label}</span>
+                                  <span className={styles.navLinkTextHover} aria-hidden="true">
+                                    {label}
+                                  </span>
+                                </span>
+                              </ActiveNavLink>
+                            </li>
+                          ))}
+                        </ul>
+                      </section>
+                    </div>
+                  )
+                })}
+              </div>
+            </nav>
+          </div>
         </FadeInView>
 
         {/* ── Marquee ── */}
@@ -241,30 +258,37 @@ export function Footer() {
         </div>
 
         {/* ── Watermark ── */}
-        <div className={styles.watermark} aria-hidden="true">MEGDB</div>
+        <div className={styles.watermark} aria-hidden="true">
+          MEGDB
+        </div>
 
         {/* ── Bottom bar ── */}
         <FadeInView delay={0.05}>
-        <div className={styles.bottomBar}>
-          <div className={styles.bottomLeft}>
-            <p className={styles.copyright}>
-              © {year} <span className={styles.copyrightBrand}>MegDB</span>. All rights reserved.
-            </p>
-            <LastUpdated />
-          </div>
+          <div className={styles.bottomBar}>
+            <div className={styles.bottomLeft}>
+              <p className={styles.copyright}>
+                © {year} <span className={styles.copyrightBrand}>MegDB</span>. All rights reserved.
+              </p>
+              <LastUpdated />
+            </div>
 
-          <div className={styles.bottomRight}>
-            <p className={styles.tmdbNotice}>
-              Data by{' '}
-              <a href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer" className={styles.tmdbLink}>
-                TMDB<IconExternal />
-              </a>
-              {' '}— not endorsed by TMDB.
-            </p>
+            <div className={styles.bottomRight}>
+              <p className={styles.tmdbNotice}>
+                Data by{' '}
+                <a
+                  href="https://www.themoviedb.org/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.tmdbLink}
+                >
+                  TMDB
+                  <IconExternal />
+                </a>{' '}
+                — not endorsed by TMDB.
+              </p>
+            </div>
           </div>
-        </div>
         </FadeInView>
-
       </div>
     </footer>
   )

@@ -1,7 +1,10 @@
 /** Normalized focal point as % of the image's natural width/height (for CSS object-position / transform-origin). */
 export type PosterFocalPercent = { x: number; y: number }
 
-type FaceDetectorCtor = new (opts?: { fastMode?: boolean; maxDetectedFaces?: number }) => {
+type FaceDetectorCtor = new (opts?: {
+  fastMode?: boolean
+  maxDetectedFaces?: number
+}) => {
   detect: (source: HTMLImageElement) => Promise<Array<{ boundingBox: DOMRectReadOnly }>>
 }
 

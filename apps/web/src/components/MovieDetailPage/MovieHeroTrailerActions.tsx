@@ -69,7 +69,14 @@ function HeroWatchlistButton({
   )
 }
 
-export function MovieHeroTrailerActions({ movieId, mediaType, movieTitle, releaseDate, hasTrailer, embedTitle }: Props) {
+export function MovieHeroTrailerActions({
+  movieId,
+  mediaType,
+  movieTitle,
+  releaseDate,
+  hasTrailer,
+  embedTitle,
+}: Props) {
   const openTrailer = () => {
     window.dispatchEvent(new CustomEvent(OPEN_MOVIE_TRAILER_EVENT))
   }
@@ -106,10 +113,20 @@ export function MovieHeroTrailerActions({ movieId, mediaType, movieTitle, releas
               </svg>
               <span>Watch Trailer</span>
             </button>
-            <HeroWatchlistButton movieId={movieId} mediaType={mediaType} movieTitle={movieTitle} releaseDate={releaseDate} />
+            <HeroWatchlistButton
+              movieId={movieId}
+              mediaType={mediaType}
+              movieTitle={movieTitle}
+              releaseDate={releaseDate}
+            />
           </>
         ) : (
-          <HeroWatchlistButton movieId={movieId} mediaType={mediaType} movieTitle={movieTitle} releaseDate={releaseDate} />
+          <HeroWatchlistButton
+            movieId={movieId}
+            mediaType={mediaType}
+            movieTitle={movieTitle}
+            releaseDate={releaseDate}
+          />
         )}
       </div>
 

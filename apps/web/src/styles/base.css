@@ -70,9 +70,9 @@
     background: none;
     font: inherit;
   }
-  input[type='button'],
-  input[type='submit'],
-  input[type='reset'] {
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
     border-radius: var(--radius-button) !important;
   }
 
@@ -81,11 +81,11 @@
     border-radius: var(--radius-button);
   }
 
-  a[role='button'],
-  a[class*='Btn'],
-  a[class*='Button'],
-  a[class*='btn'],
-  a[class*='button'] {
+  a[role="button"],
+  a[class*="Btn"],
+  a[class*="Button"],
+  a[class*="btn"],
+  a[class*="button"] {
     border-radius: var(--radius-button) !important;
   }
 
@@ -186,7 +186,7 @@
   }
 
   body::after {
-    content: '';
+    content: "";
     position: fixed;
     inset: 0;
     pointer-events: none;
@@ -201,7 +201,6 @@
     z-index: 1;
     min-width: 0;
   }
-
 }
 
 /* ── Selection & Scrollbar — outside @layer to guarantee highest cascade priority ── */

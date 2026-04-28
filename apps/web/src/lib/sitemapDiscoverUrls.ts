@@ -88,7 +88,10 @@ export async function fetchDiscoverUrlsForSitemap(): Promise<MetadataRoute.Sitem
   }
 
   const moviesPayload = discoverStateToBrowseInput(parseMoviesDiscoverSearchParams({}), 1)
-  const cartoonsPayload = discoverCartoonsStateToBrowseInput(parseCartoonsDiscoverSearchParams({}), 1)
+  const cartoonsPayload = discoverCartoonsStateToBrowseInput(
+    parseCartoonsDiscoverSearchParams({}),
+    1
+  )
   const seriesPayload = discoverSeriesStateToBrowseInput(parseSeriesDiscoverSearchParams({}), 1)
   const tvShowsPayload = discoverTvShowsStateToBrowseInput(parseTvShowsDiscoverSearchParams({}), 1)
 
@@ -115,22 +118,29 @@ export async function fetchDiscoverUrlsForSitemap(): Promise<MetadataRoute.Sitem
     safe(getBestMoviesAllTime(), [] as ShelfItem[]),
     safe(getBestSeriesAllTime(), [] as ShelfItem[]),
     safe(getPopularActors(120), [] as Awaited<ReturnType<typeof getPopularActors>>),
-    safe(getTrendingPeopleForSitemap(56), [] as Awaited<ReturnType<typeof getTrendingPeopleForSitemap>>),
     safe(
-      discoverMoviesBrowse(moviesPayload.input, moviesPayload.mode, moviesPayload.comingYear),
-      EMPTY_DISCOVER_PAGE,
+      getTrendingPeopleForSitemap(56),
+      [] as Awaited<ReturnType<typeof getTrendingPeopleForSitemap>>
     ),
     safe(
-      discoverCartoonsBrowse(cartoonsPayload.input, cartoonsPayload.mode, cartoonsPayload.comingYear),
-      EMPTY_DISCOVER_PAGE,
+      discoverMoviesBrowse(moviesPayload.input, moviesPayload.mode, moviesPayload.comingYear),
+      EMPTY_DISCOVER_PAGE
+    ),
+    safe(
+      discoverCartoonsBrowse(
+        cartoonsPayload.input,
+        cartoonsPayload.mode,
+        cartoonsPayload.comingYear
+      ),
+      EMPTY_DISCOVER_PAGE
     ),
     safe(
       discoverSeriesBrowse(seriesPayload.input, seriesPayload.mode, seriesPayload.comingYear),
-      EMPTY_DISCOVER_PAGE,
+      EMPTY_DISCOVER_PAGE
     ),
     safe(
       discoverTvShowsBrowse(tvShowsPayload.input, tvShowsPayload.mode, tvShowsPayload.comingYear),
-      EMPTY_DISCOVER_PAGE,
+      EMPTY_DISCOVER_PAGE
     ),
   ])
 
@@ -191,8 +201,8 @@ export async function fetchDiscoverUrlsForSitemap(): Promise<MetadataRoute.Sitem
     throw new Error(
       `Dynamic sitemap URL count below threshold: got ${out.length}, expected >= ${Math.max(
         1,
-        MIN_DYNAMIC_URLS,
-      )}`,
+        MIN_DYNAMIC_URLS
+      )}`
     )
   }
   return out

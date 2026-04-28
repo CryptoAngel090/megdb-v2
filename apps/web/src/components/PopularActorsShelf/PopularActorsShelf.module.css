@@ -161,7 +161,7 @@
   scroll-snap-align: start;
   width: calc(
     (100cqi - (var(--rail-tile-columns) - 1) * var(--rail-tile-gap)) /
-      var(--rail-tile-columns)
+    var(--rail-tile-columns)
   );
 }
 

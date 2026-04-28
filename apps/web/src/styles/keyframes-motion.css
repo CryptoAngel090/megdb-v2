@@ -225,7 +225,7 @@
   button,
   a,
   input,
-  [role='button'] {
+  [role="button"] {
     transition-duration: 150ms !important;
   }
 }

@@ -76,7 +76,9 @@ export function PopularActorsShelf({ actors }: PopularActorsShelfProps) {
             aria-label="Scroll popular actors left"
             disabled={!canScrollLeft}
             onClick={() => scrollRow(-1)}
-            {...(!reduceMotion ? { whileTap: { scale: 0.9 }, transition: { type: 'tween', duration: 0.15 } } : {})}
+            {...(!reduceMotion
+              ? { whileTap: { scale: 0.9 }, transition: { type: 'tween', duration: 0.15 } }
+              : {})}
             // transition: explicit tween — no spring physics
           >
             <Chevron dir="left" />
@@ -87,7 +89,9 @@ export function PopularActorsShelf({ actors }: PopularActorsShelfProps) {
             aria-label="Scroll popular actors right"
             disabled={!canScrollRight}
             onClick={() => scrollRow(1)}
-            {...(!reduceMotion ? { whileTap: { scale: 0.9 }, transition: { type: 'tween', duration: 0.15 } } : {})}
+            {...(!reduceMotion
+              ? { whileTap: { scale: 0.9 }, transition: { type: 'tween', duration: 0.15 } }
+              : {})}
             // transition: explicit tween — no spring physics
           >
             <Chevron dir="right" />
@@ -105,7 +109,11 @@ export function PopularActorsShelf({ actors }: PopularActorsShelfProps) {
           <div ref={rowRef} className={styles.row}>
             {actors.map((actor, i) => (
               <div key={actor.id} className={styles.cardMotionWrap}>
-                <Link href={personPath(actor.id, actor.name)} className={styles.card} title={actor.name}>
+                <Link
+                  href={personPath(actor.id, actor.name)}
+                  className={styles.card}
+                  title={actor.name}
+                >
                   <div className={styles.avatarWrap}>
                     {actor.profilePath ? (
                       <Image
@@ -137,7 +145,11 @@ export function PopularActorsShelf({ actors }: PopularActorsShelfProps) {
                 whileTap={{ scale: 0.97 }}
                 transition={{ type: 'tween', duration: 0.15 }}
               >
-                <Link href={personPath(actor.id, actor.name)} className={styles.card} title={actor.name}>
+                <Link
+                  href={personPath(actor.id, actor.name)}
+                  className={styles.card}
+                  title={actor.name}
+                >
                   <div className={styles.avatarWrap}>
                     {actor.profilePath ? (
                       <Image

@@ -56,10 +56,7 @@ async function HomeHeroSlot() {
 
   return (
     <>
-      <HomeLcpPreloadLinks
-        heroSlides={heroItems}
-        shelfFallbacks={[]}
-      />
+      <HomeLcpPreloadLinks heroSlides={heroItems} shelfFallbacks={[]} />
       <HeroSection slides={heroItems} />
     </>
   )

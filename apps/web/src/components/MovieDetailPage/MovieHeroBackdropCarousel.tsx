@@ -82,10 +82,13 @@ export function MovieHeroCarouselProvider({
     })
   }, [n])
 
-  const goToSlide = useCallback((index: number) => {
-    if (n === 0) return
-    setCurrentIndex(((index % n) + n) % n)
-  }, [n])
+  const goToSlide = useCallback(
+    (index: number) => {
+      if (n === 0) return
+      setCurrentIndex(((index % n) + n) % n)
+    },
+    [n]
+  )
 
   const goToPrev = useCallback(() => {
     if (n <= 1) return
@@ -163,7 +166,7 @@ export function MovieHeroCarouselProvider({
       slideUrls,
       slideVariants,
       toggleCarouselPause,
-    ],
+    ]
   )
 
   return (
@@ -192,9 +195,12 @@ export function MovieHeroCarouselBackdrop({ slideImageClassName }: MovieHeroCaro
   const currentUrl = slideUrls[currentIndex]
   if (!currentUrl) return null
 
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStartX.current = e.changedTouches[0]?.clientX ?? null
-  }, [touchStartX])
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      touchStartX.current = e.changedTouches[0]?.clientX ?? null
+    },
+    [touchStartX]
+  )
 
   const handleTouchEnd = useCallback(
     (e: React.TouchEvent) => {
@@ -210,7 +216,7 @@ export function MovieHeroCarouselBackdrop({ slideImageClassName }: MovieHeroCaro
       if (dx > 0) goToPrev()
       else goToNext()
     },
-    [goToNext, goToPrev, slideUrls.length, touchStartX],
+    [goToNext, goToPrev, slideUrls.length, touchStartX]
   )
 
   const handleKeyDown = useCallback(
@@ -224,7 +230,7 @@ export function MovieHeroCarouselBackdrop({ slideImageClassName }: MovieHeroCaro
       if (e.key === 'ArrowLeft') goToPrev()
       else goToNext()
     },
-    [goToNext, goToPrev],
+    [goToNext, goToPrev]
   )
 
   return (
@@ -271,4 +277,3 @@ export function MovieHeroCarouselBackdrop({ slideImageClassName }: MovieHeroCaro
     </div>
   )
 }
-

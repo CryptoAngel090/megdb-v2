@@ -59,7 +59,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     disabled = false,
     ...rest
   },
-  ref,
+  ref
 ) {
   const variants = buttonVariants
 
