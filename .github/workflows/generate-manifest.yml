@@ -31,9 +31,9 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: chore: regenerate CODE_INDEX.md
+          commit-message: "chore: regenerate CODE_INDEX.md"
           branch: manifest/update-${{ github.run_id }}
-          title: chore: update CODE_INDEX.md
+          title: "chore: update CODE_INDEX.md"
           body: Auto-generated CODE_INDEX.md (daily)
           labels: automated, repo-maintenance
 

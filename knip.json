@@ -1,0 +1,45 @@
+{
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "workspaces": {
+    ".": {
+      "entry": ["scripts/**/*.mjs", "scripts/**/*.js"],
+      "project": ["scripts/**/*.{js,mjs,ts,tsx}"]
+    },
+    "apps/web": {
+      "entry": ["next.config.ts", "src/app/**/*.{ts,tsx}", "scripts/**/*.mjs"],
+      "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs", "*.config.{js,mjs,ts}"],
+      "ignore": [".seo/**"]
+    },
+    "apps/admin": {
+      "entry": ["next.config.ts", "src/app/**/*.{ts,tsx}"],
+      "project": ["src/**/*.{ts,tsx}", "*.config.{js,mjs,ts}"]
+    },
+    "apps/api": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.{ts,tsx}", "*.config.{js,mjs,ts}"]
+    },
+    "packages/db": {
+      "entry": ["src/**/*.ts"],
+      "project": ["src/**/*.ts"]
+    },
+    "packages/ui": {
+      "entry": ["src/**/*.{ts,tsx}"],
+      "project": ["src/**/*.{ts,tsx}"]
+    },
+    "packages/types": {
+      "entry": ["src/**/*.ts"],
+      "project": ["src/**/*.ts"]
+    }
+  },
+  "ignore": [
+    ".github/**",
+    "vendor/**",
+    "legacy-api/**",
+    "**/.next/**",
+    "**/dist/**",
+    "**/coverage/**",
+    "**/.turbo/**",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ]
+}
