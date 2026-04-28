@@ -86,59 +86,16 @@
       "unresolved": []
     },
     {
-      "file": "apps/web/src/lib/jsonLdSite.ts",
-      "binaries": [],
-      "catalog": [],
-      "dependencies": [],
-      "devDependencies": [],
-      "duplicates": [],
-      "enumMembers": [],
-      "exports": [
-        { "name": "ORGANIZATION_ID", "line": 10, "col": 14, "pos": 270 },
-        { "name": "JSON_LD_PAGE_ENTITY_FRAGMENT", "line": 21, "col": 14, "pos": 665 },
-        { "name": "JSON_LD_COLLECTION_ENTITY_FRAGMENT", "line": 24, "col": 14, "pos": 777 },
-        { "name": "buildCollectionPageJsonLd", "line": 115, "col": 17, "pos": 3749 }
-      ],
-      "files": [],
-      "namespaceMembers": [],
-      "optionalPeerDependencies": [],
-      "types": [],
-      "unlisted": [],
-      "unresolved": []
-    },
-    {
-      "file": "apps/web/src/lib/seoSocial.ts",
-      "binaries": [],
-      "catalog": [],
-      "dependencies": [],
-      "devDependencies": [],
-      "duplicates": [],
-      "enumMembers": [],
-      "exports": [{ "name": "absoluteUrl", "line": 5, "col": 17, "pos": 165 }],
-      "files": [],
-      "namespaceMembers": [],
-      "optionalPeerDependencies": [],
-      "types": [],
-      "unlisted": [],
-      "unresolved": []
-    },
-    {
       "file": "apps/web/src/lib/slug.ts",
       "binaries": [],
       "catalog": [],
       "dependencies": [],
       "devDependencies": [],
-      "duplicates": [
-        [
-          { "name": "seriesPath", "line": 32, "col": 17, "pos": 1246 },
-          { "name": "tvshowPath", "line": 44, "col": 14, "pos": 1808 }
-        ]
-      ],
+      "duplicates": [],
       "enumMembers": [],
       "exports": [
         { "name": "toSlug", "line": 4, "col": 17, "pos": 115 },
-        { "name": "tvshowPath", "line": 44, "col": 14, "pos": 1808 },
-        { "name": "parseSlug", "line": 97, "col": 17, "pos": 3394 }
+        { "name": "parseSlug", "line": 89, "col": 17, "pos": 3149 }
       ],
       "files": [],
       "namespaceMembers": [],
@@ -231,22 +188,6 @@
       "unresolved": []
     },
     {
-      "file": "apps/web/src/components/Header/Header.animations.ts",
-      "binaries": [],
-      "catalog": [],
-      "dependencies": [],
-      "devDependencies": [],
-      "duplicates": [],
-      "enumMembers": [],
-      "exports": [{ "name": "pillVariants", "line": 5, "col": 14, "pos": 125 }],
-      "files": [],
-      "namespaceMembers": [],
-      "optionalPeerDependencies": [],
-      "types": [],
-      "unlisted": [],
-      "unresolved": []
-    },
-    {
       "file": "apps/web/src/lib/auth-client.ts",
       "binaries": [],
       "catalog": [],
@@ -255,22 +196,6 @@
       "duplicates": [],
       "enumMembers": [],
       "exports": [{ "name": "isAuthenticated", "line": 65, "col": 17, "pos": 1815 }],
-      "files": [],
-      "namespaceMembers": [],
-      "optionalPeerDependencies": [],
-      "types": [],
-      "unlisted": [],
-      "unresolved": []
-    },
-    {
-      "file": "apps/web/src/components/Footer/FooterClient.tsx",
-      "binaries": [],
-      "catalog": [],
-      "dependencies": [],
-      "devDependencies": [],
-      "duplicates": [],
-      "enumMembers": [],
-      "exports": [{ "name": "LangSwitcher", "line": 233, "col": 17, "pos": 7126 }],
       "files": [],
       "namespaceMembers": [],
       "optionalPeerDependencies": [],
@@ -295,69 +220,22 @@
       "unresolved": []
     },
     {
-      "file": "apps/web/src/hooks/usePrefersReducedMotion.ts",
-      "binaries": [],
-      "catalog": [],
-      "dependencies": [],
-      "devDependencies": [],
-      "duplicates": [
-        [
-          { "name": "usePrefersReducedMotion", "line": 10, "col": 17, "pos": 307 },
-          { "name": "useReducedMotion", "line": 15, "col": 14, "pos": 532 }
-        ]
-      ],
-      "enumMembers": [],
-      "exports": [{ "name": "useReducedMotion", "line": 15, "col": 14, "pos": 532 }],
-      "files": [],
-      "namespaceMembers": [],
-      "optionalPeerDependencies": [],
-      "types": [],
-      "unlisted": [],
-      "unresolved": []
-    },
-    {
       "file": "apps/web/src/lib/shelfAnimations.ts",
-      "binaries": [],
-      "catalog": [],
-      "dependencies": [],
-      "devDependencies": [],
-      "duplicates": [
-        [
-          { "name": "tapTransition", "line": 70, "col": 14, "pos": 1756 },
-          { "name": "shelfTapSpring", "line": 76, "col": 14, "pos": 1858 },
-          { "name": "shelfLinkTapSpring", "line": 77, "col": 14, "pos": 1903 },
-          { "name": "actorTileTapSpring", "line": 78, "col": 14, "pos": 1952 }
-        ]
-      ],
-      "enumMembers": [],
-      "exports": [
-        { "name": "shelfInViewOptions", "line": 13, "col": 14, "pos": 473 },
-        { "name": "shelfSectionRevealVariants", "line": 23, "col": 14, "pos": 777 },
-        { "name": "shelfMediaRowListVariants", "line": 32, "col": 14, "pos": 990 },
-        { "name": "mediaShelfCardVariants", "line": 42, "col": 14, "pos": 1169 },
-        { "name": "actorRowListVariants", "line": 51, "col": 14, "pos": 1378 },
-        { "name": "actorCardVariants", "line": 61, "col": 14, "pos": 1552 },
-        { "name": "tapTransition", "line": 70, "col": 14, "pos": 1756 },
-        { "name": "shelfTapSpring", "line": 76, "col": 14, "pos": 1858 },
-        { "name": "shelfLinkTapSpring", "line": 77, "col": 14, "pos": 1903 },
-        { "name": "actorTileTapSpring", "line": 78, "col": 14, "pos": 1952 }
-      ],
-      "files": [],
-      "namespaceMembers": [],
-      "optionalPeerDependencies": [],
-      "types": [],
-      "unlisted": [],
-      "unresolved": []
-    },
-    {
-      "file": "apps/web/src/lib/localWatchlist.ts",
       "binaries": [],
       "catalog": [],
       "dependencies": [],
       "devDependencies": [],
       "duplicates": [],
       "enumMembers": [],
-      "exports": [{ "name": "setLocalWatchlistItems", "line": 98, "col": 17, "pos": 3318 }],
+      "exports": [
+        { "name": "shelfInViewOptions", "line": 13, "col": 14, "pos": 461 },
+        { "name": "shelfSectionRevealVariants", "line": 23, "col": 14, "pos": 755 },
+        { "name": "shelfMediaRowListVariants", "line": 32, "col": 14, "pos": 959 },
+        { "name": "mediaShelfCardVariants", "line": 42, "col": 14, "pos": 1128 },
+        { "name": "actorRowListVariants", "line": 51, "col": 14, "pos": 1328 },
+        { "name": "actorCardVariants", "line": 61, "col": 14, "pos": 1492 },
+        { "name": "tapTransition", "line": 70, "col": 14, "pos": 1687 }
+      ],
       "files": [],
       "namespaceMembers": [],
       "optionalPeerDependencies": [],
@@ -383,6 +261,22 @@
         { "name": "gridGapLayoutClasses", "line": 9, "col": 3, "pos": 154 },
         { "name": "gridColumnLayoutClasses", "line": 11, "col": 3, "pos": 201 }
       ],
+      "files": [],
+      "namespaceMembers": [],
+      "optionalPeerDependencies": [],
+      "types": [],
+      "unlisted": [],
+      "unresolved": []
+    },
+    {
+      "file": "apps/web/src/lib/localWatchlist.ts",
+      "binaries": [],
+      "catalog": [],
+      "dependencies": [],
+      "devDependencies": [],
+      "duplicates": [],
+      "enumMembers": [],
+      "exports": [{ "name": "setLocalWatchlistItems", "line": 98, "col": 17, "pos": 3318 }],
       "files": [],
       "namespaceMembers": [],
       "optionalPeerDependencies": [],
