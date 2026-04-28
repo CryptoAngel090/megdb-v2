@@ -45,6 +45,7 @@
     "seo:indexnow:trigger:dry": "pnpm --filter @repo/web run seo:indexnow:trigger:dry",
     "test": "pnpm run verify:tokens && pnpm run verify:design-tokens-sync && pnpm run verify:seo && turbo test",
     "format": "prettier --write \"**/*.{ts,tsx,css,md}\"",
+    "lint-staged": "lint-staged",
     "biome:check": "biome check .",
     "biome:write": "biome check --write .",
     "knip": "knip",

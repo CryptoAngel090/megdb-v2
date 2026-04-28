@@ -1,1 +1,4 @@
-pnpm lint-staged
+pnpm run verify:tokens
+pnpm run verify:seo:scaffold:sync-staged
+pnpm run verify:seo:scaffold:staged
+pnpm run verify:seo

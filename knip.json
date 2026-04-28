@@ -41,5 +41,11 @@
     "**/.turbo/**",
     "**/*.test.ts",
     "**/*.test.tsx"
+  ],
+  "ignoreDependencies": [
+    "lint-staged"
+  ],
+  "ignoreBinaries": [
+    "lint-staged"
   ]
 }
