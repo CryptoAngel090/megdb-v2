@@ -5,9 +5,11 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type { PosterFocalPercent } from '@/lib/posterFaceFocalPoint'
 import { detectPosterFocalPoint } from '@/lib/posterFaceFocalPoint'
 
-export type MovieHeroBackdropImageProps = ImageProps & {
+type MovieHeroBackdropImageProps = ImageProps & {
   /** When this string changes, focal point is recomputed (e.g. `${id}-backdrop-${path}`). */
   focalAssetKey: string
+  /** Disable auto face focal detection and keep provided CSS/style object-position. */
+  disableAutoFocal?: boolean
 }
 
 /**
@@ -16,6 +18,7 @@ export type MovieHeroBackdropImageProps = ImageProps & {
  */
 export function MovieHeroBackdropImage({
   focalAssetKey,
+  disableAutoFocal = false,
   className,
   style,
   onLoadingComplete,
@@ -32,6 +35,7 @@ export function MovieHeroBackdropImage({
   const handleLoad = useCallback(
     (img: HTMLImageElement) => {
       onLoadingComplete?.(img)
+      if (disableAutoFocal) return
       const k = focalAssetKey
       const run = () => {
         void detectPosterFocalPoint(img).then((p) => {
@@ -44,7 +48,7 @@ export function MovieHeroBackdropImage({
         globalThis.setTimeout(run, 0)
       }
     },
-    [focalAssetKey, onLoadingComplete]
+    [disableAutoFocal, focalAssetKey, onLoadingComplete]
   )
 
   const mergedStyle =
