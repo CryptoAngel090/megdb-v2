@@ -9,14 +9,16 @@
 - Captured first cleanup diagnostics baselines from `biome` and `knip`.
 - Fixed invalid GitHub workflow YAML keys with colons to unblock `knip` parsing.
 - Generated machine-readable knip baseline report: `.reports/knip-baseline.json`.
+- Executed first cleanup batch: deleted 18 files flagged by knip as `Unused files` in `apps/web`.
 
 ### Metrics (Before -> After)
 
-- Files: 44936 -> 44936
+- Files: 44936 -> 46873
 - Dirs: 8037 -> 8037
 - Build: 64.70s (failed) -> 64.70s (failed)
 - tsc errors: 0 -> 0
-- knip issues: N/A (tool missing) -> 75 reported items (+ 1 workflow parser blocker)
+- knip issues: N/A (tool missing) -> 57 reported items
+- knip unused files: 18 -> 0
 - biome diagnostics: N/A (tool missing) -> 643 errors / 145 warnings / 38 infos
 - tests: 68/68 -> 68/68
 
