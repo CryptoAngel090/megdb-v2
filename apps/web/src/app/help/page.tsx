@@ -2,19 +2,20 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalDocument, LegalNote } from '@/components/LegalDocument/LegalDocument'
 import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
-import { discoverSocialMeta } from '@/lib/seoSocial'
+import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
+/** @sync `ROUTE_REVALIDATE_STATIC_COPY` in `@/lib/cachePolicy` */
 export const revalidate = 86_400
 
 const title = 'Help & Support'
 const description =
-  'MegDB help center: search, browse, accounts, troubleshooting, TMDB data, rate limits, and how to get support in 2026.'
+  'MegDB Help: how search and discover hubs work, account/login issues, TMDB data freshness, API rate limits on our routes, and where to report bugs — 2026.'
 
 export const metadata: Metadata = {
   title,
   description,
-  alternates: { canonical: '/help' },
+  alternates: discoverPageAlternates('/help'),
   ...discoverSocialMeta(title, description, '/help'),
 }
 

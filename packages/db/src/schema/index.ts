@@ -18,6 +18,7 @@ export const mediaTypeEnum = pgEnum('media_type', ['movie', 'series', 'cartoon',
 export const userRoleEnum = pgEnum('user_role', ['user', 'admin'])
 export const reactionEnum = pgEnum('reaction_type', ['like', 'dislike'])
 export const watchStatusEnum = pgEnum('watch_status', ['watching', 'completed', 'planned'])
+export const commentStatusEnum = pgEnum('comment_status', ['pending', 'approved', 'rejected'])
 
 // ── Media ─────────────────────────────────────
 
@@ -33,6 +34,8 @@ export const media = pgTable(
     tagline: text('tagline'),
     posterPath: text('poster_path'),
     backdropPath: text('backdrop_path'),
+    primaryColor: text('primary_color'),
+    blurHash: text('blur_hash'),
     releaseDate: timestamp('release_date'),
     runtime: integer('runtime'),
     voteAverage: real('vote_average').default(0),
@@ -204,6 +207,30 @@ export const movieFeedbackVotes = pgTable(
   (t) => [
     uniqueIndex('movie_feedback_unique_vote').on(t.tmdbMovieId, t.visitorId),
     index('movie_feedback_tmdb_idx').on(t.tmdbMovieId),
+  ]
+)
+
+// ── Movie comments with moderation (email approval flow) ─────
+
+export const movieComments = pgTable(
+  'movie_comments',
+  {
+    id: serial('id').primaryKey(),
+    tmdbMovieId: integer('tmdb_movie_id').notNull(),
+    mediaType: mediaTypeEnum('media_type').notNull().default('movie'),
+    authorName: text('author_name').notNull(),
+    authorEmail: text('author_email').notNull(),
+    body: text('body').notNull(),
+    status: commentStatusEnum('status').notNull().default('pending'),
+    moderationToken: text('moderation_token').notNull(),
+    createdAt: timestamp('created_at').defaultNow(),
+    reviewedAt: timestamp('reviewed_at'),
+  },
+  (t) => [
+    uniqueIndex('movie_comments_token_unique').on(t.moderationToken),
+    index('movie_comments_tmdb_idx').on(t.tmdbMovieId),
+    index('movie_comments_media_type_idx').on(t.mediaType),
+    index('movie_comments_status_idx').on(t.status),
   ]
 )
 

@@ -2,13 +2,14 @@
 
 import Link from 'next/link'
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { MediaCard, MediaCardSkeleton } from '@/components/MediaCard/MediaCard'
 import { ShelfRevealShell } from '@/components/ShelfRevealShell/ShelfRevealShell'
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
-import { shelfInViewOptions, shelfLinkTapSpring, shelfTapSpring } from '@/lib/shelfAnimations'
+// Spring animations removed per request — interactions now use instant or simple CSS transitions
 import styles from './MediaShelf.module.css'
 import type { ShelfItem } from '@/lib/tmdb'
+import type { CardSizeKey } from '@/theme/tokens/size'
 
 const MotionLink = motion(Link)
 
@@ -18,15 +19,18 @@ interface MediaShelfProps {
   viewAllHref?: string
   /** Passed to cards: show full release date (day month year) instead of year only. */
   releaseDateDisplay?: 'year' | 'full'
-  /** Passed to cards: e.g. homepage “Coming in …” — poster shows only centered release date. */
+  /** Passed to cards: e.g. homepage "Coming in …" — poster shows only centered release date. */
   posterBadges?: 'default' | 'comingDateOnly'
+  /** Poster frame preset — `theme/tokens/size.ts` `cardSize`. @default 'md' */
+  cardSize?: CardSizeKey
 }
 
 interface MediaShelfSkeletonProps {
   count?: number
+  cardSize?: CardSizeKey
 }
 
-export function MediaShelfSkeleton({ count = 10 }: MediaShelfSkeletonProps) {
+export function MediaShelfSkeleton({ count = 10, cardSize = 'md' }: MediaShelfSkeletonProps) {
   return (
     <section className={styles.shelf}>
       <div className={styles.header}>
@@ -46,7 +50,7 @@ export function MediaShelfSkeleton({ count = 10 }: MediaShelfSkeletonProps) {
         <div className={styles.row}>
           <div className={styles.rowInner}>
             {Array.from({ length: count }).map((_, i) => (
-              <MediaCardSkeleton key={i} />
+              <MediaCardSkeleton key={i} cardSize={cardSize} />
             ))}
           </div>
         </div>
@@ -61,6 +65,7 @@ export function MediaShelf({
   viewAllHref,
   releaseDateDisplay,
   posterBadges,
+  cardSize = 'md',
 }: MediaShelfProps) {
   const reduceMotion = usePrefersReducedMotion()
   const shelfTitleId = useId()
@@ -90,8 +95,6 @@ export function MediaShelf({
       ro.disconnect()
     }
   }, [items, updateScrollButtons])
-
-  const rowInView = useInView(rowRef, shelfInViewOptions)
 
   const scrollRow = useCallback(
     (dir: -1 | 1) => {
@@ -136,8 +139,8 @@ export function MediaShelf({
             title={`Previous titles — ${title}`}
             disabled={!canScrollLeft}
             onClick={() => scrollRow(-1)}
-            {...(!reduceMotion ? { whileTap: { scale: 0.9 } } : {})}
-            transition={shelfTapSpring}
+            {...(!reduceMotion ? { whileTap: { scale: 0.9 }, transition: { type: 'tween', duration: 0.15 } } : {})}
+            // transition: explicit tween — no spring physics
           >
             <ChevronIcon dir="left" />
           </motion.button>
@@ -148,8 +151,8 @@ export function MediaShelf({
             title={`More titles — ${title}`}
             disabled={!canScrollRight}
             onClick={() => scrollRow(1)}
-            {...(!reduceMotion ? { whileTap: { scale: 0.9 } } : {})}
-            transition={shelfTapSpring}
+            {...(!reduceMotion ? { whileTap: { scale: 0.9 }, transition: { type: 'tween', duration: 0.15 } } : {})}
+            // transition: explicit tween — no spring physics
           >
             <ChevronIcon dir="right" />
           </motion.button>
@@ -160,12 +163,12 @@ export function MediaShelf({
               href={viewAllHref}
               className={styles.viewAll}
               aria-label={`See all titles in ${title}`}
-              {...(!reduceMotion ? { whileHover: { scale: 1.03 }, whileTap: { scale: 0.96 } } : {})}
-              transition={shelfLinkTapSpring}
+              {...(!reduceMotion ? { whileHover: { scale: 1.03 }, whileTap: { scale: 0.96 }, transition: { type: 'tween', duration: 0.15 } } : {})}
+            // transition: explicit tween — no spring physics
             >
               <span className={styles.viewAllLabel}>See all</span>
               <span className={styles.viewAllIcon} aria-hidden="true">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <svg className={styles.viewAllChevron} viewBox="0 0 24 24" fill="none">
                   <path
                     d="M9 18l6-6-6-6"
                     stroke="currentColor"
@@ -195,10 +198,12 @@ export function MediaShelf({
                   listIndex={i}
                   priority={i < 5}
                   shelfReveal={false}
+                  enablePointerMotion={false}
                   posterContext="shelf"
                   layout="compact"
                   unifiedDiscoverMeta
                   hideContextBadgeOnMobile
+                  cardSize={cardSize}
                   {...(releaseDateDisplay !== undefined ? { releaseDateDisplay } : {})}
                   {...(posterBadges !== undefined ? { posterBadges } : {})}
                 />
@@ -207,29 +212,22 @@ export function MediaShelf({
           ) : (
             <div className={styles.rowInner}>
               {items.map((item, i) => (
-                <motion.div
-                  key={item.id}
-                  initial={{ opacity: 0, y: 40 }}
-                  animate={rowInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-                  transition={{
-                    duration: 0.4,
-                    delay: i * 0.05,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                >
+                <div key={item.id}>
                   <MediaCard
                     {...item}
                     listIndex={i}
                     priority={i < 5}
                     shelfReveal={false}
+                    enablePointerMotion={false}
                     posterContext="shelf"
                     layout="compact"
                     unifiedDiscoverMeta
                     hideContextBadgeOnMobile
+                    cardSize={cardSize}
                     {...(releaseDateDisplay !== undefined ? { releaseDateDisplay } : {})}
                     {...(posterBadges !== undefined ? { posterBadges } : {})}
                   />
-                </motion.div>
+                </div>
               ))}
             </div>
           )}
@@ -243,7 +241,6 @@ export function MediaShelf({
       outerClassName={styles.shelfOuter}
       innerClassName={styles.shelf}
       aria-labelledby={shelfTitleId}
-      reduceMotion={reduceMotion}
     >
       {shelfBody}
     </ShelfRevealShell>
@@ -252,7 +249,7 @@ export function MediaShelf({
 
 function ChevronIcon({ dir }: { dir: 'left' | 'right' }) {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+    <svg className={styles.scrollChevron} viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
         d={dir === 'left' ? 'M15 18l-6-6 6-6' : 'M9 18l6-6-6-6'}
         stroke="currentColor"

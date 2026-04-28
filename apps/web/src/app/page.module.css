@@ -1,5 +1,5 @@
 /* ── Homepage — Netflix style ───────────────── */
-/* rule 32: section margin-bottom 48–64px → gap: 48px (--space-6) */
+/* rule 32: section margin-bottom 48–64px → gap: var(--space-6) (--space-6) */
 /* rule 33: максимум 6–7 секций на странице (контролируется в page.tsx) */
 .page {
   display: flex;

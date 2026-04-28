@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { MediaCard } from '@/components/MediaCard/MediaCard'
 import type {
@@ -148,13 +148,9 @@ type DiscoverPagePayload = { results: ShelfItem[]; page: number; total_pages: nu
 type ActiveChip = { key: string; label: string; patch: Partial<MoviesFilterDraft> }
 const PREFETCH_LOOKAHEAD_PAGES = 2
 
-const MOVIES_DISCOVER_VIEW_KEY = 'megdb-movies-discover-view-v1'
-
 function discoverScrollStorageKey(basePath: string): string {
   return `megdb-discover-scroll-${basePath}`
 }
-
-type DiscoverViewMode = 'default' | 'compact' | 'list'
 
 function getModalFocusables(root: HTMLElement): HTMLElement[] {
   const sel = [
@@ -172,130 +168,6 @@ function getModalFocusables(root: HTMLElement): HTMLElement[] {
   })
 }
 
-/**
- * Square-unit grid — mixed portrait (2:3) + one landscape (16:9):
- * — small [2,3], medium [4,6], large portrait [6,9] (all 3c = 2r)
- * — wide [16,9] (9c = 16r)
- * Deterministic irregular mix: lots of small tiles, never long runs of one size.
- */
-type MosaicSpan = readonly [c: number, r: number]
-
-function mosaicHash01(i: number): number {
-  const x = Math.imul(i + 1, 0x9e3779b1) >>> 0
-  return x / 4294967296
-}
-
-/** Long template so rows rarely look “one size only”; SSR-stable. */
-function buildIrregularMosaicPattern(
-  count: number
-): Array<{ span: MosaicSpan; landscape: boolean }> {
-  const S: MosaicSpan = [2, 3]
-  const M: MosaicSpan = [4, 6]
-  const L: MosaicSpan = [6, 9]
-  const W: MosaicSpan = [16, 9]
-  const out: Array<{ span: MosaicSpan; landscape: boolean }> = []
-  let streakS = 0
-  for (let i = 0; i < count; i++) {
-    const t = mosaicHash01(i)
-    if (streakS >= 3) {
-      const t2 = mosaicHash01(i + 4133)
-      if (t2 < 0.48) {
-        out.push({ span: M, landscape: false })
-      } else if (t2 < 0.82) {
-        out.push({ span: L, landscape: false })
-      } else {
-        out.push({ span: W, landscape: true })
-      }
-      streakS = 0
-      continue
-    }
-    if (t < 0.56) {
-      out.push({ span: S, landscape: false })
-      streakS += 1
-    } else if (t < 0.8) {
-      out.push({ span: M, landscape: false })
-      streakS = 0
-    } else if (t < 0.9) {
-      out.push({ span: L, landscape: false })
-      streakS = 0
-    } else {
-      out.push({ span: W, landscape: true })
-      streakS = 0
-    }
-  }
-  return out
-}
-
-const MOSAIC_PATTERN = buildIrregularMosaicPattern(480)
-
-const MOSAIC_TILE_TARGET = 380
-
-/** `urls` are already hype-sorted (best first). Big tiles only use the top slice. */
-function mosaicTileTier(c: number, r: number, landscape: boolean): 'ultra' | 'mid' | 'small' {
-  if (landscape || (c === 6 && r === 9)) return 'ultra'
-  if (c * r >= 24) return 'mid'
-  return 'small'
-}
-
-function buildNetflixMosaicTiles(
-  urls: string[]
-): Array<{ url: string; c: number; r: number; landscape: boolean }> {
-  const uniqueUrls = [...new Set(urls.filter((u) => u.trim() !== ''))]
-  if (uniqueUrls.length === 0) return []
-
-  const ultraCap = Math.min(48, uniqueUrls.length)
-  const midCap = Math.min(120, uniqueUrls.length)
-  const ultraPool = uniqueUrls.slice(0, ultraCap)
-  const midPool = uniqueUrls.slice(0, midCap)
-  const tailStart = Math.min(36, Math.max(0, uniqueUrls.length - 1))
-  const smallPool = uniqueUrls.length > tailStart ? uniqueUrls.slice(tailStart) : uniqueUrls
-
-  const recentLimit = 18
-  const recentQueue: string[] = []
-  const recentSet = new Set<string>()
-
-  const remember = (url: string) => {
-    recentQueue.push(url)
-    recentSet.add(url)
-    if (recentQueue.length > recentLimit) {
-      const dropped = recentQueue.shift()
-      if (dropped != null) recentSet.delete(dropped)
-    }
-  }
-
-  const pickFromPool = (pool: string[], seed: number): string => {
-    if (pool.length === 0) return uniqueUrls[seed % uniqueUrls.length]!
-    if (pool.length === 1) return pool[0]!
-    // Prefer URLs not used in recent neighborhood to avoid visible repeats.
-    const start = (Math.imul(seed + 1, 2654435761) >>> 0) % pool.length
-    for (let step = 0; step < pool.length; step += 1) {
-      const idx = (start + step) % pool.length
-      const candidate = pool[idx]!
-      if (pool.length > recentSet.size && recentSet.has(candidate)) continue
-      return candidate
-    }
-    return pool[start]!
-  }
-
-  const tiles: Array<{ url: string; c: number; r: number; landscape: boolean }> = []
-  for (let i = 0; i < MOSAIC_TILE_TARGET; i += 1) {
-    const def = MOSAIC_PATTERN[i % MOSAIC_PATTERN.length]!
-    const [c, r] = def.span
-    const tier = mosaicTileTier(c, r, def.landscape)
-    let url: string
-    if (tier === 'ultra') {
-      url = pickFromPool(ultraPool, i * 13 + 3)
-    } else if (tier === 'mid') {
-      url = pickFromPool(midPool, i * 17 + 5)
-    } else {
-      url = pickFromPool(smallPool, i * 23 + 7)
-    }
-    remember(url)
-    tiles.push({ url, c, r, landscape: def.landscape })
-  }
-  return tiles
-}
-
 export function MoviesDiscoverPage({
   discoverState,
   genres,
@@ -306,6 +178,8 @@ export function MoviesDiscoverPage({
   basePath,
   apiPath,
   pageTitle,
+  seoTitle,
+  seoSubtitle,
   emptyText,
   contentLabelPlural,
   presetsStorageKey = DEFAULT_PRESETS_STORAGE_KEY,
@@ -314,9 +188,10 @@ export function MoviesDiscoverPage({
   presetSuggestions = [],
   initialItems,
   totalPages,
-  mosaicUrls,
+  mosaicUrls: _mosaicUrls,
   heroDescription,
   enableDiscoverPolish = false,
+  mobileGridColumns = 2,
   trustUpdatedAtLabel,
 }: {
   discoverState: DiscoverPageState
@@ -328,6 +203,8 @@ export function MoviesDiscoverPage({
   basePath: string
   apiPath: string
   pageTitle: string
+  seoTitle?: string
+  seoSubtitle?: string
   emptyText: string
   contentLabelPlural: string
   presetsStorageKey?: string
@@ -340,11 +217,30 @@ export function MoviesDiscoverPage({
   heroDescription: string
   /** Movies `/movies` UX: focus trap, scroll restore, layout modes, TMDB trust line, hero LCP tile. */
   enableDiscoverPolish?: boolean
+  /** Mobile-only poster grid columns. @default 2 */
+  mobileGridColumns?: 2 | 3
   /** Pre-formatted timestamp (UTC), e.g. from the server render. */
   trustUpdatedAtLabel?: string
 }) {
+  void _mosaicUrls
+  const pathname = usePathname()
   const router = useRouter()
   const y = new Date().getFullYear()
+
+  const discoverBreadcrumbs = (() => {
+    if (!pathname.startsWith('/movies/category/')) return null
+    const genreSlug = pathname.split('/').filter(Boolean)[2]
+    if (!genreSlug) return null
+    const genreLabel = genreSlug
+      .split('-')
+      .map((part) => (part ? `${part[0]!.toUpperCase()}${part.slice(1)}` : part))
+      .join(' ')
+    return [
+      { href: '/', label: 'Home' },
+      { href: '/movies', label: 'Movies' },
+      { label: genreLabel },
+    ] as const
+  })()
 
   const [items, setItems] = useState<ShelfItem[]>(initialItems)
   const [nextPage, setNextPage] = useState(2)
@@ -352,7 +248,6 @@ export function MoviesDiscoverPage({
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
-  const [discoverViewMode, setDiscoverViewMode] = useState<DiscoverViewMode>('default')
   const [savedPresets, setSavedPresets] = useState<SavedPreset[]>([])
   const [editingPresetId, setEditingPresetId] = useState<string | null>(null)
   const [editingPresetName, setEditingPresetName] = useState('')
@@ -370,29 +265,6 @@ export function MoviesDiscoverPage({
     prefetchedPagesRef.current.clear()
     prefetchInFlightPagesRef.current.clear()
   }, [filterKey, initialItems, totalPages])
-
-  useEffect(() => {
-    if (!enableDiscoverPolish) return
-    try {
-      const raw = localStorage.getItem(MOVIES_DISCOVER_VIEW_KEY)
-      if (raw === 'compact' || raw === 'list' || raw === 'default') setDiscoverViewMode(raw)
-    } catch {
-      // ignore
-    }
-  }, [enableDiscoverPolish])
-
-  const setDiscoverViewModePersisted = useCallback(
-    (mode: DiscoverViewMode) => {
-      setDiscoverViewMode(mode)
-      if (!enableDiscoverPolish) return
-      try {
-        localStorage.setItem(MOVIES_DISCOVER_VIEW_KEY, mode)
-      } catch {
-        // ignore
-      }
-    },
-    [enableDiscoverPolish]
-  )
 
   useEffect(() => {
     if (!enableDiscoverPolish) return
@@ -717,48 +589,11 @@ export function MoviesDiscoverPage({
     })
   }
   return (
-    <div className={styles.root}>
-      <header className={styles.hero}>
-        {/* Isolated backdrop so 3D mosaic layers cannot paint over the in-flow copy (Chrome/WebKit quirk). */}
-        <div className={styles.heroBackdrop} aria-hidden>
-          <div className={styles.mosaicStage}>
-            <div className={styles.mosaicPlane}>
-              {buildNetflixMosaicTiles(mosaicUrls).map((t, i) => (
-                <div
-                  key={`${i}-${t.c}x${t.r}-${t.url}`}
-                  className={`${styles.mosaicCell} ${t.landscape ? styles.mosaicCellLandscape : ''}`}
-                  style={{
-                    gridColumn: `span ${t.c}`,
-                    gridRow: `span ${t.r}`,
-                    ...(enableDiscoverPolish && i === 0
-                      ? {}
-                      : { backgroundImage: `url(${t.url})` }),
-                  }}
-                >
-                  {enableDiscoverPolish && i === 0 ? (
-                    <img
-                      src={t.url}
-                      alt=""
-                      fetchPriority="high"
-                      decoding="async"
-                      className={styles.mosaicCellImg}
-                    />
-                  ) : null}
-                </div>
-              ))}
-            </div>
-            <div className={styles.mosaicOverlay} />
-          </div>
-          {/* Netflix-style: darken behind copy so white type reads without heavy halos (see netflix.com marketing heroes). */}
-          <div className={styles.heroTextScrim} />
-        </div>
-        <div className={styles.heroInner}>
-          <div className={styles.heroBody}>
-            <h1 className={styles.title}>{pageTitle}</h1>
-            <p className={styles.heroDescription}>{heroDescription}</p>
-          </div>
-        </div>
-      </header>
+    <div className={`${styles.root} ${mobileGridColumns === 3 ? styles.mobileGrid3 : ''}`}>
+      <section className={styles.seoIntro} aria-label={`${pageTitle} page intro`}>
+        <h1 className={styles.seoTitle}>{seoTitle ?? pageTitle}</h1>
+        <p className={styles.seoSubtitle}>{seoSubtitle ?? heroDescription}</p>
+      </section>
 
       <div className={styles.mobileFiltersBar}>
         <button
@@ -769,9 +604,33 @@ export function MoviesDiscoverPage({
           aria-label="Open filters"
         >
           <span>Filters</span>
-          {hasActiveFilters && <span className={styles.mobileFilterBadge}>●</span>}
         </button>
       </div>
+      {discoverBreadcrumbs && (
+        <nav className={styles.discoverBreadcrumb} aria-label="Breadcrumb">
+          {discoverBreadcrumbs.map((crumb, index) => {
+            const isLast = index === discoverBreadcrumbs.length - 1
+            return (
+              <span key={`${crumb.label}-${index}`} className={styles.discoverBreadcrumbItem}>
+                {'href' in crumb && crumb.href ? (
+                  <button
+                    type="button"
+                    className={styles.discoverBreadcrumbLink}
+                    onClick={() => browsePush(crumb.href)}
+                  >
+                    {crumb.label}
+                  </button>
+                ) : (
+                  <span className={styles.discoverBreadcrumbCurrent} aria-current="page">
+                    {crumb.label}
+                  </span>
+                )}
+                {!isLast && <span className={styles.discoverBreadcrumbSep}>›</span>}
+              </span>
+            )
+          })}
+        </nav>
+      )}
 
       {enableDiscoverPolish && (
         <p className={styles.appliedSummary} aria-live="polite">
@@ -1519,41 +1378,7 @@ export function MoviesDiscoverPage({
           </div>
         ) : (
           <>
-            {enableDiscoverPolish ? (
-              <div className={styles.viewToggle} role="group" aria-label="Results layout">
-                <button
-                  type="button"
-                  className={`${styles.viewToggleBtn} ${discoverViewMode === 'default' ? styles.viewToggleBtnActive : ''}`}
-                  aria-pressed={discoverViewMode === 'default'}
-                  onClick={() => setDiscoverViewModePersisted('default')}
-                >
-                  Grid
-                </button>
-                <span className={styles.viewDivider} aria-hidden />
-                <button
-                  type="button"
-                  className={`${styles.viewToggleBtn} ${discoverViewMode === 'compact' ? styles.viewToggleBtnActive : ''}`}
-                  aria-pressed={discoverViewMode === 'compact'}
-                  onClick={() => setDiscoverViewModePersisted('compact')}
-                >
-                  Compact
-                </button>
-                <span className={styles.viewDivider} aria-hidden />
-                <button
-                  type="button"
-                  className={`${styles.viewToggleBtn} ${discoverViewMode === 'list' ? styles.viewToggleBtnActive : ''}`}
-                  aria-pressed={discoverViewMode === 'list'}
-                  onClick={() => setDiscoverViewModePersisted('list')}
-                >
-                  List
-                </button>
-              </div>
-            ) : null}
-            <div
-              className={`${styles.grid} ${
-                discoverViewMode === 'compact' ? styles.gridCompact : ''
-              } ${discoverViewMode === 'list' ? styles.gridList : ''}`}
-            >
+            <div className={styles.grid}>
               {items.map((item, idx) => (
                 <MediaCard
                   key={`${item.id}-${idx}`}
@@ -1570,10 +1395,10 @@ export function MoviesDiscoverPage({
                   listIndex={idx}
                   priority={idx < 8}
                   shelfReveal={false}
+                  enablePointerMotion={false}
                   {...(enableDiscoverPolish
                     ? {
                         unifiedDiscoverMeta: true,
-                        layout: discoverViewMode === 'default' ? 'default' : discoverViewMode,
                       }
                     : {})}
                 />

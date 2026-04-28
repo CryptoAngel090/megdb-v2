@@ -14,14 +14,14 @@
 
 /**
  * rule 63: Кнопка фильтра — базовое состояние
- * rule 16: min-height 44px (Apple HIG touch target)
+ * rule 16: min-height var(--touch-target) (Apple HIG)
  * Capsule filters: --radius-pill (not --radius-button — rule 19 is for rectangular CTAs).
  */
 .filterBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px; /* Apple HIG touch target (mobile) */
+  min-height: var(--touch-target); /* Apple HIG touch target (mobile) */
   padding: var(--space-2) var(--space-3); /* rule 18: горизонталь > вертикаль */
   border-radius: var(--radius-pill);
   font-size: var(--text-caption);
@@ -108,7 +108,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  min-height: 44px;
+  min-height: var(--touch-target);
   padding: var(--space-2) var(--space-2-5);
   border-radius: var(--radius-pill);
   font-size: var(--text-caption);
@@ -128,9 +128,9 @@
 }
 
 .clearBtn:hover {
-  background: rgba(229, 9, 20, 0.12);
+  background: var(--color-primary-muted);
   color: var(--text-primary);
-  border-color: rgba(229, 9, 20, 0.3);
+  border-color: var(--color-primary-border);
 }
 
 .clearBtn:focus-visible {

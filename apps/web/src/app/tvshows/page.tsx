@@ -8,8 +8,8 @@ import {
   getTvShowsDiscoverKeywords,
   getTvShowsDiscoverTitle,
 } from '@/lib/tvShowsDiscoverCopy'
-import { buildCollectionPageJsonLd } from '@/lib/jsonLdSite'
-import { discoverSocialMeta } from '@/lib/seoSocial'
+import { buildCollectionPageStructuredData } from '@/lib/jsonLdSite'
+import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import {
   discoverTvShowsBrowse,
   discoverTvShowsFetchKey,
@@ -26,7 +26,30 @@ import {
 } from '@/lib/tmdb'
 import styles from './page.module.css'
 
+/** @sync `ROUTE_REVALIDATE_DISCOVER_HUB` in `@/lib/cachePolicy` */
 export const revalidate = 600
+
+function isStrictTvShowRow(row: {
+  name?: string | null
+  first_air_date?: string | null
+  title?: string | null
+  release_date?: string | null
+}): boolean {
+  const hasTvSignals =
+    (typeof row.name === 'string' && row.name.trim().length > 0) &&
+    (typeof row.first_air_date === 'string' && row.first_air_date.trim().length > 0)
+  const hasMovieSignals =
+    (typeof row.title === 'string' && row.title.trim().length > 0) ||
+    (typeof row.release_date === 'string' && row.release_date.trim().length > 0)
+  return hasTvSignals && !hasMovieSignals
+}
+
+function ensureTwoTvShowGenres(genres: string[] | undefined): string[] {
+  const normalized = (genres ?? []).map((g) => String(g).trim()).filter(Boolean).slice(0, 2)
+  if (normalized.length === 0) return ['TV SHOW', 'TV SHOW']
+  if (normalized.length === 1) return [normalized[0]!, 'TV SHOW']
+  return normalized
+}
 
 type PageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>
@@ -62,7 +85,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
       title,
       description,
       robots: { index: false, follow: true },
-      alternates: { canonical: path },
+      alternates: discoverPageAlternates(path),
       ...discoverSocialMeta(title, description, path),
     }
   }
@@ -71,7 +94,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
     title,
     description,
     ...(keywords ? { keywords } : {}),
-    alternates: { canonical: path },
+    alternates: discoverPageAlternates(path),
     ...discoverSocialMeta(title, description, path),
   }
 }
@@ -97,8 +120,12 @@ export default async function TvShowsPage({ searchParams }: PageProps) {
   const tvShowsCopyCtx = { providers, studios }
 
   const initialItems = await enrichTvShowsShelfRuntime(
-    results.results.map(mapTmdbTvShowRowToShelfItem)
+    results.results.filter(isStrictTvShowRow).map(mapTmdbTvShowRowToShelfItem)
   )
+  const normalizedInitialItems = initialItems.map((item) => ({
+    ...item,
+    genres: ensureTwoTvShowGenres(item.genres),
+  }))
   const runtimeOptions = [
     { value: '', label: 'Any episode runtime' },
     { value: '0-25', label: 'Under 25 min' },
@@ -142,10 +169,10 @@ export default async function TvShowsPage({ searchParams }: PageProps) {
     },
   ]
   const heroDescription = getTvShowsDiscoverHeroLead(state, genres, tvShowsCopyCtx)
-  const collectionLd =
+  const hubStructured =
     keys.length > 1
       ? null
-      : buildCollectionPageJsonLd({
+      : buildCollectionPageStructuredData({
           name: getTvShowsDiscoverTitle(state, genres, tvShowsCopyCtx),
           description: getTvShowsDiscoverDescription(state, genres, tvShowsCopyCtx),
           pathname: getTvShowsDiscoverCanonicalPath(state, genres, tvShowsCopyCtx),
@@ -158,11 +185,17 @@ export default async function TvShowsPage({ searchParams }: PageProps) {
 
   return (
     <>
-      {collectionLd && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionLd) }}
-        />
+      {hubStructured && (
+        <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(hubStructured.collectionPage) }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(hubStructured.breadcrumb) }}
+          />
+        </>
       )}
       <div className={styles.page}>
         <MosaicHeroLcpPreload href={mosaicUrls[0]} />
@@ -176,17 +209,20 @@ export default async function TvShowsPage({ searchParams }: PageProps) {
           basePath="/tvshows"
           apiPath="/api/tvshows-discover"
           pageTitle="TV Shows"
+          seoTitle="Best TV Shows to Watch Online"
+          seoSubtitle="Find trending and top-rated TV shows with smart filters by genre, release year, rating, episode runtime, language, country, streaming platform, and studio."
           emptyText="No TV shows match these filters yet."
           contentLabelPlural="tv shows"
           presetsStorageKey="megdb-tvshows-filter-presets-v1"
           runtimeFilterLabel="Episode runtime"
           runtimeOptions={runtimeOptions}
           presetSuggestions={presetSuggestions}
-          initialItems={initialItems}
+          initialItems={normalizedInitialItems}
           totalPages={results.total_pages}
           mosaicUrls={mosaicUrls}
           heroDescription={heroDescription}
           enableDiscoverPolish
+          mobileGridColumns={3}
           trustUpdatedAtLabel={trustUpdatedAtLabel}
         />
       </div>

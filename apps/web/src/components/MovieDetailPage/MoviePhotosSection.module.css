@@ -35,7 +35,7 @@
   margin: 0;
   font-size: clamp(1rem, 0.92rem + 0.35vw, 1.125rem);
   font-weight: var(--weight-bold);
-  color: #fff;
+  color: var(--color-primary);
   min-width: 0;
 }
 
@@ -43,18 +43,18 @@
   width: 4px;
   height: 1.25rem;
   border-radius: 2px;
-  background: #e50914;
+  background: var(--color-primary);
   flex-shrink: 0;
 }
 
 .count {
-  color: #444;
+  color: var(--color-text-muted);
   font-size: var(--text-caption);
   font-weight: var(--weight-regular);
 }
 
 .galleryIcon {
-  color: #a0a0a0;
+  color: var(--color-text-secondary);
   flex-shrink: 0;
 }
 
@@ -70,9 +70,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #2a2a2a;
-  background: #1a1a1a;
-  color: #a0a0a0;
+  border: 1px solid var(--color-primary-border);
+  background: color-mix(in oklab, var(--color-primary) 10%, transparent);
+  color: var(--color-primary);
   cursor: pointer;
   transition:
     border-color 0.15s ease,
@@ -83,7 +83,10 @@
 
 @media (hover: hover) and (pointer: fine) {
   .navBtn:hover {
-    filter: brightness(0.88);
+    border-color: color-mix(in oklab, var(--color-primary) 62%, transparent);
+    background: color-mix(in oklab, var(--color-primary) 22%, transparent);
+    color: var(--color-primary-hover);
+    filter: none;
   }
 }
 
@@ -139,8 +142,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.95);
-  backdrop-filter: blur(12px);
+  background: rgba(0, 0, 0, 0.98);
 }
 
 .close {
@@ -152,7 +154,7 @@
   height: 2.25rem;
   border-radius: var(--radius-pill);
   border: none;
-  background: #e50914;
+  background: var(--color-primary);
   color: #fff;
   cursor: pointer;
   display: flex;

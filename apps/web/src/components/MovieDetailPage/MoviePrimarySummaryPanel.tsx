@@ -49,9 +49,8 @@ export function MoviePrimarySummaryPanel({
   if (movie.ageRatingBadge) metaPieces.push(movie.ageRatingBadge)
   if (releaseDateFull) metaPieces.push(releaseDateFull)
   if (runtimeLabel) metaPieces.push(runtimeLabel)
-  if (showBoxOffice && movie.revenue > 0) {
-    metaPieces.push(`Box office: ${formatMoney(movie.revenue)}`)
-  }
+  const boxOfficeLine =
+    showBoxOffice && movie.revenue > 0 ? `Box office: ${formatMoney(movie.revenue)}` : null
 
   const genreShow = movie.genres.slice(0, 3)
   const genreOverflow = movie.genres.length > 3
@@ -112,6 +111,7 @@ export function MoviePrimarySummaryPanel({
             ) : null}
           </p>
         ) : null}
+        {boxOfficeLine ? <p className={styles.metaSecondary}>{boxOfficeLine}</p> : null}
 
         <MoviePrimaryRatingsRow
           tmdbDisplay={tmdbDisplay}

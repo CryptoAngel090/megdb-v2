@@ -1,9 +1,13 @@
 import type { Metadata } from 'next'
+import { redirect } from 'next/navigation'
 import { SearchPageClient } from '@/components/SearchPage/SearchPageClient'
 import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
-import { discoverSocialMeta } from '@/lib/seoSocial'
+import { buildEntityCanonicalHref } from '@/lib/entitySearch'
+import { buildSearchSnippetTemplate } from '@/lib/seoSnippetTemplates'
+import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
+/** @sync `ROUTE_REVALIDATE_SEARCH_DYNAMIC` in `@/lib/cachePolicy` */
 export const revalidate = 0
 
 type PageProps = {
@@ -17,39 +21,54 @@ function queryFromSearchParams(sp: Record<string, string | string[] | undefined>
   return ''
 }
 
-function webPageInfoFromQuery(q: string): { title: string; description: string; path: string } {
+function webPageInfoFromQuery(q: string): {
+  title: string
+  description: string
+  path: string
+  snippetCohort: string
+} {
+  const snippet = buildSearchSnippetTemplate({ query: q })
   if (q.length >= 2) {
     const qs = new URLSearchParams({ q }).toString()
     return {
       path: `/search?${qs}`,
-      title: `Search: ${q}`,
-      description: `Search results for “${q}” — movies, series, and people on MegDB.`,
+      title: snippet.title,
+      description: snippet.description,
+      snippetCohort: snippet.cohort,
     }
   }
   return {
     path: '/search',
-    title: 'Search',
-    description: 'Search movies, TV series, and people on MegDB via The Movie Database (TMDB).',
+    title: snippet.title,
+    description: snippet.description,
+    snippetCohort: snippet.cohort,
   }
 }
 
 export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
   const sp = await searchParams
   const q = queryFromSearchParams(sp).trim()
-  const { title, description, path } = webPageInfoFromQuery(q)
+  const { title, description, snippetCohort } = webPageInfoFromQuery(q)
   const robots = { index: false, follow: true } as const
   return {
     title,
     description,
     robots,
-    alternates: { canonical: path },
-    ...discoverSocialMeta(title, description, path),
+    alternates: discoverPageAlternates('/search'),
+    ...discoverSocialMeta(title, description, '/search'),
+    other: {
+      'megdb:snippet-cohort': snippetCohort,
+    },
   }
 }
 
 export default async function SearchPage({ searchParams }: PageProps) {
   const sp = await searchParams
   const initialQuery = queryFromSearchParams(sp).trim()
+  if (initialQuery.length >= 2) {
+    const canonicalEntity = buildEntityCanonicalHref(initialQuery)
+    if (canonicalEntity) redirect(canonicalEntity)
+  }
   const { title, description, path } = webPageInfoFromQuery(initialQuery)
   return (
     <>

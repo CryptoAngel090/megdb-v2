@@ -1,82 +1,40 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { isMovieInLocalWatchlist, toggleLocalMovieWatchlist } from '@/lib/localMovieWatchlist'
+import type { MediaType } from '@repo/types'
+import { Share2, Users, Bookmark } from 'lucide-react'
+import { isInLocalWatchlist, toggleLocalWatchlistItem } from '@/lib/localWatchlist'
+import { useToast } from '@/components/Toast/Toast'
 import { OPEN_MOVIE_TRAILER_EVENT } from './movieTrailerEvents'
 import { MovieShareButton } from './MovieShareButton'
 import styles from './MovieDetailPage.module.css'
 
 type Props = {
   movieId: number
+  mediaType: MediaType
   movieTitle: string
+  releaseDate: string | null
   hasTrailer: boolean
   embedTitle: string
 }
 
-function IconShare() {
-  return (
-    <svg
-      className={styles.heroMobileTrailerIcon}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      aria-hidden
-    >
-      <circle cx="18" cy="5" r="3" />
-      <circle cx="6" cy="12" r="3" />
-      <circle cx="18" cy="19" r="3" />
-      <path
-        d="m8.59 13.51 6.83 3.98M15.41 6.49l-6.82 3.98"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-function IconCast() {
-  return (
-    <svg
-      className={styles.heroMobileTrailerIcon}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      aria-hidden
-    >
-      <path
-        d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-function IconBookmark({ filled }: { filled: boolean }) {
-  return (
-    <svg
-      className={styles.heroMobileTrailerIcon}
-      viewBox="0 0 24 24"
-      fill={filled ? 'currentColor' : 'none'}
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-    </svg>
-  )
-}
-
-function HeroWatchlistButton({ movieId, movieTitle }: { movieId: number; movieTitle: string }) {
+function HeroWatchlistButton({
+  movieId,
+  mediaType,
+  movieTitle,
+  releaseDate,
+}: {
+  movieId: number
+  mediaType: MediaType
+  movieTitle: string
+  releaseDate: string | null
+}) {
   const [inList, setInList] = useState(false)
+  const toast = useToast()
 
   useEffect(() => {
-    setInList(isMovieInLocalWatchlist(movieId))
-  }, [movieId])
+    setInList(isInLocalWatchlist(mediaType, movieId))
+  }, [mediaType, movieId])
 
   const label = inList ? 'In watchlist' : 'Add to watchlist'
 
@@ -85,18 +43,33 @@ function HeroWatchlistButton({ movieId, movieTitle }: { movieId: number; movieTi
       type="button"
       className={`${styles.heroMobileTrailerBtnSecondary} ${inList ? styles.heroMobileTrailerBtnWatchlistOn : ''}`}
       onClick={() => {
-        setInList(toggleLocalMovieWatchlist(movieId))
+        const nextInList = toggleLocalWatchlistItem({
+          mediaType,
+          mediaId: movieId,
+          title: movieTitle,
+          releaseDate,
+        })
+        setInList(nextInList)
+        if (nextInList) {
+          toast.success(`Added "${movieTitle}" to watchlist`)
+        } else {
+          toast.info(`Removed "${movieTitle}" from watchlist`)
+        }
       }}
       aria-pressed={inList}
       aria-label={`${label} — ${movieTitle}`}
     >
-      <IconBookmark filled={inList} />
+      <Bookmark
+        className={styles.heroMobileTrailerIcon}
+        fill={inList ? 'currentColor' : 'none'}
+        aria-hidden
+      />
       <span>{label}</span>
     </button>
   )
 }
 
-export function MovieHeroTrailerActions({ movieId, movieTitle, hasTrailer, embedTitle }: Props) {
+export function MovieHeroTrailerActions({ movieId, mediaType, movieTitle, releaseDate, hasTrailer, embedTitle }: Props) {
   const openTrailer = () => {
     window.dispatchEvent(new CustomEvent(OPEN_MOVIE_TRAILER_EVENT))
   }
@@ -133,10 +106,10 @@ export function MovieHeroTrailerActions({ movieId, movieTitle, hasTrailer, embed
               </svg>
               <span>Watch Trailer</span>
             </button>
-            <HeroWatchlistButton movieId={movieId} movieTitle={movieTitle} />
+            <HeroWatchlistButton movieId={movieId} mediaType={mediaType} movieTitle={movieTitle} releaseDate={releaseDate} />
           </>
         ) : (
-          <HeroWatchlistButton movieId={movieId} movieTitle={movieTitle} />
+          <HeroWatchlistButton movieId={movieId} mediaType={mediaType} movieTitle={movieTitle} releaseDate={releaseDate} />
         )}
       </div>
 
@@ -144,7 +117,7 @@ export function MovieHeroTrailerActions({ movieId, movieTitle, hasTrailer, embed
         title={movieTitle}
         unstyled
         className={styles.heroMobileTrailerBtnSecondary}
-        icon={<IconShare />}
+        icon={<Share2 className={styles.heroMobileTrailerIcon} aria-hidden />}
       />
 
       <button
@@ -153,7 +126,7 @@ export function MovieHeroTrailerActions({ movieId, movieTitle, hasTrailer, embed
         onClick={scrollToCast}
         aria-label={`Cast and credits for ${movieTitle}`}
       >
-        <IconCast />
+        <Users className={styles.heroMobileTrailerIcon} aria-hidden />
         <span>Cast</span>
       </button>
     </div>

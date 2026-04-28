@@ -2,19 +2,20 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalDocument, LegalNote } from '@/components/LegalDocument/LegalDocument'
 import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
-import { discoverSocialMeta } from '@/lib/seoSocial'
+import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
+/** @sync `ROUTE_REVALIDATE_STATIC_COPY` in `@/lib/cachePolicy` */
 export const revalidate = 86_400
 
 const title = 'Privacy Policy'
 const description =
-  'How MegDB collects, uses, and protects personal information when you browse movies, series, and TV discovery features.'
+  'MegDB Privacy Policy: what we collect (logs, optional accounts, support mail), legal bases for EEA/UK, U.S. state rights in 2026, TMDB/CDN requests, retention, and how to reach privacy@megdb.com.'
 
 export const metadata: Metadata = {
   title,
   description,
-  alternates: { canonical: '/privacy' },
+  alternates: discoverPageAlternates('/privacy'),
   ...discoverSocialMeta(title, description, '/privacy'),
 }
 

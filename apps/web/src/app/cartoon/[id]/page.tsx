@@ -1,7 +1,7 @@
 import { CartoonDetailPageApp, generateCartoonDetailMetadata } from '@/lib/cartoonDetailRoute'
 import styles from './page.module.css'
 
-/** Must match `CARTOON_DETAIL_REVALIDATE`; Next.js only accepts a literal here. */
+/** @sync `ROUTE_REVALIDATE_MEDIA_DETAIL` in `@/lib/cachePolicy` */
 export const revalidate = 3600
 
 export const generateMetadata = generateCartoonDetailMetadata

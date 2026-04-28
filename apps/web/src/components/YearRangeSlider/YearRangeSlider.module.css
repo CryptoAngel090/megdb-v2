@@ -103,8 +103,8 @@
   height: var(--space-3-5);
   border-radius: 50%;
   background: var(--primary);
-  border: 2px solid #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--text-primary);
+  box-shadow: var(--shadow-sm);
   cursor: pointer;
   pointer-events: all;
   transition:
@@ -117,8 +117,8 @@
   height: var(--space-3-5);
   border-radius: 50%;
   background: var(--primary);
-  border: 2px solid #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--text-primary);
+  box-shadow: var(--shadow-sm);
   cursor: pointer;
   pointer-events: all;
 }
@@ -128,7 +128,7 @@
   transform: scale(1.2);
   box-shadow:
     0 0 0 4px var(--primary-muted),
-    0 2px 8px rgba(0, 0, 0, 0.5);
+    var(--shadow-sm);
 }
 
 .thumb:focus-visible {

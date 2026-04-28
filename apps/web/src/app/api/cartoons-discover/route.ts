@@ -60,13 +60,21 @@ export async function GET(request: NextRequest) {
 
   try {
     const data = await discoverCartoonsBrowse(input, mode, comingYear)
-    const results = await enrichMovieShelfRuntime(data.results.map(mapTmdbCartoonRowToShelfItem))
-    return NextResponse.json({
-      results,
-      page: data.page,
-      total_pages: data.total_pages,
-      total_results: data.total_results,
-    })
+    const baseResults = data.results.map(mapTmdbCartoonRowToShelfItem)
+    const results = await enrichMovieShelfRuntime(baseResults)
+    return NextResponse.json(
+      {
+        results,
+        page: data.page,
+        total_pages: data.total_pages,
+        total_results: data.total_results,
+      },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=1800',
+        },
+      }
+    )
   } catch (e) {
     const message = e instanceof Error ? e.message : 'Discover failed'
     return NextResponse.json({ error: message }, { status: 502 })

@@ -3,18 +3,20 @@ import { Button } from '@repo/ui/button'
 import { Badge } from '@repo/ui/badge'
 import { Input } from '@repo/ui/input'
 import { Skeleton } from '@repo/ui/skeleton'
+import { CardsGrid } from '@/components/CardsGrid/CardsGrid'
 import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
-import { discoverSocialMeta } from '@/lib/seoSocial'
+import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
 const title = 'UI Kit'
-const description = 'Internal MegDB design system showcase for @repo/ui components (not indexed).'
+const description =
+  'MegDB UI kit (noindex): internal @repo/ui component gallery for developers — not part of the public movie/TV experience.'
 
 export const metadata: Metadata = {
   title,
   description,
   robots: { index: false, follow: true },
-  alternates: { canonical: '/ui-kit' },
+  alternates: discoverPageAlternates('/ui-kit'),
   ...discoverSocialMeta(title, description, '/ui-kit'),
 }
 
@@ -62,6 +64,14 @@ export default function UiKitPage() {
             Full Width
           </Button>
         </div>
+        <div className={styles.row}>
+          <Button type="button" variant="primary" fab iconOnly aria-label="FAB example">
+            ↑
+          </Button>
+          <Button type="button" variant="primary" fab>
+            Extended FAB
+          </Button>
+        </div>
       </section>
 
       {/* ── Badges ── */}
@@ -92,12 +102,12 @@ export default function UiKitPage() {
       {/* ── Skeletons ── */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Skeletons</h2>
-        <div className={styles.row}>
+        <CardsGrid>
           <Skeleton variant="card" width={140} />
           <Skeleton variant="card" width={140} />
           <Skeleton variant="card" width={140} />
           <Skeleton variant="card" width={140} />
-        </div>
+        </CardsGrid>
         <div className={styles.col}>
           <Skeleton variant="title" width={300} />
           <Skeleton variant="text" width={500} />

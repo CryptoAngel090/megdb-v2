@@ -7,14 +7,17 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  pillVariants,
   drawerVariants,
   backdropVariants,
   navItemVariants,
   dropdownVariants,
 } from './Header.animations'
+import { Button } from '@repo/ui/button'
 import { SearchBar } from '@/components/SearchBar/SearchBar'
-import { getNextSelectionIndex, hasLikelySessionCookie } from './drawerSearch.utils'
+import { getNextSelectionIndex } from './drawerSearch.utils'
+import { getUser, clearUser } from '@/lib/auth-client'
+import { HeaderBreadcrumb, HeaderContextTint, useNavKeyboard } from './HeaderExtras'
+import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './Header.module.css'
 
 interface NavLink {
@@ -34,80 +37,11 @@ interface DrawerSearchResult {
 
 const NAV_LINKS: NavLink[] = [
   {
-    href: '/movies',
-    label: 'Movies',
-    icon: (
-      <svg
-        width="15"
-        height="15"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        viewBox="0 0 24 24"
-      >
-        <rect x="2" y="2" width="20" height="20" rx="2.5" />
-        <path d="M7 2v20M17 2v20M2 12h20M2 7h5M17 7h5M2 17h5M17 17h5" />
-      </svg>
-    ),
-  },
-  {
-    href: '/series',
-    label: 'Series',
-    icon: (
-      <svg
-        width="15"
-        height="15"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        viewBox="0 0 24 24"
-      >
-        <rect x="2" y="3" width="20" height="13" rx="2" />
-        <path d="M8 21h8M12 17v4" />
-      </svg>
-    ),
-  },
-  {
-    href: '/cartoons',
-    label: 'Cartoons',
-    icon: (
-      <svg
-        width="15"
-        height="15"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        viewBox="0 0 24 24"
-      >
-        <path d="m12 3-1.9 5.8a2 2 0 0 1-1.287 1.288L3 12l5.8 1.9a2 2 0 0 1 1.288 1.287L12 21l1.9-5.8a2 2 0 0 1 1.287-1.288L21 12l-5.8-1.9a2 2 0 0 1-1.288-1.287Z" />
-      </svg>
-    ),
-  },
-  {
-    href: '/tvshows',
-    label: 'TV Shows',
-    badge: 'NEW',
-    icon: (
-      <svg
-        width="15"
-        height="15"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        viewBox="0 0 24 24"
-      >
-        <path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0" />
-        <circle cx="12" cy="20" r="1" fill="currentColor" stroke="none" />
-      </svg>
-    ),
-  },
-  {
     href: '/categories',
-    label: 'Categories',
+    label: 'Browse',
     icon: (
       <svg
-        width="15"
-        height="15"
+        className={`${iconSlot.block} ${iconSlot.inline15}`}
         fill="none"
         stroke="currentColor"
         strokeWidth="1.75"
@@ -136,8 +70,18 @@ export function Header() {
   const userMenuButtonRef = useRef<HTMLButtonElement>(null)
 
   const [scrolled, setScrolled] = useState(false)
+  const [scrollHidden, setScrollHidden] = useState(false)
+  const [contextTinted, setContextTinted] = useState(false)
+  const lastScrollY = useRef(0)
+  const navRef = useRef<HTMLElement>(null)
+  useNavKeyboard(navRef)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [searchOpen, setSearchOpen] = useState(false)
+  const [drawerCategoriesOpen, setDrawerCategoriesOpen] = useState(false)
+  const [megaMenuOpen, setMegaMenuOpen] = useState(false)
+  const megaMenuRef = useRef<HTMLDivElement>(null)
+  const megaMenuTriggerRef = useRef<HTMLLIElement>(null)
+  const megaMenuCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const pillRef = useRef<HTMLDivElement>(null)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const [drawerQuery, setDrawerQuery] = useState('')
   const [drawerResults, setDrawerResults] = useState<DrawerSearchResult[]>([])
@@ -145,10 +89,8 @@ export function Header() {
   const [drawerSearchFocused, setDrawerSearchFocused] = useState(false)
   const [drawerSelectedIndex, setDrawerSelectedIndex] = useState(-1)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [notifCount, setNotifCount] = useState(0)
-
+  const [loggedInUser, setLoggedInUser] = useState<{ name: string; username: string } | null>(null)
   const markNotificationsSeen = useCallback(() => {
-    setNotifCount(0)
     try {
       localStorage.setItem(NOTIF_UNREAD_STORAGE_KEY, '0')
     } catch {
@@ -157,25 +99,25 @@ export function Header() {
   }, [])
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(NOTIF_UNREAD_STORAGE_KEY)
-      if (raw === null) return
-      const n = Number.parseInt(raw, 10)
-      if (!Number.isNaN(n) && n >= 0) setNotifCount(n)
-    } catch {
-      /* ignore */
+    const onScroll = () => {
+      const y = window.scrollY
+      setScrolled(y > 40)
+      if (y > lastScrollY.current && y > 120) {
+        setScrollHidden(true)
+      } else {
+        setScrollHidden(false)
+      }
+      lastScrollY.current = y
     }
-  }, [])
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   useEffect(() => {
     const syncAuthState = () => {
-      setIsLoggedIn(hasLikelySessionCookie(document.cookie))
+      const user = getUser()
+      setIsLoggedIn(user !== null)
+      setLoggedInUser(user ? { name: user.name, username: user.username } : null)
     }
 
     syncAuthState()
@@ -250,6 +192,7 @@ export function Header() {
       setDrawerLoading(false)
       setDrawerSearchFocused(false)
       setDrawerSelectedIndex(-1)
+      setDrawerCategoriesOpen(false)
       return
     }
 
@@ -332,6 +275,20 @@ export function Header() {
   }, [menuOpen, drawerSearchFocused])
 
   useEffect(() => {
+    if (!megaMenuOpen) return
+    const handlePointerDown = (e: MouseEvent) => {
+      if (
+        !megaMenuRef.current?.contains(e.target as Node) &&
+        !megaMenuTriggerRef.current?.contains(e.target as Node)
+      ) {
+        setMegaMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handlePointerDown)
+    return () => document.removeEventListener('mousedown', handlePointerDown)
+  }, [megaMenuOpen])
+
+  useEffect(() => {
     if (!userMenuOpen) return
 
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -355,6 +312,19 @@ export function Header() {
       document.removeEventListener('mousedown', handlePointerDown)
     }
   }, [userMenuOpen])
+
+  const updateMegaMenuPos = useCallback(() => {
+    const pill = pillRef.current
+    if (!pill) return
+    const rect = pill.getBoundingClientRect()
+    document.documentElement.style.setProperty('--mega-menu-top', `${rect.bottom + 8}px`)
+  }, [])
+
+  useEffect(() => {
+    if (!megaMenuOpen) return
+    window.addEventListener('resize', updateMegaMenuPos)
+    return () => window.removeEventListener('resize', updateMegaMenuPos)
+  }, [megaMenuOpen, updateMegaMenuPos])
 
   const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href))
 
@@ -395,84 +365,216 @@ export function Header() {
   return (
     <>
       <div className={styles.navbarWrapper}>
-        <motion.div
-          className={`${styles.pill} ${scrolled ? styles.pillScrolled : ''}`}
-          variants={pillVariants}
-          animate={scrolled ? 'scrolled' : 'top'}
+        <div
+          ref={pillRef}
+          className={`${styles.pill} ${scrolled ? styles.pillScrolled : ''} ${scrollHidden ? styles.pillHidden : ''} ${contextTinted ? styles.pillContextTinted : ''}`}
         >
           <div className={styles.inner}>
             <Link href="/" className={styles.logo} onClick={() => setMenuOpen(false)}>
               <svg
-                className={styles.logoIcon}
-                width="22"
-                height="22"
+                className={`${styles.logoIcon} ${iconSlot.block} ${iconSlot.inline22}`}
                 viewBox="0 0 24 24"
                 fill="currentColor"
               >
                 <path d="M5 3l14 9-14 9V3z" />
               </svg>
               <span className={styles.logoText}>
-                Meg<span className={styles.logoAccent}>DB</span>
+                <span className={styles.logoLetterM}>M</span>
+                <span className={styles.logoLetterE}>e</span>
+                <span className={styles.logoLetterG}>g</span>
+                <span className={styles.logoAccent}>DB</span>
               </span>
             </Link>
 
-            <nav aria-label="Main navigation" className={styles.nav}>
+            <div className={styles.inlineSearch}>
+              <SearchBar />
+            </div>
+
+            <nav aria-label="Main navigation" className={styles.nav} ref={navRef}>
               <ul className={styles.links}>
-                {NAV_LINKS.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className={`${styles.link} ${isActive(link.href) ? styles.linkActive : ''}`}
-                      aria-current={isActive(link.href) ? 'page' : undefined}
+                {NAV_LINKS.map((link) => {
+                  const isCat = link.href === '/categories'
+                  return (
+                    <li
+                      key={link.href}
+                      ref={isCat ? megaMenuTriggerRef : undefined}
+                      className={isCat ? styles.megaMenuWrap : undefined}
+                      onMouseEnter={isCat ? () => {
+                        if (megaMenuCloseTimer.current) {
+                          clearTimeout(megaMenuCloseTimer.current)
+                          megaMenuCloseTimer.current = null
+                        }
+                        // Position mega menu centered under the pill
+                        updateMegaMenuPos()
+                        setMegaMenuOpen(true)
+                      } : undefined}
+                      onMouseLeave={isCat ? () => {
+                        megaMenuCloseTimer.current = setTimeout(() => setMegaMenuOpen(false), 120)
+                      } : undefined}
                     >
-                      <span className={styles.linkIcon}>{link.icon}</span>
-                      {link.label}
-                      {link.badge && <span className={styles.navBadge}>{link.badge}</span>}
-                      {isActive(link.href) && <span className={styles.linkDot} />}
-                    </Link>
-                  </li>
-                ))}
+                      <Link
+                        href={link.href}
+                        className={`${styles.link} ${isActive(link.href) ? styles.linkActive : ''}`}
+                        aria-current={isActive(link.href) ? 'page' : undefined}
+                        aria-haspopup={isCat ? 'true' : undefined}
+                        aria-expanded={isCat ? megaMenuOpen : undefined}
+                      >
+                        {link.label}
+                        {isActive(link.href) && <span className={styles.linkDot} />}
+                      </Link>
+
+                      {isCat && (
+                        <AnimatePresence>
+                          {megaMenuOpen && (
+                            <motion.div
+                              ref={megaMenuRef}
+                              className={styles.megaMenu}
+                              variants={dropdownVariants}
+                              initial="hidden"
+                              animate="visible"
+                              exit="hidden"
+                              role="menu"
+                              aria-label="Browse by genre"
+                              onMouseEnter={() => {
+                                if (megaMenuCloseTimer.current) {
+                                  clearTimeout(megaMenuCloseTimer.current)
+                                  megaMenuCloseTimer.current = null
+                                }
+                              }}
+                              onMouseLeave={() => {
+                                megaMenuCloseTimer.current = setTimeout(() => setMegaMenuOpen(false), 120)
+                              }}
+                            >
+                              <div className={styles.megaMenuBody}>
+                                {/* ── Left: Browse ── */}
+                                <div className={styles.megaMenuRight}>
+                                  <p className={styles.megaMenuTitle}>Browse</p>
+                                  <div className={styles.megaMenuBrowseList}>
+                                    {[
+                                      {
+                                        label: 'Movies',
+                                        href: '/movies',
+                                        icon: (
+                                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
+                                            <rect x="2" y="2" width="20" height="20" rx="2.5" />
+                                            <path d="M7 2v20M17 2v20M2 12h20M2 7h5M17 7h5M2 17h5M17 17h5" />
+                                          </svg>
+                                        ),
+                                      },
+                                      {
+                                        label: 'Series',
+                                        href: '/series',
+                                        icon: (
+                                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
+                                            <rect x="2" y="3" width="20" height="13" rx="2" />
+                                            <path d="M8 21h8M12 17v4" />
+                                          </svg>
+                                        ),
+                                      },
+                                      {
+                                        label: 'Cartoons',
+                                        href: '/cartoons',
+                                        icon: (
+                                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
+                                            <path d="m12 3-1.9 5.8a2 2 0 0 1-1.287 1.288L3 12l5.8 1.9a2 2 0 0 1 1.288 1.287L12 21l1.9-5.8a2 2 0 0 1 1.287-1.288L21 12l-5.8-1.9a2 2 0 0 1-1.288-1.287Z" />
+                                          </svg>
+                                        ),
+                                      },
+                                      {
+                                        label: 'TV Shows',
+                                        href: '/tvshows',
+                                        icon: (
+                                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
+                                            <path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0" />
+                                            <circle cx="12" cy="20" r="1" fill="currentColor" stroke="none" />
+                                          </svg>
+                                        ),
+                                      },
+                                      {
+                                        label: 'Random Movie',
+                                        href: '/movies/random',
+                                        icon: (
+                                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
+                                            <path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22M18 2l4 4-4 4M18 14l4 4-4 4" />
+                                          </svg>
+                                        ),
+                                      },
+                                    ].map((item) => (
+                                      <Link
+                                        key={item.href}
+                                        href={item.href}
+                                        className={styles.megaMenuBrowseItem}
+                                        role="menuitem"
+                                        onClick={() => setMegaMenuOpen(false)}
+                                      >
+                                        <span className={styles.megaMenuBrowseIcon}>{item.icon}</span>
+                                        {item.label}
+                                      </Link>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                {/* ── Divider ── */}
+                                <div className={styles.megaMenuDivider} aria-hidden />
+
+                                {/* ── Right: Genres ── */}
+                                <div className={styles.megaMenuLeft}>
+                                  <p className={styles.megaMenuTitle}>Genres</p>
+                                  <div className={styles.megaMenuGrid}>
+                                    {[
+                                      { label: 'Action', href: '/movies/category/action' },
+                                      { label: 'Adventure', href: '/movies/category/adventure' },
+                                      { label: 'Animation', href: '/movies/category/animation' },
+                                      { label: 'Comedy', href: '/movies/category/comedy' },
+                                      { label: 'Crime', href: '/movies/category/crime' },
+                                      { label: 'Documentary', href: '/movies/category/documentary' },
+                                      { label: 'Drama', href: '/movies/category/drama' },
+                                      { label: 'Family', href: '/movies/category/family' },
+                                      { label: 'Fantasy', href: '/movies/category/fantasy' },
+                                      { label: 'History', href: '/movies/category/history' },
+                                      { label: 'Horror', href: '/movies/category/horror' },
+                                      { label: 'Music', href: '/movies/category/music' },
+                                      { label: 'Mystery', href: '/movies/category/mystery' },
+                                      { label: 'Romance', href: '/movies/category/romance' },
+                                      { label: 'Sci-Fi', href: '/movies/category/sci-fi' },
+                                      { label: 'Thriller', href: '/movies/category/thriller' },
+                                      { label: 'War', href: '/movies/category/war' },
+                                      { label: 'Western', href: '/movies/category/western' },
+                                    ].map((g) => (
+                                      <Link
+                                        key={g.href}
+                                        href={g.href}
+                                        className={styles.megaMenuItem}
+                                        role="menuitem"
+                                        onClick={() => setMegaMenuOpen(false)}
+                                      >
+                                        {g.label}
+                                      </Link>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      )}
+                    </li>
+                  )
+                })}
+                <li>
+                  <Link
+                    href="/watchlist"
+                    className={`${styles.link} ${isActive('/watchlist') ? styles.linkActive : ''}`}
+                    aria-current={isActive('/watchlist') ? 'page' : undefined}
+                  >
+                    Watchlist
+                    {isActive('/watchlist') && <span className={styles.linkDot} />}
+                  </Link>
+                </li>
               </ul>
             </nav>
 
             <div className={styles.actions}>
-              {/* Random — desktop */}
-              <button
-                className={`${styles.iconBtn} ${styles.randomBtn}`}
-                onClick={handleRandom}
-                aria-label="Random movie"
-                title="Random movie"
-              >
-                <svg
-                  width="17"
-                  height="17"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22M18 2l4 4-4 4M18 14l4 4-4 4" />
-                </svg>
-              </button>
-
-              <button
-                className={`${styles.iconBtn} ${styles.searchToggle}`}
-                onClick={() => setSearchOpen((v) => !v)}
-                aria-label="Search"
-              >
-                <svg
-                  width="18"
-                  height="18"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="m21 21-4.35-4.35" />
-                </svg>
-              </button>
-
               <div className={styles.notifWrap}>
                 <Link
                   href="/notifications"
@@ -481,8 +583,7 @@ export function Header() {
                   onClick={markNotificationsSeen}
                 >
                   <svg
-                    width="18"
-                    height="18"
+                    className={`${iconSlot.block} ${iconSlot.inline18}`}
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
@@ -491,25 +592,7 @@ export function Header() {
                     <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
                   </svg>
                 </Link>
-                {notifCount > 0 && <span className={styles.notifBadge}>{notifCount}</span>}
               </div>
-
-              <Link
-                href="/watchlist"
-                className={`${styles.iconBtn} ${styles.watchlistBtn}`}
-                aria-label="Watchlist"
-              >
-                <svg
-                  width="18"
-                  height="18"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-                </svg>
-              </Link>
 
               {isLoggedIn ? (
                 <div className={styles.userMenu}>
@@ -520,7 +603,11 @@ export function Header() {
                     aria-expanded={userMenuOpen}
                     aria-label="User menu"
                   >
-                    <img src="https://i.pravatar.cc/80" alt="Avatar" className={styles.avatarImg} />
+                    <img
+                      src="https://i.pravatar.cc/80"
+                      alt="User profile avatar"
+                      className={styles.avatarImg}
+                    />
                   </button>
                   <AnimatePresence>
                     {userMenuOpen && (
@@ -542,7 +629,21 @@ export function Header() {
                           Settings
                         </Link>
                         <div className={styles.dropdownDivider} />
-                        <button className={styles.dropdownItem}>Logout</button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className={styles.dropdownItem}
+                          onClick={() => {
+                            clearUser()
+                            setIsLoggedIn(false)
+                            setLoggedInUser(null)
+                            setUserMenuOpen(false)
+                            router.push('/')
+                          }}
+                        >
+                          Logout
+                        </Button>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -566,8 +667,7 @@ export function Header() {
                 aria-expanded={menuOpen}
               >
                 <svg
-                  width="18"
-                  height="18"
+                  className={`${iconSlot.block} ${iconSlot.inline18}`}
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2.5"
@@ -578,23 +678,13 @@ export function Header() {
               </button>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
 
-      {/* Floating search */}
-      <AnimatePresence>
-        {searchOpen && (
-          <motion.div
-            className={styles.searchPanel}
-            initial={{ opacity: 0, y: -12, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.98 }}
-            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <SearchBar autoFocus onBlur={() => setSearchOpen(false)} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <HeaderBreadcrumb />
+
+      {/* Context-aware tint — changes pill bg on movie/series pages */}
+      <HeaderContextTint onTintChange={setContextTinted} />
 
       {/* Mobile drawer */}
       <AnimatePresence>
@@ -621,11 +711,9 @@ export function Header() {
               <div className={styles.drawerHeader}>
                 <Link href="/" className={styles.drawerLogo} onClick={() => setMenuOpen(false)}>
                   <svg
-                    width="24"
-                    height="24"
+                    className={`${styles.drawerLogoIcon} ${iconSlot.block} ${iconSlot.lg}`}
                     viewBox="0 0 24 24"
                     fill="currentColor"
-                    className={styles.drawerLogoIcon}
                   >
                     <path d="M5 3l14 9-14 9V3z" />
                   </svg>
@@ -639,8 +727,7 @@ export function Header() {
                   aria-label="Close menu"
                 >
                   <svg
-                    width="18"
-                    height="18"
+                    className={`${iconSlot.block} ${iconSlot.inline18}`}
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2.5"
@@ -657,12 +744,12 @@ export function Header() {
                   <div className={styles.drawerUserRow}>
                     <img
                       src="https://i.pravatar.cc/80"
-                      alt="Avatar"
+                      alt="User profile avatar"
                       className={styles.drawerAvatar}
                     />
                     <div>
-                      <div className={styles.drawerUserName}>John Doe</div>
-                      <div className={styles.drawerUserSub}>Member since 2024</div>
+                      <div className={styles.drawerUserName}>{loggedInUser?.name ?? loggedInUser?.username ?? 'User'}</div>
+                      <div className={styles.drawerUserSub}>@{loggedInUser?.username}</div>
                     </div>
                   </div>
                 ) : (
@@ -673,8 +760,7 @@ export function Header() {
                       onClick={() => setMenuOpen(false)}
                     >
                       <svg
-                        width="18"
-                        height="18"
+                        className={`${iconSlot.block} ${iconSlot.inline18}`}
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="2"
@@ -693,8 +779,7 @@ export function Header() {
                       onClick={() => setMenuOpen(false)}
                     >
                       <svg
-                        width="18"
-                        height="18"
+                        className={`${iconSlot.block} ${iconSlot.inline18}`}
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="2"
@@ -713,13 +798,11 @@ export function Header() {
               <div ref={drawerSearchContainerRef} className={styles.drawerSearch}>
                 <div className={styles.drawerSearchWrap}>
                   <svg
-                    width="16"
-                    height="16"
+                    className={`${styles.drawerSearchIcon} ${iconSlot.block} ${iconSlot.sm}`}
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
                     viewBox="0 0 24 24"
-                    className={styles.drawerSearchIcon}
                   >
                     <circle cx="11" cy="11" r="8" />
                     <path d="m21 21-4.35-4.35" />
@@ -807,8 +890,7 @@ export function Header() {
                   >
                     <span className={styles.drawerLinkIcon}>
                       <svg
-                        width="15"
-                        height="15"
+                        className={`${iconSlot.block} ${iconSlot.inline15}`}
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="1.75"
@@ -820,9 +902,7 @@ export function Header() {
                     </span>
                     <span className={styles.drawerLinkLabel}>Home</span>
                     <svg
-                      className={styles.drawerChevron}
-                      width="16"
-                      height="16"
+                      className={`${styles.drawerChevron} ${iconSlot.block} ${iconSlot.sm}`}
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"
@@ -840,27 +920,153 @@ export function Header() {
                     initial="closed"
                     animate="open"
                   >
-                    <Link
-                      href={link.href}
-                      className={`${styles.drawerLink} ${isActive(link.href) ? styles.drawerLinkActive : ''}`}
-                      onClick={() => setMenuOpen(false)}
-                      aria-current={isActive(link.href) ? 'page' : undefined}
-                    >
-                      <span className={styles.drawerLinkIcon}>{link.icon}</span>
-                      <span className={styles.drawerLinkLabel}>{link.label}</span>
-                      {link.badge && <span className={styles.drawerBadge}>{link.badge}</span>}
-                      <svg
-                        className={styles.drawerChevron}
-                        width="16"
-                        height="16"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
+                    {link.href === '/categories' ? (
+                      <div className={styles.drawerNested}>
+                        <button
+                          type="button"
+                          className={`${styles.drawerLink} ${styles.drawerLinkBtn} ${drawerCategoriesOpen ? styles.drawerLinkActive : ''}`}
+                          onClick={() => setDrawerCategoriesOpen((v) => !v)}
+                          aria-expanded={drawerCategoriesOpen}
+                          aria-controls="drawer-categories-submenu"
+                        >
+                          <span className={styles.drawerLinkIcon}>{link.icon}</span>
+                          <span className={styles.drawerLinkLabel}>{link.label}</span>
+                          <svg
+                            className={`${styles.drawerChevron} ${styles.drawerChevronToggle} ${drawerCategoriesOpen ? styles.drawerChevronOpen : ''} ${iconSlot.block} ${iconSlot.sm}`}
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="m9 18 6-6-6-6" />
+                          </svg>
+                        </button>
+
+                        {drawerCategoriesOpen && (
+                          <div id="drawer-categories-submenu" className={styles.drawerSubmenu}>
+                            <div className={styles.drawerSubmenuGroup}>
+                              <p className={styles.drawerSubmenuTitle}>Browse</p>
+                              {[
+                                {
+                                  label: 'Movies',
+                                  href: '/movies',
+                                  icon: (
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
+                                      <rect x="2" y="2" width="20" height="20" rx="2.5" />
+                                      <path d="M7 2v20M17 2v20M2 12h20M2 7h5M17 7h5M2 17h5M17 17h5" />
+                                    </svg>
+                                  ),
+                                },
+                                {
+                                  label: 'Series',
+                                  href: '/series',
+                                  icon: (
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
+                                      <rect x="2" y="3" width="20" height="13" rx="2" />
+                                      <path d="M8 21h8M12 17v4" />
+                                    </svg>
+                                  ),
+                                },
+                                {
+                                  label: 'Cartoons',
+                                  href: '/cartoons',
+                                  icon: (
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
+                                      <path d="m12 3-1.9 5.8a2 2 0 0 1-1.287 1.288L3 12l5.8 1.9a2 2 0 0 1 1.288 1.287L12 21l1.9-5.8a2 2 0 0 1 1.287-1.288L21 12l-5.8-1.9a2 2 0 0 1-1.288-1.287Z" />
+                                    </svg>
+                                  ),
+                                },
+                                {
+                                  label: 'TV Shows',
+                                  href: '/tvshows',
+                                  icon: (
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
+                                      <path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0" />
+                                      <circle cx="12" cy="20" r="1" fill="currentColor" stroke="none" />
+                                    </svg>
+                                  ),
+                                },
+                                {
+                                  label: 'Random Movie',
+                                  href: '/movies/random',
+                                  icon: (
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
+                                      <path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22M18 2l4 4-4 4M18 14l4 4-4 4" />
+                                    </svg>
+                                  ),
+                                },
+                              ].map((item) => (
+                                <Link
+                                  key={item.href}
+                                  href={item.href}
+                                  className={`${styles.drawerSubmenuLink} ${isActive(item.href) ? styles.drawerSubmenuLinkActive : ''}`}
+                                  onClick={() => setMenuOpen(false)}
+                                >
+                                  <span className={styles.drawerSubmenuIcon} aria-hidden>
+                                    {item.icon}
+                                  </span>
+                                  {item.label}
+                                </Link>
+                              ))}
+                            </div>
+
+                            <div className={styles.drawerSubmenuGroup}>
+                              <p className={styles.drawerSubmenuTitle}>Genres</p>
+                              <div className={styles.drawerSubmenuGrid}>
+                                {[
+                                  { label: 'Action', href: '/movies/category/action' },
+                                  { label: 'Adventure', href: '/movies/category/adventure' },
+                                  { label: 'Animation', href: '/movies/category/animation' },
+                                  { label: 'Comedy', href: '/movies/category/comedy' },
+                                  { label: 'Crime', href: '/movies/category/crime' },
+                                  { label: 'Documentary', href: '/movies/category/documentary' },
+                                  { label: 'Drama', href: '/movies/category/drama' },
+                                  { label: 'Family', href: '/movies/category/family' },
+                                  { label: 'Fantasy', href: '/movies/category/fantasy' },
+                                  { label: 'History', href: '/movies/category/history' },
+                                  { label: 'Horror', href: '/movies/category/horror' },
+                                  { label: 'Music', href: '/movies/category/music' },
+                                  { label: 'Mystery', href: '/movies/category/mystery' },
+                                  { label: 'Romance', href: '/movies/category/romance' },
+                                  { label: 'Sci-Fi', href: '/movies/category/sci-fi' },
+                                  { label: 'Thriller', href: '/movies/category/thriller' },
+                                  { label: 'War', href: '/movies/category/war' },
+                                  { label: 'Western', href: '/movies/category/western' },
+                                ].map((genre) => (
+                                  <Link
+                                    key={genre.href}
+                                    href={genre.href}
+                                    className={`${styles.drawerSubmenuLink} ${isActive(genre.href) ? styles.drawerSubmenuLinkActive : ''}`}
+                                    onClick={() => setMenuOpen(false)}
+                                  >
+                                    {genre.label}
+                                  </Link>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className={`${styles.drawerLink} ${isActive(link.href) ? styles.drawerLinkActive : ''}`}
+                        onClick={() => setMenuOpen(false)}
+                        aria-current={isActive(link.href) ? 'page' : undefined}
                       >
-                        <path d="m9 18 6-6-6-6" />
-                      </svg>
-                    </Link>
+                        <span className={styles.drawerLinkIcon}>{link.icon}</span>
+                        <span className={styles.drawerLinkLabel}>{link.label}</span>
+                        <svg
+                          className={`${styles.drawerChevron} ${iconSlot.block} ${iconSlot.sm}`}
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="m9 18 6-6-6-6" />
+                        </svg>
+                      </Link>
+                    )}
                   </motion.div>
                 ))}
 
@@ -879,8 +1085,7 @@ export function Header() {
                   >
                     <span className={styles.drawerLinkIcon}>
                       <svg
-                        width="15"
-                        height="15"
+                        className={`${iconSlot.block} ${iconSlot.inline15}`}
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="1.75"
@@ -891,9 +1096,7 @@ export function Header() {
                     </span>
                     <span className={styles.drawerLinkLabel}>Watchlist</span>
                     <svg
-                      className={styles.drawerChevron}
-                      width="16"
-                      height="16"
+                      className={`${styles.drawerChevron} ${iconSlot.block} ${iconSlot.sm}`}
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"
@@ -921,8 +1124,7 @@ export function Header() {
                   >
                     <span className={styles.drawerLinkIcon}>
                       <svg
-                        width="15"
-                        height="15"
+                        className={`${iconSlot.block} ${iconSlot.inline15}`}
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="1.75"
@@ -932,13 +1134,8 @@ export function Header() {
                       </svg>
                     </span>
                     <span className={styles.drawerLinkLabel}>Notifications</span>
-                    {notifCount > 0 && (
-                      <span className={styles.drawerNotifBadge}>{notifCount}</span>
-                    )}
                     <svg
-                      className={styles.drawerChevron}
-                      width="16"
-                      height="16"
+                      className={`${styles.drawerChevron} ${iconSlot.block} ${iconSlot.sm}`}
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"
@@ -965,8 +1162,7 @@ export function Header() {
                   >
                     <span className={styles.drawerLinkIcon}>
                       <svg
-                        width="15"
-                        height="15"
+                        className={`${iconSlot.block} ${iconSlot.inline15}`}
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="1.75"
@@ -994,8 +1190,7 @@ export function Header() {
                   >
                     <span className={styles.drawerLinkIcon}>
                       <svg
-                        width="15"
-                        height="15"
+                        className={`${iconSlot.block} ${iconSlot.inline15}`}
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="1.75"
@@ -1007,9 +1202,7 @@ export function Header() {
                     </span>
                     <span className={styles.drawerLinkLabel}>Profile</span>
                     <svg
-                      className={styles.drawerChevron}
-                      width="16"
-                      height="16"
+                      className={`${styles.drawerChevron} ${iconSlot.block} ${iconSlot.sm}`}
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"
@@ -1031,8 +1224,7 @@ export function Header() {
                   onClick={() => setMenuOpen(false)}
                 >
                   <svg
-                    width="15"
-                    height="15"
+                    className={`${iconSlot.block} ${iconSlot.inline15}`}
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="1.75"
@@ -1049,8 +1241,7 @@ export function Header() {
                   onClick={() => setMenuOpen(false)}
                 >
                   <svg
-                    width="15"
-                    height="15"
+                    className={`${iconSlot.block} ${iconSlot.inline15}`}
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="1.75"

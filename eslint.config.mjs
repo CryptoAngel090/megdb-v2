@@ -14,6 +14,10 @@ export default tseslint.config(
       '**/build/**',
       '**/*.d.ts',
       '**/eslint.config.mjs',
+      '**/postcss.config.mjs',
+      /** Node scripts: not in TS `project` — type-aware rules (e.g. await-thenable) cannot run. */
+      'apps/web/scripts/**',
+      'scripts/**',
     ],
   },
   js.configs.recommended,

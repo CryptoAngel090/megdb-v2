@@ -6,14 +6,12 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import type { PopularActorItem } from '@/lib/tmdb'
 import { getImageUrl } from '@/lib/tmdb'
-import {
-  actorCardVariants,
-  actorRowListVariants,
-  actorTileTapSpring,
-  shelfTapSpring,
-} from '@/lib/shelfAnimations'
+import { PERSON_PROFILE_IMAGE_SIZES, PERSON_PROFILE_IMAGE_TMDB_SIZE } from '@/lib/imageSizes'
+// Spring animations removed per request — interactions now use instant or simple CSS transitions
+import { personPath } from '@/lib/slug'
 import { ShelfRevealShell } from '@/components/ShelfRevealShell/ShelfRevealShell'
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
+import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './PopularActorsShelf.module.css'
 
 interface PopularActorsShelfProps {
@@ -78,8 +76,8 @@ export function PopularActorsShelf({ actors }: PopularActorsShelfProps) {
             aria-label="Scroll popular actors left"
             disabled={!canScrollLeft}
             onClick={() => scrollRow(-1)}
-            {...(!reduceMotion ? { whileTap: { scale: 0.9 } } : {})}
-            transition={shelfTapSpring}
+            {...(!reduceMotion ? { whileTap: { scale: 0.9 }, transition: { type: 'tween', duration: 0.15 } } : {})}
+            // transition: explicit tween — no spring physics
           >
             <Chevron dir="left" />
           </motion.button>
@@ -89,8 +87,8 @@ export function PopularActorsShelf({ actors }: PopularActorsShelfProps) {
             aria-label="Scroll popular actors right"
             disabled={!canScrollRight}
             onClick={() => scrollRow(1)}
-            {...(!reduceMotion ? { whileTap: { scale: 0.9 } } : {})}
-            transition={shelfTapSpring}
+            {...(!reduceMotion ? { whileTap: { scale: 0.9 }, transition: { type: 'tween', duration: 0.15 } } : {})}
+            // transition: explicit tween — no spring physics
           >
             <Chevron dir="right" />
           </motion.button>
@@ -107,15 +105,15 @@ export function PopularActorsShelf({ actors }: PopularActorsShelfProps) {
           <div ref={rowRef} className={styles.row}>
             {actors.map((actor, i) => (
               <div key={actor.id} className={styles.cardMotionWrap}>
-                <Link href={`/person/${actor.id}`} className={styles.card} title={actor.name}>
+                <Link href={personPath(actor.id, actor.name)} className={styles.card} title={actor.name}>
                   <div className={styles.avatarWrap}>
                     {actor.profilePath ? (
                       <Image
                         fill
                         className={styles.avatar}
-                        src={getImageUrl(actor.profilePath, 'w342')}
-                        alt=""
-                        sizes="(max-width: 767px) 32vw, (max-width: 1279px) 18vw, 148px"
+                        src={getImageUrl(actor.profilePath, PERSON_PROFILE_IMAGE_TMDB_SIZE)}
+                        alt={`${actor.name} portrait`}
+                        sizes={PERSON_PROFILE_IMAGE_SIZES}
                         priority={i < 8}
                       />
                     ) : (
@@ -131,24 +129,23 @@ export function PopularActorsShelf({ actors }: PopularActorsShelfProps) {
             ))}
           </div>
         ) : (
-          <motion.div ref={rowRef} className={styles.row} variants={actorRowListVariants}>
+          <div ref={rowRef} className={styles.row}>
             {actors.map((actor, i) => (
               <motion.div
                 key={actor.id}
                 className={styles.cardMotionWrap}
-                variants={actorCardVariants}
                 whileTap={{ scale: 0.97 }}
-                transition={{ scale: actorTileTapSpring }}
+                transition={{ type: 'tween', duration: 0.15 }}
               >
-                <Link href={`/person/${actor.id}`} className={styles.card} title={actor.name}>
+                <Link href={personPath(actor.id, actor.name)} className={styles.card} title={actor.name}>
                   <div className={styles.avatarWrap}>
                     {actor.profilePath ? (
                       <Image
                         fill
                         className={styles.avatar}
-                        src={getImageUrl(actor.profilePath, 'w342')}
-                        alt=""
-                        sizes="(max-width: 767px) 32vw, (max-width: 1279px) 18vw, 148px"
+                        src={getImageUrl(actor.profilePath, PERSON_PROFILE_IMAGE_TMDB_SIZE)}
+                        alt={`${actor.name} portrait`}
+                        sizes={PERSON_PROFILE_IMAGE_SIZES}
                         priority={i < 8}
                       />
                     ) : (
@@ -162,7 +159,7 @@ export function PopularActorsShelf({ actors }: PopularActorsShelfProps) {
                 </Link>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         )}
       </div>
     </>
@@ -173,7 +170,6 @@ export function PopularActorsShelf({ actors }: PopularActorsShelfProps) {
       outerClassName={styles.shelfOuter}
       innerClassName={styles.shelf}
       aria-labelledby={titleId}
-      reduceMotion={reduceMotion}
     >
       {shelfBody}
     </ShelfRevealShell>
@@ -182,7 +178,7 @@ export function PopularActorsShelf({ actors }: PopularActorsShelfProps) {
 
 function Chevron({ dir }: { dir: 'left' | 'right' }) {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+    <svg className={`${iconSlot.block} ${iconSlot.md}`} viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
         d={dir === 'left' ? 'M15 18l-6-6 6-6' : 'M9 18l6-6-6-6'}
         stroke="currentColor"

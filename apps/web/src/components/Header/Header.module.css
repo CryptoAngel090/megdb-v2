@@ -16,38 +16,82 @@
   pointer-events: none;
 }
 
+.breadcrumb {
+  position: fixed;
+  inset-block-start: calc(
+    env(safe-area-inset-top, 0px) + var(--layout-header-top-gutter) + var(--layout-pill-inner-min) +
+      calc(2 * var(--border-width-ui)) + var(--space-2)
+  );
+  inset-inline: 0;
+  z-index: calc(var(--z-header) - 1);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0 auto;
+  inline-size: min(var(--container-max), calc(100% - var(--space-6)));
+  min-block-size: 1.6rem;
+  padding-inline: var(--space-2);
+  color: color-mix(in oklab, var(--color-text-secondary) 88%, transparent);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.breadcrumbItem {
+  color: color-mix(in oklab, var(--color-text-secondary) 90%, transparent);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.breadcrumbCurrent {
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.breadcrumbSep {
+  color: color-mix(in oklab, var(--color-text-muted) 86%, transparent);
+  flex-shrink: 0;
+}
+
+@media (max-width: 767px) {
+  .breadcrumb {
+    display: none;
+  }
+}
+
 /* ── Pill — glassmorphism 2.0 ── */
 .pill {
   width: 100%;
   max-width: var(--container-max);
   pointer-events: auto;
   border-radius: var(--radius-pill);
-  background: oklch(12% 0.01 264 / 0.62);
+  background: color-mix(in oklab, var(--bg) 88%, transparent);
   backdrop-filter: blur(40px) saturate(2) brightness(1.1);
   -webkit-backdrop-filter: blur(40px) saturate(2) brightness(1.1);
   position: relative;
-  border: var(--border-width-ui, 2px) solid var(--border-strong);
+  border: none;
   transition:
     background 0.22s ease,
     border-color 0.22s ease;
 }
 
 .pillScrolled {
-  background: oklch(12% 0.01 264 / 0.86);
-  border-color: var(--border-strong);
+  background: color-mix(in oklab, var(--bg) 90%, transparent);
 }
 
 .pill::before {
-  content: '';
+  content: none;
   position: absolute;
   inset: 0;
   border-radius: inherit;
   padding: 1px;
   background: linear-gradient(
     135deg,
-    oklch(45% 0.22 27 / 0.55) 0%,
-    oklch(20% 0.02 27 / 0.1) 45%,
-    oklch(45% 0.22 27 / 0.25) 100%
+    color-mix(in oklab, var(--color-border) 92%, transparent) 0%,
+    color-mix(in oklab, var(--color-border) 78%, transparent) 50%,
+    color-mix(in oklab, var(--color-border) 92%, transparent) 100%
   );
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
@@ -283,6 +327,7 @@
   display: none;
 }
 
+
 /* Random — hidden on mobile */
 .randomBtn {
   display: none;
@@ -473,10 +518,10 @@
   z-index: var(--z-header-drawer);
   width: clamp(260px, 88vw, 340px);
   max-width: calc(100vw - var(--space-3));
-  background: oklch(12% 0.01 264 / 0.98);
+  background: color-mix(in oklab, var(--bg) 94%, transparent);
   backdrop-filter: blur(40px);
   -webkit-backdrop-filter: blur(40px);
-  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  border-right: 1px solid color-mix(in oklab, var(--color-border) 78%, transparent);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -728,6 +773,99 @@
   text-align: left;
 }
 
+.drawerNested {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.drawerChevronToggle {
+  transition: transform 0.18s ease;
+}
+
+.drawerChevronOpen {
+  transform: rotate(90deg);
+}
+
+.drawerSubmenu {
+  margin-top: var(--space-1);
+  margin-left: var(--space-4);
+  padding-left: var(--space-2);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.drawerSubmenuGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.drawerSubmenuTitle {
+  margin: 0;
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.drawerSubmenuGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-1);
+}
+
+.drawerSubmenuLink {
+  min-height: calc(var(--space-5) + var(--space-2));
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-button);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid transparent;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
+  transition:
+    color 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.drawerSubmenuLink:hover {
+  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.drawerSubmenuLinkActive {
+  color: var(--color-text-primary);
+  background: color-mix(in oklab, var(--color-accent) 12%, transparent);
+  border-color: color-mix(in oklab, var(--color-accent) 24%, transparent);
+}
+
+.drawerSubmenuIcon {
+  width: calc(var(--space-6) - var(--space-2) - var(--space-1));
+  height: calc(var(--space-6) - var(--space-2) - var(--space-1));
+  flex-shrink: 0;
+  border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, 0.06);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drawerSubmenuIcon svg {
+  width: var(--icon-inline-15);
+  height: var(--icon-inline-15);
+  display: block;
+}
+
 .drawerNotifBadge {
   min-width: var(--space-3-5);
   height: var(--space-3-5);
@@ -769,8 +907,8 @@
 }
 
 .drawerSearchWrap:focus-within {
-  border-color: rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.09);
+  border-color: color-mix(in oklab, var(--color-border) 82%, white 18%);
+  background: color-mix(in oklab, var(--color-surface) 62%, transparent);
 }
 
 .drawerSearchIcon {
@@ -787,6 +925,12 @@
   font-size: var(--text-caption);
   font-weight: var(--weight-medium);
   outline: none !important;
+}
+
+.drawerSearchInput:focus,
+.drawerSearchInput:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .drawerSearchInput::placeholder {
@@ -1074,6 +1218,127 @@
 
 .bottomNavItemActive .bottomNavLabel {
   font-weight: var(--weight-bold);
+}
+
+/* ── Mega menu (Categories) ── */
+.megaMenuWrap {
+  position: relative;
+}
+
+.megaMenu {
+  position: fixed;
+  top: var(--mega-menu-top, 72px);
+  left: 50%;
+  width: min(740px, calc(100vw - 32px));
+  margin-left: calc(-1 * min(740px, calc(100vw - 32px)) / 2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  padding: 20px 20px 16px;
+  z-index: var(--z-dropdown);
+  pointer-events: auto;
+}
+
+.megaMenuBody {
+  display: flex;
+  gap: 0;
+  align-items: flex-start;
+}
+
+.megaMenuLeft {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.megaMenuDivider {
+  width: 1px;
+  align-self: stretch;
+  background: rgba(255, 255, 255, 0.07);
+  margin: 0 16px;
+  flex-shrink: 0;
+}
+
+.megaMenuRight {
+  width: 180px;
+  flex-shrink: 0;
+}
+
+.megaMenuTitle {
+  margin: 0;
+  padding: 0 4px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.megaMenuGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+
+.megaMenuItem {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--color-text-secondary);
+  font-size: 15px;
+  font-weight: 500;
+  transition: background 120ms ease, color 120ms ease;
+  white-space: nowrap;
+}
+
+.megaMenuItem:hover {
+  background: color-mix(in oklab, var(--color-surface-hover) 70%, transparent);
+  color: var(--color-text-primary);
+}
+
+.megaMenuBrowseList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.megaMenuBrowseItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--color-text-secondary);
+  font-size: 15px;
+  font-weight: 500;
+  transition: background 120ms ease, color 120ms ease;
+  white-space: nowrap;
+}
+
+.megaMenuBrowseItem:hover {
+  background: color-mix(in oklab, var(--color-surface-hover) 70%, transparent);
+  color: var(--color-text-primary);
+}
+
+.megaMenuBrowseIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.megaMenuBrowseIcon svg {
+  width: 16px;
+  height: 16px;
+  max-width: 16px;
+  max-height: 16px;
+  display: block;
 }
 
 /* Hide bottom nav on tablet+ */

@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './Toast.module.css'
 
 // ── Types ────────────────────────────────────────────────
@@ -122,7 +123,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: string)
       initial={{ opacity: 0, y: 24, scale: 0.94 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -8, scale: 0.94 }}
-      transition={{ type: 'spring', stiffness: 420, damping: 28 }}
+      transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
       onMouseEnter={pause}
       onMouseLeave={resume}
     >
@@ -137,8 +138,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: string)
         aria-label="Dismiss notification"
       >
         <svg
-          width="14"
-          height="14"
+          className={`${iconSlot.block} ${iconSlot.inline14}`}
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"

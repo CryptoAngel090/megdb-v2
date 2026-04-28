@@ -2,19 +2,20 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalDocument, LegalNote } from '@/components/LegalDocument/LegalDocument'
 import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
-import { discoverSocialMeta } from '@/lib/seoSocial'
+import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
+/** @sync `ROUTE_REVALIDATE_STATIC_COPY` in `@/lib/cachePolicy` */
 export const revalidate = 86_400
 
 const title = 'Cookie Policy'
 const description =
-  'How MegDB uses cookies and similar storage technologies, consent, and your choices — with 2025–2026 regulatory context.'
+  'MegDB Cookie Policy: essential vs optional storage, consent signals (GPC where applicable), EU/UK ePrivacy context, and how to change browser settings — April 2026.'
 
 export const metadata: Metadata = {
   title,
   description,
-  alternates: { canonical: '/cookies' },
+  alternates: discoverPageAlternates('/cookies'),
   ...discoverSocialMeta(title, description, '/cookies'),
 }
 
@@ -23,7 +24,12 @@ const UPDATED = 'April 21, 2026'
 export default function CookiesPage() {
   return (
     <>
-      <WebPageJsonLd pathname="/cookies" title={title} description={description} />
+      <WebPageJsonLd
+        pathname="/cookies"
+        title={title}
+        description={description}
+        breadcrumbParent={{ name: 'Legal & privacy', pathname: '/privacy' }}
+      />
       <div className={styles.page}>
       <LegalDocument title="Cookie Policy" lastUpdated={UPDATED}>
         <h2 id="intro">1. Introduction</h2>

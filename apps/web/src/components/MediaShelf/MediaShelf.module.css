@@ -114,7 +114,7 @@
   width: 4px;
   align-self: stretch;
   border-radius: 2px;
-  background: linear-gradient(180deg, var(--primary) 0%, rgba(229, 9, 20, 0.35) 100%);
+  background: linear-gradient(180deg, var(--primary) 0%, var(--color-primary-border) 100%);
   box-shadow: 0 0 20px var(--primary-glow);
 }
 
@@ -124,10 +124,10 @@
 
 .title {
   font-family: var(--font-display);
-  font-size: var(--text-xl);
-  font-weight: var(--weight-bold);
+  font-size: clamp(18px, 1.5vw + 0.5rem, 26px);
+  font-weight: var(--weight-extrabold);
   color: var(--color-text-primary);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   line-height: var(--leading-snug);
   text-wrap: balance;
 }
@@ -135,7 +135,7 @@
 /* rule 30: "See All" always visible — chip + icon, not bare text */
 .viewAll {
   font-size: var(--text-small);
-  font-weight: var(--weight-semibold);
+  font-weight: var(--weight-bold);
   color: var(--text-primary);
   text-decoration: none;
   display: inline-flex;
@@ -144,14 +144,12 @@
   white-space: nowrap;
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-pill);
-  border: 1px solid var(--border-strong);
-  background: linear-gradient(165deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+  border: 1px solid var(--color-primary-border);
+  background: var(--color-primary-muted);
   transition:
     color var(--duration-fast),
     border-color var(--duration-fast),
     background var(--duration-fast),
-    box-shadow var(--duration-fast),
     transform var(--duration-fast);
 }
 
@@ -160,44 +158,52 @@
   transition: color var(--duration-fast);
 }
 
+.viewAllChevron {
+  display: block;
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+
 .viewAllIcon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: var(--icon-inline-22);
+  height: var(--icon-inline-22);
   border-radius: var(--radius-pill);
-  background: var(--primary-muted);
+  background: color-mix(in oklab, var(--color-primary) 20%, transparent);
   color: var(--primary);
   transition:
     background var(--duration-fast),
-    color var(--duration-fast),
     transform var(--duration-fast);
 }
 
 .viewAll:hover {
-  border-color: var(--primary-border);
-  background: rgba(229, 9, 20, 0.08);
-  box-shadow: 0 0 0 1px rgba(229, 9, 20, 0.12);
+  border-color: color-mix(in oklab, var(--color-primary) 70%, transparent);
+  background: color-mix(in oklab, var(--color-primary) 15%, transparent);
+  transform: translateY(-1px);
 }
 
 .viewAll:hover .viewAllLabel {
-  color: var(--primary-hover);
+  color: #fff;
 }
 
 .viewAll:hover .viewAllIcon {
-  background: rgba(229, 9, 20, 0.22);
-  color: var(--on-primary);
+  background: color-mix(in oklab, var(--color-primary) 35%, transparent);
+  color: #fff;
   transform: translateX(2px);
 }
 
 .viewAll:focus-visible {
-  outline: 2px solid var(--primary, #e50914);
+  outline: 2px solid var(--color-primary);
   outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .viewAll:hover .viewAllIcon {
+    transform: none;
+  }
+  .viewAll:hover {
     transform: none;
   }
 }
@@ -217,45 +223,56 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: var(--hit-area-round-md);
+  height: var(--hit-area-round-md);
   padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid var(--color-border);
   border-radius: 50%;
-  background: rgba(18, 18, 18, 0.92);
-  color: #fff;
+  background: var(--color-surface-raised);
+  color: var(--color-text-muted);
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
   transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    opacity 0.2s ease,
-    transform 0.15s ease;
+    background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    opacity var(--duration-fast) var(--ease-out),
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
 }
 
 .scrollBtn:hover:not(:disabled) {
-  background: rgba(40, 40, 40, 0.95);
-  border-color: rgba(255, 255, 255, 0.22);
+  background: var(--color-primary-muted);
+  border-color: var(--color-primary-border);
+  color: var(--color-primary);
+  box-shadow: 0 4px 20px color-mix(in oklab, var(--color-primary) 20%, transparent);
 }
 
 .scrollBtn:focus-visible {
-  outline: 2px solid var(--primary, #e50914);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
 .scrollBtn:disabled {
-  opacity: 0.35;
+  opacity: 0.25;
   cursor: not-allowed;
+  background: transparent;
+  border-color: transparent;
 }
 
 .scrollBtn:active:not(:disabled) {
-  transform: scale(0.96);
+  transform: scale(0.94);
+}
+
+.scrollChevron {
+  display: block;
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
 }
 
 @media (min-width: 1024px) {
   .scrollBtn {
-    width: 44px;
-    height: 44px;
+    width: var(--control-height-sm);
+    height: var(--control-height-sm);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
   }
 }
@@ -282,7 +299,7 @@
 
 .rowInner {
   display: flex;
-  gap: var(--media-card-rail-gap);
+  gap: var(--rail-tile-gap);
   width: max-content;
 }
 
@@ -291,8 +308,8 @@
   flex: 0 0 auto;
   scroll-snap-align: start;
   width: calc(
-    (100cqi - (var(--media-card-rail-columns) - 1) * var(--media-card-rail-gap)) /
-      var(--media-card-rail-columns)
+    (100cqi - (var(--rail-tile-columns) - 1) * var(--rail-tile-gap)) /
+      var(--rail-tile-columns)
   );
 }
 
@@ -347,7 +364,7 @@
   }
 
   .viewAll {
-    min-height: 44px;
+    min-height: var(--touch-target);
     padding-block: 10px;
     padding-inline: var(--space-3);
   }
@@ -364,8 +381,8 @@
 }
 
 .skeletonScrollBtn {
-  width: 40px;
-  height: 40px;
+  width: var(--hit-area-round-md);
+  height: var(--hit-area-round-md);
   flex-shrink: 0;
   border-radius: 50%;
   background: var(--surface-raised);
@@ -373,8 +390,8 @@
 
 @media (min-width: 1024px) {
   .skeletonScrollBtn {
-    width: 44px;
-    height: 44px;
+    width: var(--touch-target);
+    height: var(--touch-target);
   }
 }
 
@@ -386,7 +403,7 @@
 }
 
 .skeletonTitleBar {
-  height: 25px;
+  height: var(--skeleton-title-height);
   width: min(180px, 45vw);
   border-radius: 6px;
   background: linear-gradient(

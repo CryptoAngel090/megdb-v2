@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import Link from 'next/link'
+import { Button } from '@repo/ui/button'
 import styles from './EmptyState.module.css'
 
 interface EmptyStateProps {
@@ -51,9 +52,11 @@ export function EmptyState({
             {ctaLabel}
           </Link>
         ) : (
-          <button type="button" className={styles.cta} onClick={onCtaClick}>
-            {ctaLabel}
-          </button>
+          <div className={styles.ctaSlot}>
+            <Button type="button" variant="primary" size="md" onClick={() => onCtaClick?.()}>
+              {ctaLabel}
+            </Button>
+          </div>
         ))}
     </div>
   )

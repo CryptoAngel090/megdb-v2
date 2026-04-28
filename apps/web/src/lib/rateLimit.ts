@@ -9,7 +9,7 @@ const store = new Map<string, WindowEntry>()
 
 const WINDOW_MS = 60_000
 
-export interface RateLimitResult {
+interface RateLimitResult {
   ok: boolean
   /** Seconds until the current window resets (when ok is false). */
   retryAfterSec?: number

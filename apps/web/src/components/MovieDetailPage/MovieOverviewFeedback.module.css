@@ -16,7 +16,7 @@
 }
 
 .feedbackButton {
-  min-height: 40px;
+  min-height: var(--hit-area-round-md);
   padding: 0 var(--space-3);
   display: inline-flex;
   align-items: center;
@@ -89,14 +89,14 @@
 }
 
 .feedbackIcon {
-  width: 16px;
-  height: 16px;
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
   flex-shrink: 0;
 }
 
 .count {
   min-width: min(3.25rem, 100%);
-  min-height: 40px;
+  min-height: var(--hit-area-round-md);
   padding: 0 var(--space-2-5);
   display: inline-flex;
   align-items: center;
@@ -153,21 +153,21 @@
   }
 
   .feedbackButton {
-    min-height: 34px;
+    min-height: var(--min-control-34);
     padding: 0 var(--space-2-5);
     gap: 0.35rem;
     font-size: var(--text-sm);
   }
 
   .feedbackIcon {
-    width: 13px;
-    height: 13px;
+    width: var(--icon-inline-13);
+    height: var(--icon-inline-13);
   }
 
   .count {
     min-width: min(2.75rem, 100%);
-    min-height: 34px;
-    padding: 0 10px;
+    min-height: var(--min-control-34);
+    padding: 0 var(--space-stack-10);
     font-size: var(--text-caption);
   }
 }

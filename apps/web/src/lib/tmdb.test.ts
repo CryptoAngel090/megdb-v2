@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   applyTrendingRecencyBias,
   COMING_BLOCKBUSTER_MOVIE_VOTE_MIN,
@@ -12,6 +12,7 @@ import {
   discoverTvShowsStateToBrowseInput,
   discoverTvShowsStateToFetchParams,
   discoverStateToFetchParams,
+  getTopMovies2026MosaicPosterUrls,
   getImageUrl,
   parseCartoonsDiscoverSearchParams,
   parseMoviesDiscoverSearchParams,
@@ -59,6 +60,17 @@ describe('movies discover filters smoke', () => {
     const { input } = discoverStateToBrowseInput(state, 1)
     expect(input.sort_by).toBe('primary_release_date.desc')
     expect(input.primary_release_date_lte).toBe(`${new Date().getFullYear()}-12-31`)
+    expect(input.vote_count_gte).toBe('0')
+  })
+
+  it('uses 2026-down release-date-desc defaults for genre-only categories', () => {
+    const state = parseMoviesDiscoverSearchParams({ genre: '28' })
+    const { input } = discoverStateToBrowseInput(state, 1)
+    const today = new Date().toISOString().slice(0, 10)
+    expect(input.genre).toBe('28')
+    expect(input.sort_by).toBe('primary_release_date.desc')
+    expect(input.primary_release_date_gte).toBeUndefined()
+    expect(input.primary_release_date_lte).toBe(today)
     expect(input.vote_count_gte).toBe('0')
   })
 
@@ -237,5 +249,56 @@ describe('upcoming / coming-soon shelf order', () => {
     })
     const sorted = [june, april, may].sort(compareShelfItemsByUpcomingReleaseAsc)
     expect(sorted.map((x) => x.title)).toEqual(['April', 'May', 'June'])
+  })
+})
+
+describe('getTopMovies2026MosaicPosterUrls resilience', () => {
+  const rawMovie = {
+    id: 7001,
+    title: 'Sample Movie',
+    overview: 'Sample overview',
+    poster_path: '/poster.jpg',
+    backdrop_path: '/backdrop.jpg',
+    release_date: '2026-05-20',
+    vote_average: 7.8,
+    vote_count: 900,
+    popularity: 1200,
+    genre_ids: [28, 12],
+  }
+
+  const makeDiscoverPage = () => ({
+    page: 1,
+    total_pages: 1,
+    total_results: 1,
+    results: [rawMovie],
+  })
+
+  beforeEach(() => {
+    let discoverFailureConsumed = false
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((input: string | URL) => {
+        const url = String(input)
+        if (!discoverFailureConsumed && url.includes('/discover/movie')) {
+          discoverFailureConsumed = true
+          return new Response('Internal Server Error', { status: 500 })
+        }
+
+        return new Response(JSON.stringify(makeDiscoverPage()), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        })
+      })
+    )
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('continues building mosaic when one discover request returns 500', async () => {
+    const posters = await getTopMovies2026MosaicPosterUrls(10)
+    expect(posters.length).toBeGreaterThan(0)
+    expect(posters[0]).toContain('/w154/')
   })
 })

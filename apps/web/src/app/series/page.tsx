@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { MosaicHeroLcpPreload } from '@/components/MosaicHeroLcpPreload'
 import { MoviesDiscoverPage } from '@/components/MoviesDiscoverPage/MoviesDiscoverPage'
-import { buildCollectionPageJsonLd } from '@/lib/jsonLdSite'
+import { buildCollectionPageStructuredData } from '@/lib/jsonLdSite'
 import {
   getSeriesDiscoverCanonicalPath,
   getSeriesDiscoverDescription,
@@ -9,7 +9,8 @@ import {
   getSeriesDiscoverKeywords,
   getSeriesDiscoverTitle,
 } from '@/lib/seriesDiscoverCopy'
-import { discoverSocialMeta } from '@/lib/seoSocial'
+import { buildDiscoverHubSnippetTemplate } from '@/lib/seoSnippetTemplates'
+import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import {
   discoverSeriesBrowse,
   discoverSeriesFetchKey,
@@ -26,7 +27,15 @@ import {
 } from '@/lib/tmdb'
 import styles from './page.module.css'
 
+/** @sync `ROUTE_REVALIDATE_DISCOVER_HUB` in `@/lib/cachePolicy` */
 export const revalidate = 600
+
+function ensureTwoSeriesGenres(genres: string[] | undefined): string[] {
+  const normalized = (genres ?? []).map((g) => String(g).trim()).filter(Boolean).slice(0, 2)
+  if (normalized.length === 0) return ['SERIES', 'TV']
+  if (normalized.length === 1) return [normalized[0]!, 'SERIES']
+  return normalized
+}
 
 type PageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>
@@ -56,23 +65,36 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   const title = getSeriesDiscoverTitle(state, genres, ctx)
   const path = getSeriesDiscoverCanonicalPath(state, genres, ctx)
   const keywords = getSeriesDiscoverKeywords(state, genres)
+  const isHubRoot = keys.length === 0
+  const hubSnippet = isHubRoot
+    ? buildDiscoverHubSnippetTemplate({ page: 'series', year: new Date().getFullYear() })
+    : null
+  const finalTitle = hubSnippet?.title ?? title
+  const finalDescription = hubSnippet?.description ?? description
 
   if (keys.length > 1) {
     return {
-      title,
-      description,
+      title: finalTitle,
+      description: finalDescription,
       robots: { index: false, follow: true },
-      alternates: { canonical: path },
-      ...discoverSocialMeta(title, description, path),
+      alternates: discoverPageAlternates(path),
+      ...discoverSocialMeta(finalTitle, finalDescription, path),
     }
   }
 
   return {
-    title,
-    description,
+    title: finalTitle,
+    description: finalDescription,
     ...(keywords ? { keywords } : {}),
-    alternates: { canonical: path },
-    ...discoverSocialMeta(title, description, path),
+    alternates: discoverPageAlternates(path),
+    ...discoverSocialMeta(finalTitle, finalDescription, path),
+    ...(hubSnippet
+      ? {
+          other: {
+            'megdb:snippet-cohort': hubSnippet.cohort,
+          },
+        }
+      : {}),
   }
 }
 
@@ -96,9 +118,12 @@ export default async function SeriesPage({ searchParams }: PageProps) {
   const genres = allGenres.filter((g) => !tvShowOnlyGenreIdsPage.has(String(g.id)))
   const seriesCopyCtx = { providers, studios }
 
-  const initialItems = await enrichSeriesShelfRuntime(
-    results.results.map(mapTmdbSeriesRowToShelfItem)
-  )
+  const initialItemsBase = results.results.map(mapTmdbSeriesRowToShelfItem)
+  const initialItemsWithRuntime = await enrichSeriesShelfRuntime(initialItemsBase)
+  const initialItems = initialItemsWithRuntime.map((item) => ({
+    ...item,
+    genres: ensureTwoSeriesGenres(item.genres),
+  }))
   const seriesRuntimeOptions = [
     { value: '', label: 'Any episode runtime' },
     { value: '0-25', label: 'Under 25 min' },
@@ -163,10 +188,10 @@ export default async function SeriesPage({ searchParams }: PageProps) {
     timeZone: 'UTC',
   })
 
-  const collectionLd =
+  const hubStructured =
     keys.length > 1
       ? null
-      : buildCollectionPageJsonLd({
+      : buildCollectionPageStructuredData({
           name: getSeriesDiscoverTitle(state, genres, seriesCopyCtx),
           description: getSeriesDiscoverDescription(state, genres, seriesCopyCtx),
           pathname: getSeriesDiscoverCanonicalPath(state, genres, seriesCopyCtx),
@@ -175,11 +200,17 @@ export default async function SeriesPage({ searchParams }: PageProps) {
 
   return (
     <>
-      {collectionLd && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionLd) }}
-        />
+      {hubStructured && (
+        <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(hubStructured.collectionPage) }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(hubStructured.breadcrumb) }}
+          />
+        </>
       )}
       <div className={styles.page}>
         <MosaicHeroLcpPreload href={mosaicUrls[0]} />
@@ -193,6 +224,8 @@ export default async function SeriesPage({ searchParams }: PageProps) {
           basePath="/series"
           apiPath="/api/series-discover"
           pageTitle="Series"
+          seoTitle="Best TV Series to Watch Online"
+          seoSubtitle="Discover trending and top-rated TV series with smart filters by genre, release year, rating, episode runtime, language, country, streaming platform, and studio."
           emptyText="No series match these filters yet."
           contentLabelPlural="series"
           presetsStorageKey="megdb-series-filter-presets-v1"
@@ -204,6 +237,7 @@ export default async function SeriesPage({ searchParams }: PageProps) {
           mosaicUrls={mosaicUrls}
           heroDescription={heroDescription}
           enableDiscoverPolish
+          mobileGridColumns={3}
           trustUpdatedAtLabel={trustUpdatedAtLabel}
         />
       </div>

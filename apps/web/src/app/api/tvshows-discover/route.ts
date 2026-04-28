@@ -10,6 +10,28 @@ import {
 
 const DISCOVER_RATE_LIMIT = 60
 
+function isStrictTvShowRow(row: {
+  name?: string | null
+  first_air_date?: string | null
+  title?: string | null
+  release_date?: string | null
+}): boolean {
+  const hasTvSignals =
+    (typeof row.name === 'string' && row.name.trim().length > 0) &&
+    (typeof row.first_air_date === 'string' && row.first_air_date.trim().length > 0)
+  const hasMovieSignals =
+    (typeof row.title === 'string' && row.title.trim().length > 0) ||
+    (typeof row.release_date === 'string' && row.release_date.trim().length > 0)
+  return hasTvSignals && !hasMovieSignals
+}
+
+function ensureTwoTvShowGenres(genres: string[] | undefined): string[] {
+  const normalized = (genres ?? []).map((g) => String(g).trim()).filter(Boolean).slice(0, 2)
+  if (normalized.length === 0) return ['TV SHOW', 'TV SHOW']
+  if (normalized.length === 1) return [normalized[0]!, 'TV SHOW']
+  return normalized
+}
+
 function urlSearchParamsToDiscoverRecord(
   sp: URLSearchParams
 ): Record<string, string | string[] | undefined> {
@@ -59,13 +81,25 @@ export async function GET(request: NextRequest) {
 
   try {
     const data = await discoverTvShowsBrowse(input, mode, comingYear)
-    const results = await enrichTvShowsShelfRuntime(data.results.map(mapTmdbTvShowRowToShelfItem))
-    return NextResponse.json({
-      results,
-      page: data.page,
-      total_pages: data.total_pages,
-      total_results: data.total_results,
-    })
+    const strictTvRows = data.results.filter(isStrictTvShowRow)
+    const withRuntime = await enrichTvShowsShelfRuntime(strictTvRows.map(mapTmdbTvShowRowToShelfItem))
+    const results = withRuntime.map((item) => ({
+      ...item,
+      genres: ensureTwoTvShowGenres(item.genres),
+    }))
+    return NextResponse.json(
+      {
+        results,
+        page: data.page,
+        total_pages: data.total_pages,
+        total_results: data.total_results,
+      },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=1800',
+        },
+      }
+    )
   } catch (e) {
     const message = e instanceof Error ? e.message : 'Discover failed'
     return NextResponse.json({ error: message }, { status: 502 })

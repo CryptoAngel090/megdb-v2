@@ -30,11 +30,11 @@ describe('deviceTierFromSignals', () => {
 })
 
 describe('shouldEnableEffect and effectsForTier', () => {
-  it('maps low tier to spring only', () => {
+  it('maps low tier to no heavy effects (spring removed)', () => {
     const low = effectsForTier('low')
-    expect(low).toContain('spring')
+    expect(low).not.toContain('spring')
     expect(low).not.toContain('magnetic')
-    expect(shouldEnableEffect('spring', 'low')).toBe(true)
+    expect(shouldEnableEffect('spring', 'low')).toBe(false)
     expect(shouldEnableEffect('tilt', 'low')).toBe(false)
     expect(shouldEnableEffect('magnetic', 'low')).toBe(false)
   })
@@ -45,9 +45,11 @@ describe('shouldEnableEffect and effectsForTier', () => {
     expect(shouldEnableEffect('parallax', 'high')).toBe(true)
   })
 
-  it('medium tier has tilt but not magnetic', () => {
-    expect(shouldEnableEffect('tilt', 'medium')).toBe(true)
-    expect(shouldEnableEffect('magnetic', 'medium')).toBe(false)
+  it('medium tier has magnetic but not tilt (tilt removed to reduce INP on mid-range phones)', () => {
+    expect(shouldEnableEffect('tilt', 'medium')).toBe(false)
+    expect(shouldEnableEffect('magnetic', 'medium')).toBe(true)
+    expect(shouldEnableEffect('spring', 'medium')).toBe(false)
+    expect(shouldEnableEffect('parallax', 'medium')).toBe(true)
   })
 })
 

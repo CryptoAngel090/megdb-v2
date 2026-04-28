@@ -2,19 +2,20 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalDocument, LegalNote } from '@/components/LegalDocument/LegalDocument'
 import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
-import { discoverSocialMeta } from '@/lib/seoSocial'
+import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
+/** @sync `ROUTE_REVALIDATE_STATIC_COPY` in `@/lib/cachePolicy` */
 export const revalidate = 86_400
 
 const title = 'Terms of Service'
 const description =
-  'Terms governing your use of MegDB movie and TV discovery services, content sources, and acceptable use.'
+  'MegDB Terms of Service: eligibility, TMDB-backed catalogue rules, acceptable use (no abuse of search/API), disclaimers, limitation of liability, and how to contact us — read before using discovery features.'
 
 export const metadata: Metadata = {
   title,
   description,
-  alternates: { canonical: '/terms' },
+  alternates: discoverPageAlternates('/terms'),
   ...discoverSocialMeta(title, description, '/terms'),
 }
 
@@ -23,7 +24,12 @@ const UPDATED = 'April 21, 2026'
 export default function TermsPage() {
   return (
     <>
-      <WebPageJsonLd pathname="/terms" title={title} description={description} />
+      <WebPageJsonLd
+        pathname="/terms"
+        title={title}
+        description={description}
+        breadcrumbParent={{ name: 'Legal & privacy', pathname: '/privacy' }}
+      />
       <div className={styles.page}>
       <LegalDocument title="Terms of Service" lastUpdated={UPDATED}>
         <h2 id="agreement">1. Agreement to terms</h2>

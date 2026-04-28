@@ -162,7 +162,16 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    return NextResponse.json({ results })
+    return NextResponse.json(
+      { results },
+      {
+        headers: {
+          // Search results are the same for all users with the same query.
+          // Cache on CDN: fresh 5m, serve stale up to 10m while revalidating.
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+        },
+      }
+    )
   } catch (error) {
     console.error('Search API error:', error)
     return NextResponse.json({ error: 'Search failed' }, { status: 500 })

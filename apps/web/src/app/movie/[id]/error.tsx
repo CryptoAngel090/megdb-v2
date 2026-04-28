@@ -2,6 +2,8 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
+import { Button } from '@repo/ui/button'
+import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './error.module.css'
 
 /**
@@ -24,8 +26,7 @@ export default function MovieDetailError({
       <div className={styles.inner}>
         <div className={styles.iconWrap} aria-hidden>
           <svg
-            width="28"
-            height="28"
+            className={`${iconSlot.block} ${iconSlot.xl}`}
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -41,24 +42,20 @@ export default function MovieDetailError({
         </p>
         {error.digest ? <p className={styles.digest}>Error ID: {error.digest}</p> : null}
         <div className={styles.actions}>
-          <button
-            type="button"
-            className={`${styles.btn} ${styles.btnPrimary}`}
-            onClick={() => reset()}
-          >
+          <Button type="button" variant="primary" size="md" onClick={() => reset()}>
             <svg
-              width="16"
-              height="16"
+              className={`${iconSlot.block} ${iconSlot.sm}`}
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
+              aria-hidden
             >
               <path d="M23 4v6h-6M1 20v-6h6" />
               <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
             </svg>
             Try again
-          </button>
+          </Button>
           <Link href="/movies" className={`${styles.btn} ${styles.btnGhost}`}>
             Browse movies
           </Link>

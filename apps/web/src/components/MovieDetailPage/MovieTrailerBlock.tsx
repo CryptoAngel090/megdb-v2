@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
+import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import blockStyles from './MovieTrailerBlock.module.css'
 import { OPEN_MOVIE_TRAILER_EVENT } from './movieTrailerEvents'
 
@@ -118,8 +119,7 @@ export function MovieTrailerBlock({ videoKey, embedTitle, boxClassName }: MovieT
                 aria-label="Close trailer"
               >
                 <svg
-                  width="24"
-                  height="24"
+                  className={`${iconSlot.block} ${iconSlot.lg}`}
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"

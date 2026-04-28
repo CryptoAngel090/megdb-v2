@@ -3,19 +3,20 @@ import Link from 'next/link'
 import { LegalDocument, LegalNote } from '@/components/LegalDocument/LegalDocument'
 import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
 import { buildAboutOrganizationStructuredData } from '@/lib/jsonLdSite'
-import { discoverSocialMeta } from '@/lib/seoSocial'
+import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
+/** @sync `ROUTE_REVALIDATE_STATIC_COPY` in `@/lib/cachePolicy` */
 export const revalidate = 86_400
 
 const title = 'About MegDB'
 const description =
-  'What MegDB is, how we use TMDB, our editorial approach, and product context for 2026.'
+  'MegDB is an English-first movie and TV discovery product: how we use the TMDB API, editorial rules for homepage rails, and what we are not (no streaming host). Updated for 2026.'
 
 export const metadata: Metadata = {
   title,
   description,
-  alternates: { canonical: '/about' },
+  alternates: discoverPageAlternates('/about'),
   ...discoverSocialMeta(title, description, '/about'),
 }
 

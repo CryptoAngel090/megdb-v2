@@ -1,10 +1,86 @@
 'use client'
+// client: multi-step registration form state
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { signIn } from 'next-auth/react'
+import { Button } from '@repo/ui/button'
+import { CountrySelect } from '@/components/CountrySelect/CountrySelect'
+import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './RegisterForm.module.css'
 
+function isRecord(v: unknown): v is Record<string, unknown> {
+  return v !== null && typeof v === 'object' && !Array.isArray(v)
+}
+
+const COUNTRIES = [
+  { code: 'US', name: 'United States' },
+  { code: 'GB', name: 'United Kingdom' },
+  { code: 'CA', name: 'Canada' },
+  { code: 'AU', name: 'Australia' },
+  { code: 'DE', name: 'Germany' },
+  { code: 'FR', name: 'France' },
+  { code: 'IT', name: 'Italy' },
+  { code: 'ES', name: 'Spain' },
+  { code: 'NL', name: 'Netherlands' },
+  { code: 'SE', name: 'Sweden' },
+  { code: 'NO', name: 'Norway' },
+  { code: 'DK', name: 'Denmark' },
+  { code: 'FI', name: 'Finland' },
+  { code: 'PL', name: 'Poland' },
+  { code: 'RU', name: 'Russia' },
+  { code: 'UA', name: 'Ukraine' },
+  { code: 'TR', name: 'Turkey' },
+  { code: 'JP', name: 'Japan' },
+  { code: 'KR', name: 'South Korea' },
+  { code: 'CN', name: 'China' },
+  { code: 'IN', name: 'India' },
+  { code: 'BR', name: 'Brazil' },
+  { code: 'MX', name: 'Mexico' },
+  { code: 'AR', name: 'Argentina' },
+  { code: 'CL', name: 'Chile' },
+  { code: 'CO', name: 'Colombia' },
+  { code: 'PE', name: 'Peru' },
+  { code: 'ZA', name: 'South Africa' },
+  { code: 'EG', name: 'Egypt' },
+  { code: 'NG', name: 'Nigeria' },
+  { code: 'KE', name: 'Kenya' },
+  { code: 'AE', name: 'United Arab Emirates' },
+  { code: 'SA', name: 'Saudi Arabia' },
+  { code: 'IL', name: 'Israel' },
+  { code: 'SG', name: 'Singapore' },
+  { code: 'MY', name: 'Malaysia' },
+  { code: 'TH', name: 'Thailand' },
+  { code: 'VN', name: 'Vietnam' },
+  { code: 'PH', name: 'Philippines' },
+  { code: 'ID', name: 'Indonesia' },
+  { code: 'NZ', name: 'New Zealand' },
+  { code: 'AT', name: 'Austria' },
+  { code: 'BE', name: 'Belgium' },
+  { code: 'CH', name: 'Switzerland' },
+  { code: 'CZ', name: 'Czech Republic' },
+  { code: 'GR', name: 'Greece' },
+  { code: 'PT', name: 'Portugal' },
+  { code: 'IE', name: 'Ireland' },
+  { code: 'HU', name: 'Hungary' },
+  { code: 'RO', name: 'Romania' },
+  { code: 'BG', name: 'Bulgaria' },
+  { code: 'HR', name: 'Croatia' },
+  { code: 'RS', name: 'Serbia' },
+  { code: 'SK', name: 'Slovakia' },
+  { code: 'SI', name: 'Slovenia' },
+  { code: 'LT', name: 'Lithuania' },
+  { code: 'LV', name: 'Latvia' },
+  { code: 'EE', name: 'Estonia' },
+  { code: 'IS', name: 'Iceland' },
+  { code: 'LU', name: 'Luxembourg' },
+  { code: 'MT', name: 'Malta' },
+  { code: 'CY', name: 'Cyprus' },
+]
+
 export function RegisterForm() {
+  const googleOAuthEnabled = Boolean(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID?.trim())
+  const githubOAuthEnabled = Boolean(process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID?.trim())
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -18,6 +94,8 @@ export function RegisterForm() {
   const [usernameValid, setUsernameValid] = useState<boolean | null>(null)
   const [passwordMatch, setPasswordMatch] = useState<boolean | null>(null)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [birthDate, setBirthDate] = useState('')
+  const [country, setCountry] = useState('')
 
   function calculatePasswordStrength(pwd: string): number {
     let strength = 0
@@ -27,6 +105,15 @@ export function RegisterForm() {
     if (/\d/.test(pwd)) strength++
     if (/[^a-zA-Z0-9]/.test(pwd)) strength++
     return Math.min(strength, 4)
+  }
+
+  function getPasswordFeedback(pwd: string): string[] {
+    const feedback: string[] = []
+    if (pwd.length < 8) feedback.push('At least 8 characters')
+    if (!/[a-z]/.test(pwd) || !/[A-Z]/.test(pwd)) feedback.push('Mix of uppercase & lowercase')
+    if (!/\d/.test(pwd)) feedback.push('Include numbers')
+    if (!/[^a-zA-Z0-9]/.test(pwd)) feedback.push('Add special characters')
+    return feedback
   }
 
   function validateEmail(email: string): boolean {
@@ -66,6 +153,46 @@ export function RegisterForm() {
     }
   }
 
+  function parseBirthDateToIso(input: string): string | null {
+    const value = input.trim()
+    if (!value) return null
+
+    const dotMatch = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(value)
+    if (dotMatch) {
+      const day = Number(dotMatch[1])
+      const month = Number(dotMatch[2])
+      const year = Number(dotMatch[3])
+      if (year < 1900 || month < 1 || month > 12 || day < 1 || day > 31) return null
+      const parsed = new Date(Date.UTC(year, month - 1, day))
+      if (
+        parsed.getUTCFullYear() !== year ||
+        parsed.getUTCMonth() !== month - 1 ||
+        parsed.getUTCDate() !== day
+      ) {
+        return null
+      }
+      return `${year.toString().padStart(4, '0')}-${month.toString().padStart(2, '0')}-${day
+        .toString()
+        .padStart(2, '0')}`
+    }
+
+    const isoMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value)
+    if (!isoMatch) return null
+    const year = Number(isoMatch[1])
+    const month = Number(isoMatch[2])
+    const day = Number(isoMatch[3])
+    if (year < 1900 || month < 1 || month > 12 || day < 1 || day > 31) return null
+    const parsed = new Date(Date.UTC(year, month - 1, day))
+    if (
+      parsed.getUTCFullYear() !== year ||
+      parsed.getUTCMonth() !== month - 1 ||
+      parsed.getUTCDate() !== day
+    ) {
+      return null
+    }
+    return value
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
@@ -95,10 +222,19 @@ export function RegisterForm() {
       return
     }
 
+    const parsedBirthDate = parseBirthDateToIso(birthDate)
+    if (birthDate.trim() !== '' && parsedBirthDate == null) {
+      setError('Please use a valid date format: DD.MM.YYYY')
+      return
+    }
+
     setIsLoading(true)
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
+      // Use environment variable or fallback to localhost
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+      
+      const response = await fetch(`${apiUrl}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -107,19 +243,27 @@ export function RegisterForm() {
           email,
           username,
           password,
+          birthDate: parsedBirthDate ?? undefined,
+          country: country || undefined,
         }),
       })
 
-      const data = await response.json()
+      const data: unknown = await response.json().catch(() => null)
 
       if (!response.ok) {
-        throw new Error(data.error || 'Registration failed')
+        const errMsg =
+          isRecord(data) && typeof data.error === 'string'
+            ? data.error
+            : `Registration failed (${response.status})`
+        throw new Error(errMsg)
       }
 
       setShowSuccess(true)
+      
+      // Show email verification message
       setTimeout(() => {
-        window.location.href = '/login'
-      }, 2000)
+        window.location.href = '/login?registered=true'
+      }, 3000)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong')
     } finally {
@@ -128,7 +272,12 @@ export function RegisterForm() {
   }
 
   const strengthLabels = ['Weak', 'Fair', 'Good', 'Strong']
-  const strengthColors = ['#ff4444', '#ff9944', '#44ff44', '#00ff88']
+  const strengthColors = [
+    'var(--text-muted)',
+    'var(--color-warning)',
+    'var(--color-primary-hover)',
+    'var(--color-primary)',
+  ]
 
   return (
     <div className={styles.root}>
@@ -137,8 +286,7 @@ export function RegisterForm() {
           <div className={styles.successCard}>
             <div className={styles.successIcon}>
               <svg
-                width="64"
-                height="64"
+                className={`${iconSlot.block} ${iconSlot.avatar64}`}
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -149,7 +297,12 @@ export function RegisterForm() {
               </svg>
             </div>
             <h2 className={styles.successTitle}>Account Created!</h2>
-            <p className={styles.successText}>Redirecting to login...</p>
+            <p className={styles.successText}>
+              Check your email to verify your account.
+              <br />
+              <span className={styles.successEmail}>{email}</span>
+            </p>
+            <p className={styles.successSubtext}>Redirecting to login...</p>
           </div>
         </div>
       )}
@@ -162,7 +315,65 @@ export function RegisterForm() {
               <span className={styles.logoText}>MegDB</span>
             </Link>
             <h1 className={styles.title}>Create Account</h1>
-            <p className={styles.subtitle}>Join MegDB to track your favorite movies and shows</p>
+            <p className={styles.subtitle}>
+              Free account — rate movies, build your watchlist, and get personalized recommendations across 850,000+ titles.
+            </p>
+          </div>
+
+          <div className={styles.socialButtons}>
+            <button
+              type="button"
+              className={styles.socialBtn}
+              disabled={isLoading || !googleOAuthEnabled}
+              onClick={() => {
+                if (!googleOAuthEnabled) {
+                  setError('Google sign-in is not configured yet. Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in apps/web/.env.local and restart web dev server.')
+                  return
+                }
+                void signIn('google', { callbackUrl: '/profile' })
+              }}
+              aria-label="Continue with Google"
+            >
+              <svg
+                className={`${iconSlot.block} ${iconSlot.md}`}
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+              </svg>
+              Google
+            </button>
+            <button
+              type="button"
+              className={styles.socialBtn}
+              disabled={isLoading || !githubOAuthEnabled}
+              onClick={() => {
+                if (!githubOAuthEnabled) {
+                  setError('GitHub sign-in is not configured yet. Add GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET in apps/web/.env.local and restart web dev server.')
+                  return
+                }
+                void signIn('github', { callbackUrl: '/profile' })
+              }}
+              aria-label="Continue with GitHub"
+            >
+              <svg
+                className={`${iconSlot.block} ${iconSlot.md}`}
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+              </svg>
+              GitHub
+            </button>
+          </div>
+
+          <div className={styles.divider}>
+            <span>or</span>
           </div>
 
           <form
@@ -174,8 +385,7 @@ export function RegisterForm() {
             {error && (
               <div className={styles.error} role="alert">
                 <svg
-                  width="20"
-                  height="20"
+                  className={`${iconSlot.block} ${iconSlot.md}`}
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -197,9 +407,7 @@ export function RegisterForm() {
                 className={`${styles.inputWrapper} ${usernameValid === true ? styles.inputValid : usernameValid === false ? styles.inputInvalid : ''}`}
               >
                 <svg
-                  className={styles.inputIcon}
-                  width="20"
-                  height="20"
+                  className={`${styles.inputIcon} ${iconSlot.block} ${iconSlot.md}`}
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -214,7 +422,7 @@ export function RegisterForm() {
                   value={username}
                   onChange={(e) => handleUsernameChange(e.target.value)}
                   className={styles.input}
-                  placeholder="Choose a username"
+                  placeholder="Enter username"
                   required
                   autoComplete="username"
                   disabled={isLoading}
@@ -222,9 +430,7 @@ export function RegisterForm() {
                 />
                 {usernameValid === true && (
                   <svg
-                    className={styles.validIcon}
-                    width="20"
-                    height="20"
+                    className={`${styles.validIcon} ${iconSlot.block} ${iconSlot.md}`}
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -235,9 +441,7 @@ export function RegisterForm() {
                 )}
                 {usernameValid === false && (
                   <svg
-                    className={styles.invalidIcon}
-                    width="20"
-                    height="20"
+                    className={`${styles.invalidIcon} ${iconSlot.block} ${iconSlot.md}`}
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -250,7 +454,7 @@ export function RegisterForm() {
               </div>
               {usernameValid === false && (
                 <p className={styles.fieldHint}>
-                  Username must be 3+ characters (letters, numbers, underscore)
+                  Username must be at least 3 characters (letters, numbers, underscore)
                 </p>
               )}
             </div>
@@ -263,9 +467,7 @@ export function RegisterForm() {
                 className={`${styles.inputWrapper} ${emailValid === true ? styles.inputValid : emailValid === false ? styles.inputInvalid : ''}`}
               >
                 <svg
-                  className={styles.inputIcon}
-                  width="20"
-                  height="20"
+                  className={`${styles.inputIcon} ${iconSlot.block} ${iconSlot.md}`}
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -287,9 +489,7 @@ export function RegisterForm() {
                 />
                 {emailValid === true && (
                   <svg
-                    className={styles.validIcon}
-                    width="20"
-                    height="20"
+                    className={`${styles.validIcon} ${iconSlot.block} ${iconSlot.md}`}
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -300,9 +500,7 @@ export function RegisterForm() {
                 )}
                 {emailValid === false && (
                   <svg
-                    className={styles.invalidIcon}
-                    width="20"
-                    height="20"
+                    className={`${styles.invalidIcon} ${iconSlot.block} ${iconSlot.md}`}
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -316,14 +514,57 @@ export function RegisterForm() {
             </div>
 
             <div className={styles.field}>
+              <label htmlFor="birthDate" className={styles.label}>
+                Date of Birth
+              </label>
+              <div className={styles.inputWrapper}>
+                <svg
+                  className={`${styles.inputIcon} ${iconSlot.block} ${iconSlot.md}`}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <input
+                  id="birthDate"
+                  type="text"
+                  value={birthDate}
+                  onChange={(e) => setBirthDate(e.target.value)}
+                  className={`${styles.input} ${styles.inputDate}`}
+                  placeholder="DD.MM.YYYY"
+                  pattern="\d{2}\.\d{2}\.\d{4}"
+                  disabled={isLoading}
+                  autoComplete="bday"
+                  inputMode="numeric"
+                />
+              </div>
+              <p className={styles.fieldHelp}>Use format DD.MM.YYYY</p>
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.label}>
+                Country
+              </label>
+              <CountrySelect
+                value={country}
+                onChange={setCountry}
+                disabled={isLoading}
+                countries={COUNTRIES}
+              />
+            </div>
+
+            <div className={styles.field}>
               <label htmlFor="password" className={styles.label}>
                 Password
               </label>
               <div className={styles.passwordWrapper}>
                 <svg
-                  className={styles.inputIcon}
-                  width="20"
-                  height="20"
+                  className={`${styles.inputIcon} ${iconSlot.block} ${iconSlot.md}`}
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -353,8 +594,7 @@ export function RegisterForm() {
                 >
                   {showPassword ? (
                     <svg
-                      width="20"
-                      height="20"
+                      className={`${iconSlot.block} ${iconSlot.md}`}
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -365,8 +605,7 @@ export function RegisterForm() {
                     </svg>
                   ) : (
                     <svg
-                      width="20"
-                      height="20"
+                      className={`${iconSlot.block} ${iconSlot.md}`}
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -379,28 +618,39 @@ export function RegisterForm() {
                 </button>
               </div>
               {password.length > 0 && (
-                <div className={styles.passwordStrength}>
-                  <div className={styles.strengthBars}>
-                    {[0, 1, 2, 3].map((i) => (
-                      <div
-                        key={i}
-                        className={`${styles.strengthBar} ${i < passwordStrength ? styles.strengthBarActive : ''}`}
-                        style={{
-                          backgroundColor:
-                            i < passwordStrength ? strengthColors[passwordStrength - 1] : undefined,
-                        }}
-                      />
-                    ))}
+                <>
+                  <div className={styles.passwordStrength}>
+                    <div className={styles.strengthBars}>
+                      {[0, 1, 2, 3].map((i) => (
+                        <div
+                          key={i}
+                          className={`${styles.strengthBar} ${i < passwordStrength ? styles.strengthBarActive : ''}`}
+                          style={{
+                            backgroundColor:
+                              i < passwordStrength ? strengthColors[passwordStrength - 1] : undefined,
+                          }}
+                        />
+                      ))}
+                    </div>
+                    {passwordStrength > 0 && (
+                      <span
+                        className={styles.strengthLabel}
+                        style={{ color: strengthColors[passwordStrength - 1] }}
+                      >
+                        {strengthLabels[passwordStrength - 1]}
+                      </span>
+                    )}
                   </div>
-                  {passwordStrength > 0 && (
-                    <span
-                      className={styles.strengthLabel}
-                      style={{ color: strengthColors[passwordStrength - 1] }}
-                    >
-                      {strengthLabels[passwordStrength - 1]}
-                    </span>
+                  {passwordStrength < 4 && (
+                    <div className={styles.passwordFeedback}>
+                      {getPasswordFeedback(password).map((hint, idx) => (
+                        <span key={idx} className={styles.feedbackHint}>
+                          • {hint}
+                        </span>
+                      ))}
+                    </div>
                   )}
-                </div>
+                </>
               )}
             </div>
 
@@ -412,9 +662,7 @@ export function RegisterForm() {
                 className={`${styles.inputWrapper} ${passwordMatch === true ? styles.inputValid : passwordMatch === false ? styles.inputInvalid : ''}`}
               >
                 <svg
-                  className={styles.inputIcon}
-                  width="20"
-                  height="20"
+                  className={`${styles.inputIcon} ${iconSlot.block} ${iconSlot.md}`}
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -436,9 +684,7 @@ export function RegisterForm() {
                 />
                 {passwordMatch === true && (
                   <svg
-                    className={styles.validIcon}
-                    width="20"
-                    height="20"
+                    className={`${styles.validIcon} ${iconSlot.block} ${iconSlot.md}`}
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -449,9 +695,7 @@ export function RegisterForm() {
                 )}
                 {passwordMatch === false && (
                   <svg
-                    className={styles.invalidIcon}
-                    width="20"
-                    height="20"
+                    className={`${styles.invalidIcon} ${iconSlot.block} ${iconSlot.md}`}
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -477,8 +721,7 @@ export function RegisterForm() {
               />
               <span className={styles.checkboxCustom}>
                 <svg
-                  width="14"
-                  height="14"
+                  className={`${iconSlot.block} ${iconSlot.inline14}`}
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -499,53 +742,17 @@ export function RegisterForm() {
               </span>
             </label>
 
-            <button
-              type="submit"
-              className={styles.submitButton}
-              disabled={isLoading || !acceptTerms}
-            >
-              {isLoading ? (
-                <>
-                  <span className={styles.spinner} />
-                  Creating account...
-                </>
-              ) : (
-                <>
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3" />
-                  </svg>
-                  Sign Up
-                </>
-              )}
-            </button>
-
-            <div className={styles.divider}>
-              <span>or continue with</span>
-            </div>
-
-            <div className={styles.socialButtons}>
-              <button type="button" className={styles.socialButton} disabled={isLoading}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                </svg>
-                Google
-              </button>
-              <button type="button" className={styles.socialButton} disabled={isLoading}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                </svg>
-                GitHub
-              </button>
+            <div className={styles.submitWrap}>
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                fullWidth
+                loading={isLoading}
+                disabled={isLoading || !acceptTerms}
+              >
+                Sign Up
+              </Button>
             </div>
 
             <p className={styles.footer}>

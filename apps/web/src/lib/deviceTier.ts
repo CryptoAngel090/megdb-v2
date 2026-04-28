@@ -3,7 +3,7 @@
  * `deviceMemory` is only in Chromium; defaults mirror prior heuristics.
  */
 
-export type DeviceTier = 'high' | 'medium' | 'low'
+type DeviceTier = 'high' | 'medium' | 'low'
 
 type NavigatorWithDeviceMemory = Navigator & {
   /** GiB, Chromium-only */
@@ -11,9 +11,12 @@ type NavigatorWithDeviceMemory = Navigator & {
 }
 
 const EFFECTS: Record<DeviceTier, readonly string[]> = {
-  high: ['spring', 'tilt', 'magnetic', 'parallax', 'cursor-trail'],
-  medium: ['spring', 'tilt', 'parallax'],
-  low: ['spring'],
+  // Removed 'spring' effect globally — spring physics disabled.
+  high: ['tilt', 'magnetic', 'parallax', 'cursor-trail'],
+  // tilt removed from medium: 3D card rotation causes INP spikes on mid-range
+  // phones during shelf scroll. Magnetic + parallax are kept as they are cheaper.
+  medium: ['magnetic', 'parallax'],
+  low: [],
 }
 
 function getDeviceMemoryGib(): number {

@@ -235,7 +235,7 @@ export function HeroSection({ slides }: HeroSectionProps) {
           {imgSrc && (
             <motion.div
               key={currentSlide.id}
-              className={styles.backdrop}
+              className={`${styles.backdrop} ${styles.backdropDissolve}`}
               variants={slideVariants}
               initial="enter"
               animate="center"
@@ -270,118 +270,120 @@ export function HeroSection({ slides }: HeroSectionProps) {
             animate="visible"
             exit="exit"
           >
-            <motion.h1 className={styles.title} variants={heroTitleVariants}>
-              {currentSlide.title}
-            </motion.h1>
+            <div className={styles.contentMain}>
+              <motion.h1 className={styles.title} variants={heroTitleVariants}>
+                {currentSlide.title}
+              </motion.h1>
 
-            <motion.div className={styles.meta} variants={heroMetaVariants}>
-              {rating && <span className={styles.rating}>★ {rating}</span>}
-              {rating && <span className={styles.separator} />}
-              {year && <span className={styles.year}>{year}</span>}
-              {currentSlide.runtime && (
-                <>
-                  <span className={styles.separator} />
-                  <span className={styles.runtime}>
-                    {Math.floor(currentSlide.runtime / 60)}h {currentSlide.runtime % 60}m
+              <motion.div className={styles.meta} variants={heroMetaVariants}>
+                {rating && <span className={styles.rating}>★ {rating}</span>}
+                {rating && <span className={styles.separator} />}
+                {year && <span className={styles.year}>{year}</span>}
+                {currentSlide.runtime && (
+                  <>
+                    <span className={styles.separator} />
+                    <span className={styles.runtime}>
+                      {Math.floor(currentSlide.runtime / 60)}h {currentSlide.runtime % 60}m
+                    </span>
+                  </>
+                )}
+                {currentSlide.genres?.slice(0, 2).map((g) => (
+                  <span key={g} className={styles.genre}>
+                    {g}
                   </span>
-                </>
-              )}
-              {currentSlide.genres?.slice(0, 2).map((g) => (
-                <span key={g} className={styles.genre}>
-                  · {g}
-                </span>
-              ))}
-            </motion.div>
+                ))}
+              </motion.div>
 
-            <motion.p className={styles.overview} variants={heroOverviewVariants}>
-              {currentSlide.overview}
-            </motion.p>
+              <motion.p className={styles.overview} variants={heroOverviewVariants}>
+                {currentSlide.overview}
+              </motion.p>
 
-            <motion.div className={styles.buttons} variants={heroButtonsVariants}>
-              <motion.div variants={btnPrimaryVariants} {...motionBtnProps}>
-                {currentSlide.trailerKey ? (
-                  <button
-                    type="button"
-                    className={styles.btnPrimary}
-                    onClick={() => openTrailer(currentSlide.trailerKey!)}
-                  >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                      <path d="M8 5v14l11-7z" />
+              <motion.div className={styles.buttons} variants={heroButtonsVariants}>
+                <motion.div variants={btnPrimaryVariants} {...motionBtnProps}>
+                  {currentSlide.trailerKey ? (
+                    <button
+                      type="button"
+                      className={styles.btnPrimary}
+                      onClick={() => openTrailer(currentSlide.trailerKey!)}
+                    >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                      Watch Trailer
+                    </button>
+                  ) : (
+                    <Link href={href} className={styles.btnPrimary}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                      Watch Now
+                    </Link>
+                  )}
+                </motion.div>
+
+                <motion.div variants={btnSecondaryVariants} {...motionBtnProps}>
+                  <Link href={href} className={styles.btnSecondary}>
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      aria-hidden
+                    >
+                      <path d="M12 5v14M5 12h14" />
                     </svg>
-                    Watch Trailer
-                  </button>
-                ) : (
-                  <Link href={href} className={styles.btnPrimary}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                    Watch Now
+                    Movie Details
                   </Link>
+                </motion.div>
+
+                {validSlides.length > 1 && (
+                  <div className={styles.navArrows}>
+                    <motion.button
+                      type="button"
+                      className={styles.navArrow}
+                      onClick={goToPrev}
+                      aria-label="Previous slide"
+                      {...(!reduceMotion ? { whileTap: { scale: 0.9 } } : {})}
+                      transition={{ type: 'spring', stiffness: 520, damping: 22 }}
+                    >
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        aria-hidden
+                      >
+                        <path d="M15 18l-6-6 6-6" />
+                      </svg>
+                    </motion.button>
+                    <motion.button
+                      type="button"
+                      className={styles.navArrow}
+                      onClick={goToNext}
+                      aria-label="Next slide"
+                      {...(!reduceMotion ? { whileTap: { scale: 0.9 } } : {})}
+                      transition={{ type: 'spring', stiffness: 520, damping: 22 }}
+                    >
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        aria-hidden
+                      >
+                        <path d="M9 18l6-6-6-6" />
+                      </svg>
+                    </motion.button>
+                  </div>
                 )}
               </motion.div>
-
-              <motion.div variants={btnSecondaryVariants} {...motionBtnProps}>
-                <Link href={href} className={styles.btnSecondary}>
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    aria-hidden
-                  >
-                    <path d="M12 5v14M5 12h14" />
-                  </svg>
-                  More Info
-                </Link>
-              </motion.div>
-
-              {validSlides.length > 1 && (
-                <div className={styles.navArrows}>
-                  <motion.button
-                    type="button"
-                    className={styles.navArrow}
-                    onClick={goToPrev}
-                    aria-label="Previous slide"
-                    {...(!reduceMotion ? { whileTap: { scale: 0.9 } } : {})}
-                    transition={{ type: 'spring', stiffness: 520, damping: 22 }}
-                  >
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      aria-hidden
-                    >
-                      <path d="M15 18l-6-6 6-6" />
-                    </svg>
-                  </motion.button>
-                  <motion.button
-                    type="button"
-                    className={styles.navArrow}
-                    onClick={goToNext}
-                    aria-label="Next slide"
-                    {...(!reduceMotion ? { whileTap: { scale: 0.9 } } : {})}
-                    transition={{ type: 'spring', stiffness: 520, damping: 22 }}
-                  >
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      aria-hidden
-                    >
-                      <path d="M9 18l6-6-6-6" />
-                    </svg>
-                  </motion.button>
-                </div>
-              )}
-            </motion.div>
+            </div>
           </motion.div>
         </AnimatePresence>
 

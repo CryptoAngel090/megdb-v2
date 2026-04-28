@@ -2,14 +2,16 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Ultra stabilization pass: fixed `MovieComments` submit-flow lint blocker, resolved residual web lint errors from export-cleanup fallout, restored green `knip`, and re-verified full root `pnpm run build`.
+**Last focus:** Stabilized style regression investigation: restored generated token import and removed root-layout `next/dynamic` bailout path in deferred app chrome to prevent CSR fallback side-effects during startup.
 
-**Next:** Continue Stage 2 modernization prep from a green baseline (`web lint` + `knip` + root `build`), then begin toolchain migration slices (Node/TS/Next/Biome CI gates) in atomic batches.
+**Next:** Reboot dev server/session and re-check static asset delivery in-browser (`/_next/static/*` MIME/404) on the active port before continuing Stage 2 modernization prep.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-28 — Fixed "styles collapsed" regression: `apps/web/src/styles/design-tokens.generated.css` was not imported, so `--ds-*` tokens used by `globals.css` were unresolved; restored import in `app/layout.tsx` and confirmed `pnpm --filter @repo/web type-check` passes.
+- 2026-04-28 — Removed `next/dynamic` usage from `DeferredAppChrome` (root layout client chrome) to eliminate server `BAILOUT_TO_CLIENT_SIDE_RENDERING: next/dynamic` path while keeping ripple/progress/back-to-top behavior; web type-check and lints for touched file are green.
 - 2026-04-28 — Ultra stabilization: fixed `MovieComments` submit handler pattern, resolved residual `tmdb` helper lint fallout, recovered green `knip`, and validated full monorepo build after clearing stale `apps/web/.next` artifacts.
 - 2026-04-28 — Movie detail primary summary polish: split dense meta line (box office now secondary), toned down TMDB lockup against MegDB rating focus, softened icon-action contrast, and improved synopsis width/line-height for cleaner readability.
 - 2026-04-28 — Stage 1 cleanup batch #3: removed residual knip unused exports/types in API+web modules (`tmdb`/discover/entity helpers) and reached green `pnpm run knip -- --reporter compact --max-show-issues=200` with `turbo type-check` still passing.

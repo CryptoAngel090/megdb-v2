@@ -63,7 +63,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  min-height: 44px;
+  min-height: var(--touch-target);
   padding: 0 var(--space-5);
   border-radius: var(--radius-button);
   font-size: var(--text-small);
@@ -74,17 +74,6 @@
   transition:
     background var(--duration-fast),
     border-color var(--duration-fast);
-}
-
-.btnPrimary {
-  background: var(--primary);
-  color: var(--on-primary);
-  border-color: var(--primary);
-}
-
-.btnPrimary:hover {
-  background: var(--primary-hover);
-  border-color: var(--primary-hover);
 }
 
 .btnGhost {

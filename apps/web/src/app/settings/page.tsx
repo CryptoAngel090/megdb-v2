@@ -2,19 +2,20 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalDocument, LegalNote } from '@/components/LegalDocument/LegalDocument'
 import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
-import { discoverSocialMeta } from '@/lib/seoSocial'
+import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
+/** @sync `ROUTE_REVALIDATE_STATIC_COPY` in `@/lib/cachePolicy` */
 export const revalidate = 86_400
 
 const title = 'Settings'
 const description =
-  'MegDB settings: account shortcuts, privacy and cookies, display and motion preferences, notifications, and data requests.'
+  'MegDB settings (noindex): motion/theme hints, links to Privacy/Cookies/GDPR, and how to request account or data help — April 2026.'
 
 export const metadata: Metadata = {
   title,
   description,
-  alternates: { canonical: '/settings' },
+  alternates: discoverPageAlternates('/settings'),
   robots: { index: false, follow: true },
   ...discoverSocialMeta(title, description, '/settings'),
 }

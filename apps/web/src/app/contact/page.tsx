@@ -2,19 +2,20 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalDocument, LegalNote } from '@/components/LegalDocument/LegalDocument'
 import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
-import { discoverSocialMeta } from '@/lib/seoSocial'
+import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
+/** @sync `ROUTE_REVALIDATE_STATIC_COPY` in `@/lib/cachePolicy` */
 export const revalidate = 86_400
 
 const title = 'Contact'
 const description =
-  'Reach MegDB for support, privacy requests, legal notices, security reports, and partnerships — April 2026 routing table.'
+  'Contact MegDB: routed inboxes for support@, privacy@, legal@, security@, and press — use the right address to avoid delays (April 2026).'
 
 export const metadata: Metadata = {
   title,
   description,
-  alternates: { canonical: '/contact' },
+  alternates: discoverPageAlternates('/contact'),
   ...discoverSocialMeta(title, description, '/contact'),
 }
 
@@ -23,7 +24,12 @@ const UPDATED = 'April 21, 2026'
 export default function ContactPage() {
   return (
     <>
-      <WebPageJsonLd pathname="/contact" title={title} description={description} />
+      <WebPageJsonLd
+        pathname="/contact"
+        title={title}
+        description={description}
+        breadcrumbParent={{ name: 'About MegDB', pathname: '/about' }}
+      />
       <div className={styles.page}>
       <LegalDocument title="Contact MegDB" lastUpdated={UPDATED}>
         <h2 id="routing">1. Choose the right inbox</h2>

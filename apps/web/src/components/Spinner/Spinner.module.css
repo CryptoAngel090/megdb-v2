@@ -9,16 +9,16 @@
 
 /* Размеры */
 .sm {
-  width: 16px;
-  height: 16px;
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
 }
 .md {
-  width: 24px;
-  height: 24px;
+  width: var(--icon-size-lg);
+  height: var(--icon-size-lg);
 }
 .lg {
-  width: 40px;
-  height: 40px;
+  width: var(--hit-area-round-md);
+  height: var(--hit-area-round-md);
 }
 
 .svg {
@@ -34,7 +34,7 @@
 
 /* Красная дуга */
 .arc {
-  stroke: var(--primary, #e50914);
+  stroke: var(--primary);
   transform-origin: center;
 }
 

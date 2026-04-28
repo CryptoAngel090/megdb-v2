@@ -1,11 +1,15 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getMoviePageData } from '@/lib/tmdb'
+import { jsonLdMainEntityId, jsonLdYoutubeVideoId } from '@/lib/jsonLdEntity'
+import { getMoviePageDataShellCached } from '@/lib/moviePageDataCache'
 import { moviePath } from '@/lib/slug'
+import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
+import { buildWatchSeoTitle } from '@/lib/seoTitles'
 import { SITE_URL } from '@/lib/site'
 import styles from './page.module.css'
 
+/** @sync `ROUTE_REVALIDATE_MEDIA_DETAIL` in `@/lib/cachePolicy` */
 export const revalidate = 3600
 
 type Props = {
@@ -23,25 +27,44 @@ const TRAILER_ROBOTS = { index: false, follow: true } as const
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params
   const movieId = Number(id)
+  const fallbackTitle = 'Trailer'
+  const fallbackDesc = 'Watch a movie trailer clip on MegDB.'
+
   if (!Number.isFinite(movieId)) {
-    return { title: 'Trailer | MegDB', robots: TRAILER_ROBOTS }
+    const path = `/trailer/${encodeURIComponent(id)}`
+    return {
+      title: fallbackTitle,
+      description: fallbackDesc,
+      robots: TRAILER_ROBOTS,
+      alternates: discoverPageAlternates(path),
+      ...discoverSocialMeta(fallbackTitle, fallbackDesc, path),
+    }
   }
-  const movie = await getMoviePageData(movieId).catch(() => null)
+  const movie = await getMoviePageDataShellCached(movieId).catch(() => null)
+  const path = `/trailer/${movieId}`
   if (!movie || !movie.trailerYoutubeKey) {
     return {
-      title: 'Trailer | MegDB',
+      title: fallbackTitle,
+      description: fallbackDesc,
       robots: TRAILER_ROBOTS,
-      alternates: { canonical: `/trailer/${movieId}` },
+      alternates: discoverPageAlternates(path),
+      ...discoverSocialMeta(fallbackTitle, fallbackDesc, path),
     }
   }
   const y = yearFromRelease(movie.releaseDate)
+  const title = buildWatchSeoTitle(movie.title, movie.releaseDate, 'trailer')
   const head = y ? `${movie.title} (${y}) — Trailer` : `${movie.title} — Trailer`
+  const description = `Watch the trailer for ${movie.title}.`
+  const thumb = `https://img.youtube.com/vi/${movie.trailerYoutubeKey}/maxresdefault.jpg`
   return {
-    title: `${head} | MegDB`,
-    description: `Watch the trailer for ${movie.title}.`,
+    title,
+    description,
     robots: TRAILER_ROBOTS,
-    alternates: { canonical: `${SITE_URL}/trailer/${movieId}` },
-    openGraph: { title: head, type: 'video.other', url: `${SITE_URL}/trailer/${movieId}` },
+    alternates: discoverPageAlternates(path),
+    ...discoverSocialMeta(title, description, path, {
+      type: 'video.other',
+      images: [{ url: thumb, alt: head }],
+    }),
   }
 }
 
@@ -50,7 +73,7 @@ export default async function TrailerPage({ params }: Props) {
   const movieId = Number(id)
   if (!Number.isFinite(movieId)) notFound()
 
-  const movie = await getMoviePageData(movieId)
+  const movie = await getMoviePageDataShellCached(movieId)
   if (!movie) notFound()
 
   const key = movie.trailerYoutubeKey
@@ -68,11 +91,13 @@ export default async function TrailerPage({ params }: Props) {
   const y = yearFromRelease(movie.releaseDate)
   const trailerName = movie.trailer?.name ?? 'Trailer'
   const embedTitle = `${movie.title} — ${trailerName}`
+  const movieCanonicalPath = moviePath(movie.title, movie.releaseDate)
 
   const videoJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'VideoObject',
-    '@id': `${SITE_URL}/trailer/${movie.id}#video`,
+    '@id': jsonLdYoutubeVideoId(key),
+    about: { '@id': jsonLdMainEntityId(movieCanonicalPath) },
     name: `${movie.title}${y ? ` (${y})` : ''} — ${trailerName}`,
     description: `Watch the trailer for ${movie.title}${y ? ` (${y})` : ''}.`.trim(),
     thumbnailUrl: [

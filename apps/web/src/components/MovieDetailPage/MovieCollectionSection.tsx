@@ -1,32 +1,17 @@
 'use client'
 
 import { useRef } from 'react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import type { MoviePageCardItem } from '@/lib/tmdb'
 import { detailPathForMedia, type DetailMediaKind } from '@/lib/slug'
 import type { MediaType } from '@repo/types'
 import { MediaCard } from '@/components/MediaCard/MediaCard'
-import styles from './MovieDetailPage.module.css'
-
-function IconChevron({ dir }: { dir: 'left' | 'right' }) {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      aria-hidden
-    >
-      {dir === 'left' ? <path d="M15 18l-6-6 6-6" /> : <path d="M9 18l6-6-6-6" />}
-    </svg>
-  )
-}
+import iconSlot from '@/components/IconSlot/iconSlot.module.css'
+import styles from './MovieCollectionSection.module.css'
 
 type Props = {
   title: string
   parts: MoviePageCardItem[]
-  /** Default `movie` — use `series` / `tvshow` on TV detail pages. */
   mediaKind?: DetailMediaKind
 }
 
@@ -41,52 +26,48 @@ export function MovieCollectionSection({ title, parts, mediaKind = 'movie' }: Pr
   }
 
   return (
-    <section className={styles.railSection}>
-      <div className={styles.collectionHead}>
-        <h2 className={styles.sectionHeading}>
-          <span className={styles.sectionBar} aria-hidden />
+    <section className={styles.section}>
+      <div className={styles.header}>
+        <h2 className={styles.title}>
+          <span className={styles.titleBar} aria-hidden />
           {title}
         </h2>
-        <div className={styles.collectionNav}>
-          <button
-            type="button"
-            className={styles.collectionNavBtn}
-            aria-label="Scroll left"
-            onClick={() => scroll('left')}
-          >
-            <IconChevron dir="left" />
+        <div className={styles.nav}>
+          <button type="button" className={styles.navBtn} aria-label="Scroll left" onClick={() => scroll('left')}>
+            <ChevronLeft className={`${iconSlot.block} ${iconSlot.sm}`} aria-hidden />
           </button>
-          <button
-            type="button"
-            className={styles.collectionNavBtn}
-            aria-label="Scroll right"
-            onClick={() => scroll('right')}
-          >
-            <IconChevron dir="right" />
+          <button type="button" className={styles.navBtn} aria-label="Scroll right" onClick={() => scroll('right')}>
+            <ChevronRight className={`${iconSlot.block} ${iconSlot.sm}`} aria-hidden />
           </button>
         </div>
       </div>
-      <div ref={scrollRef} className={styles.collectionTrack}>
-        {parts.map((m) => (
-          <div key={m.id} className={styles.collectionSlot}>
-            <MediaCard
-              id={m.id}
-              type={cardType}
-              title={m.title}
-              posterPath={m.posterPath}
-              voteAverage={m.voteAverage}
-              releaseDate={m.releaseDate}
-              genres={m.genres ?? []}
-              runtimeMinutes={m.runtimeMinutes ?? null}
-              shelfReveal={false}
-              posterContext="shelf"
-              unifiedDiscoverMeta
-              layout="compact"
-              hideContextBadgeOnMobile
-              href={detailPathForMedia(mediaKind, m.title, m.releaseDate)}
-            />
+
+      <div className={styles.trackWrap}>
+        <div ref={scrollRef} className={styles.track}>
+          <div className={styles.inner}>
+            {parts.map((m) => (
+              <div key={m.id}>
+                <MediaCard
+                  id={m.id}
+                  type={cardType}
+                  title={m.title}
+                  posterPath={m.posterPath}
+                  voteAverage={m.voteAverage}
+                  releaseDate={m.releaseDate}
+                  genres={m.genres ?? []}
+                  runtimeMinutes={m.runtimeMinutes ?? null}
+                  shelfReveal={false}
+                  enablePointerMotion={false}
+                  posterContext="shelf"
+                  unifiedDiscoverMeta
+                  layout="compact"
+                  hideContextBadgeOnMobile
+                  href={detailPathForMedia(mediaKind, m.title, m.releaseDate)}
+                />
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
     </section>
   )

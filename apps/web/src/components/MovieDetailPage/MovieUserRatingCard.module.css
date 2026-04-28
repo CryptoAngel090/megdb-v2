@@ -5,6 +5,138 @@
   gap: 0.55rem;
 }
 
+.rootPanel {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: var(--space-4);
+  row-gap: var(--space-2);
+}
+
+.rootPanel .stars {
+  inline-size: auto;
+  flex: 1 1 auto;
+  justify-content: flex-end;
+}
+
+.rootPanel .hint,
+.rootPanel .thankYou {
+  flex-basis: 100%;
+  text-align: start;
+}
+
+/* Primary summary: MegDB mark + score + stars in one row beside TMDB */
+.rootStrip {
+  flex: 0 0 auto;
+  width: auto;
+  min-inline-size: 0;
+}
+
+.stripRow {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  min-inline-size: 0;
+}
+
+.megdbBrand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.megdbPlay {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  color: var(--color-accent);
+}
+
+.megdbWordmark {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--color-primary);
+}
+
+.megdbDb {
+  color: var(--color-primary-hover);
+}
+
+.stripBrandSep {
+  color: color-mix(in oklab, var(--color-primary) 75%, transparent);
+  font-weight: var(--weight-semibold);
+  line-height: 1;
+}
+
+.stripScore {
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+  color: var(--color-primary);
+  line-height: 1;
+  min-inline-size: 2.25ch;
+}
+
+.stripStars {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.18rem;
+}
+
+.starButtonStrip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.85rem;
+  min-width: 1.85rem;
+  height: 1.85rem;
+  min-height: 1.85rem;
+  padding: 0;
+  border: 1px solid var(--color-primary-border);
+  border-radius: var(--radius-button);
+  background: color-mix(in oklab, var(--color-primary) 8%, transparent);
+  color: color-mix(in oklab, var(--color-primary) 52%, transparent);
+  cursor: pointer;
+  transition:
+    transform 120ms ease,
+    background 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease;
+}
+
+.starButtonStrip:hover,
+.starButtonStrip:focus-visible {
+  border-color: color-mix(in oklab, var(--color-rating) 55%, transparent);
+  background: color-mix(in oklab, var(--color-rating) 10%, transparent);
+  color: color-mix(in oklab, var(--color-rating) 95%, transparent);
+}
+
+.starButtonStripActive {
+  border-color: color-mix(in oklab, var(--color-rating) 70%, transparent);
+  background: color-mix(in oklab, var(--color-rating) 14%, transparent);
+  color: color-mix(in oklab, var(--color-rating) 98%, transparent);
+}
+
+.starButtonStrip:active {
+  transform: scale(0.96);
+}
+
+.starButtonStrip:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.starIconStrip {
+  width: 0.82rem;
+  height: 0.82rem;
+  fill: currentColor;
+}
+
 .head {
   display: flex;
   align-items: baseline;
@@ -17,13 +149,13 @@
   font-weight: var(--weight-bold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.32);
+  color: color-mix(in oklab, var(--text-primary) 32%, transparent);
 }
 
 .value {
   font-size: var(--text-caption);
   font-weight: var(--weight-bold);
-  color: rgba(255, 255, 255, 0.82);
+  color: color-mix(in oklab, var(--text-primary) 82%, transparent);
 }
 
 .stars {
@@ -35,18 +167,18 @@
 }
 
 .starButton {
-  width: 34px;
+  width: var(--min-control-34);
   min-width: min(2.125rem, 100%);
-  height: 34px;
-  min-height: 34px;
+  height: var(--min-control-34);
+  min-height: var(--min-control-34);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid color-mix(in oklab, var(--text-primary) 14%, transparent);
   border-radius: var(--radius-button);
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.32);
+  background: color-mix(in oklab, var(--text-primary) 4%, transparent);
+  color: color-mix(in oklab, var(--text-primary) 32%, transparent);
   transition:
     transform 120ms ease,
     background 150ms ease,
@@ -56,15 +188,15 @@
 
 .starButton:hover,
 .starButton:focus-visible {
-  border-color: rgba(250, 204, 21, 0.55);
-  background: rgba(250, 204, 21, 0.1);
-  color: rgba(250, 204, 21, 0.95);
+  border-color: color-mix(in oklab, var(--color-rating) 55%, transparent);
+  background: color-mix(in oklab, var(--color-rating) 10%, transparent);
+  color: color-mix(in oklab, var(--color-rating) 95%, transparent);
 }
 
 .starButtonActive {
-  border-color: rgba(250, 204, 21, 0.7);
-  background: rgba(250, 204, 21, 0.14);
-  color: rgba(250, 204, 21, 0.98);
+  border-color: color-mix(in oklab, var(--color-rating) 70%, transparent);
+  background: color-mix(in oklab, var(--color-rating) 14%, transparent);
+  color: color-mix(in oklab, var(--color-rating) 98%, transparent);
 }
 
 .starButton:active {
@@ -72,8 +204,8 @@
 }
 
 .starIcon {
-  width: 18px;
-  height: 18px;
+  width: var(--icon-inline-18);
+  height: var(--icon-inline-18);
   fill: currentColor;
 }
 
@@ -81,7 +213,7 @@
   width: 100%;
   text-align: center;
   font-size: var(--text-sm);
-  color: rgba(255, 255, 255, 0.38);
+  color: color-mix(in oklab, var(--text-primary) 38%, transparent);
 }
 
 .thankYou {
@@ -89,5 +221,5 @@
   text-align: center;
   font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
-  color: rgba(134, 239, 172, 0.95);
+  color: color-mix(in oklab, var(--color-success) 95%, transparent);
 }

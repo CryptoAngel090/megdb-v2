@@ -117,10 +117,85 @@
 @keyframes glow {
   0%,
   100% {
-    box-shadow: 0 0 20px rgba(229, 9, 20, 0.2);
+    box-shadow: 0 0 20px color-mix(in oklab, var(--color-primary) 20%, transparent);
   }
   50% {
-    box-shadow: 0 0 40px rgba(229, 9, 20, 0.4);
+    box-shadow: 0 0 40px color-mix(in oklab, var(--color-primary) 40%, transparent);
+  }
+}
+
+/* ── Ken Burns scroll-reveal ──────────────────────────────────────────────────
+   Smooth fade-up with subtle scale — used on all shelf sections and cards.
+   animation-timeline: view() triggers when element enters the viewport.
+   animation-range: entry 0% entry 40% — plays during the first 40% of entry.
+   No JS required. No Framer. No spring.
+   ─────────────────────────────────────────────────────────────────────────── */
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes revealCard {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/**
+ * `.reveal` / `.reveal-card` — entrance animations disabled.
+ * Time-based + scroll-timeline variants both left some users with shelves stuck at
+ * keyframe `from` (opacity: 0). Content must always paint; polish can return via IO later.
+ */
+.reveal,
+.reveal-card {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-card {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── scroll-reveal — для элементов внутри overflow:scroll контейнеров ─────────
+   CSS animation-timeline:view() не работает внутри скролл-контейнеров.
+   Используем IntersectionObserver (useRevealOnScroll hook) который добавляет
+   класс `is-visible` — тогда срабатывает transition.
+   ─────────────────────────────────────────────────────────────────────────── */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(22px) scale(0.97);
+  transition:
+    opacity 0.55s cubic-bezier(0.25, 0.1, 0, 1),
+    transform 0.55s cubic-bezier(0.25, 0.1, 0, 1);
+}
+
+.scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
 
@@ -153,19 +228,11 @@
   [role='button'] {
     transition-duration: 150ms !important;
   }
-
-  /* Любой код, что использует var(--spring-*) (карточки, .interactive) */
-  :root {
-    --spring-duration: 70ms;
-    --spring-easing: var(--ease-out);
-  }
 }
 
 /* Runtime low FPS — usePerformanceMonitor sets `html.low-performance` (not body); skipped when user prefers reduced motion. */
 html.low-performance {
   scroll-behavior: auto !important;
-  --spring-duration: 70ms;
-  --spring-easing: var(--ease-out);
 }
 
 /* Heavy / decorative layers — best-effort hide (classes may be unused) */

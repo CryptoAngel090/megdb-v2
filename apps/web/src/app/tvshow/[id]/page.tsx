@@ -1,7 +1,7 @@
 import { TvSeriesDetailPageApp, generateTvSeriesDetailMetadata } from '@/lib/tvSeriesDetailRoute'
 import styles from './page.module.css'
 
-/** Must match `TV_SERIES_DETAIL_REVALIDATE`; Next.js only accepts a literal here. */
+/** @sync `ROUTE_REVALIDATE_MEDIA_DETAIL` in `@/lib/cachePolicy` */
 export const revalidate = 3600
 
 type Props = {

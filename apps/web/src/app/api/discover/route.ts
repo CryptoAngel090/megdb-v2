@@ -61,12 +61,21 @@ export async function GET(request: NextRequest) {
   try {
     const data = await discoverMoviesBrowse(input, mode, comingYear)
     const results = await enrichMovieShelfRuntime(data.results.map(mapTmdbMovieRowToShelfItem))
-    return NextResponse.json({
-      results,
-      page: data.page,
-      total_pages: data.total_pages,
-      total_results: data.total_results,
-    })
+    return NextResponse.json(
+      {
+        results,
+        page: data.page,
+        total_pages: data.total_pages,
+        total_results: data.total_results,
+      },
+      {
+        headers: {
+          // Cache on Vercel CDN: fresh 10m, serve stale up to 30m while revalidating.
+          // Keyed by full URL (query params included) — different filters = different cache entries.
+          'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=1800',
+        },
+      }
+    )
   } catch (e) {
     const message = e instanceof Error ? e.message : 'Discover failed'
     return NextResponse.json({ error: message }, { status: 502 })

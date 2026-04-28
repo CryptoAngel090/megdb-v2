@@ -111,14 +111,13 @@ export function SearchPageClient({ initialQuery }: { initialQuery: string }) {
             <Link
               key={`${item.type}-${item.id}`}
               href={`/${item.type}/${item.id}`}
-              className={styles.card}
+              className={`${styles.card} card-hover hover-lift-card`}
             >
               <div className={styles.posterWrap}>
-                <span className={styles.typeBadge}>{item.type}</span>
                 {item.posterPath ? (
                   <Image
                     src={getImageUrl(item.posterPath, 'w185')}
-                    alt=""
+                    alt={`${item.title} poster`}
                     fill
                     sizes="185px"
                     className={styles.coverImg}

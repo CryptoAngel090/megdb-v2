@@ -74,6 +74,10 @@
   margin-top: var(--space-2);
 }
 
+.ctaSlot {
+  margin-block-start: var(--space-2);
+}
+
 .cta:hover {
   background: var(--primary-hover);
   transform: scale(1.03);

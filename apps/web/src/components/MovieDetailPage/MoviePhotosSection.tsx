@@ -4,62 +4,12 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import type { MovieBackdropStill } from '@/lib/tmdb'
 import { getImageUrl } from '@/lib/tmdb'
+import { Image as ImageIcon, X, ChevronLeft, ChevronRight } from 'lucide-react'
+import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './MoviePhotosSection.module.css'
 
 const BLUR =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
-
-function IconGallery({ className }: { className?: string | undefined }) {
-  return (
-    <svg
-      className={className}
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      aria-hidden
-    >
-      <rect x="3" y="3" width="18" height="18" rx="2" />
-      <circle cx="8.5" cy="8.5" r="1.5" />
-      <path d="M21 15l-5-5L5 21" />
-    </svg>
-  )
-}
-
-function IconX({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      aria-hidden
-    >
-      <path d="M18 6L6 18M6 6l12 12" />
-    </svg>
-  )
-}
-
-function IconChevron({ dir }: { dir: 'left' | 'right' }) {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      aria-hidden
-    >
-      {dir === 'left' ? <path d="M15 18l-6-6 6-6" /> : <path d="M9 18l6-6-6-6" />}
-    </svg>
-  )
-}
 
 type Props = {
   images: MovieBackdropStill[]
@@ -101,7 +51,7 @@ export function MoviePhotosSection({ images, title }: Props) {
       <div className={styles.head}>
         <h2 className={styles.title}>
           <span className={styles.bar} aria-hidden />
-          <IconGallery className={styles.galleryIcon ?? ''} />
+          <ImageIcon className={[iconSlot.block, iconSlot.sm, styles.galleryIcon].filter(Boolean).join(' ')} aria-hidden />
           Photos
           <span className={styles.count}>{validImages.length}</span>
         </h2>
@@ -112,7 +62,7 @@ export function MoviePhotosSection({ images, title }: Props) {
             aria-label="Scroll left"
             onClick={() => scroll('left')}
           >
-            <IconChevron dir="left" />
+            <ChevronLeft className={`${iconSlot.block} ${iconSlot.md}`} aria-hidden />
           </button>
           <button
             type="button"
@@ -120,7 +70,7 @@ export function MoviePhotosSection({ images, title }: Props) {
             aria-label="Scroll right"
             onClick={() => scroll('right')}
           >
-            <IconChevron dir="right" />
+            <ChevronRight className={`${iconSlot.block} ${iconSlot.md}`} aria-hidden />
           </button>
         </div>
       </div>
@@ -150,7 +100,7 @@ export function MoviePhotosSection({ images, title }: Props) {
       {selected !== null && validImages[selected] != null && (
         <div className={styles.lightbox} onClick={close} role="presentation">
           <button type="button" className={styles.close} aria-label="Close" onClick={close}>
-            <IconX />
+            <X className={`${iconSlot.block} ${iconSlot.sm}`} aria-hidden />
           </button>
           {selected > 0 && (
             <button
@@ -162,7 +112,7 @@ export function MoviePhotosSection({ images, title }: Props) {
                 prev()
               }}
             >
-              <IconChevron dir="left" />
+              <ChevronLeft className={`${iconSlot.block} ${iconSlot.md}`} aria-hidden />
             </button>
           )}
           {selected < validImages.length - 1 && (
@@ -175,7 +125,7 @@ export function MoviePhotosSection({ images, title }: Props) {
                 next()
               }}
             >
-              <IconChevron dir="right" />
+              <ChevronRight className={`${iconSlot.block} ${iconSlot.md}`} aria-hidden />
             </button>
           )}
           <div onClick={(e) => e.stopPropagation()} role="presentation">

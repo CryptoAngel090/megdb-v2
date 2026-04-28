@@ -2,19 +2,20 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalDocument, LegalNote } from '@/components/LegalDocument/LegalDocument'
 import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
-import { discoverSocialMeta } from '@/lib/seoSocial'
+import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
+/** @sync `ROUTE_REVALIDATE_STATIC_COPY` in `@/lib/cachePolicy` */
 export const revalidate = 86_400
 
 const title = 'Accessibility'
 const description =
-  'MegDB accessibility statement: WCAG 2.2, European Accessibility Act context, known limitations, and how to report barriers — April 2026.'
+  'MegDB accessibility: WCAG 2.2 target, keyboard and reduced-motion support, European Accessibility Act retail context, known gaps, and a11y@megdb.com for feedback.'
 
 export const metadata: Metadata = {
   title,
   description,
-  alternates: { canonical: '/accessibility' },
+  alternates: discoverPageAlternates('/accessibility'),
   ...discoverSocialMeta(title, description, '/accessibility'),
 }
 
@@ -23,7 +24,12 @@ const UPDATED = 'April 21, 2026'
 export default function AccessibilityPage() {
   return (
     <>
-      <WebPageJsonLd pathname="/accessibility" title={title} description={description} />
+      <WebPageJsonLd
+        pathname="/accessibility"
+        title={title}
+        description={description}
+        breadcrumbParent={{ name: 'Help center', pathname: '/help' }}
+      />
       <div className={styles.page}>
       <LegalDocument title="Accessibility" lastUpdated={UPDATED}>
         <h2 id="commitment">1. Commitment</h2>

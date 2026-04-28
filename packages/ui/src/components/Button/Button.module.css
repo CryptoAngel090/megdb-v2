@@ -36,9 +36,8 @@
   outline-offset: 3px;
 }
 
-/* Rule 4: hover яркость +10–15% ИЛИ scale 1.02–1.05 */
 .button:hover {
-  transform: scale(1.03);
+  transform: none;
 }
 .button:active {
   transform: scale(0.97);
@@ -52,52 +51,74 @@
   transform: none;
 }
 
-/* ── Variants — rule 15: Primary → Secondary → Ghost ── */
-
-/* Tier 1 Primary: brand CTA — красный #E50914 */
+/* ── Variants — strict set: Primary · Ghost · Subtle ── */
 .primary {
-  background: var(--color-accent, #e50914);
-  color: #ffffff;
-  box-shadow: 0 4px 16px var(--color-accent-muted, rgba(229, 9, 20, 0.22));
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 4px 20px var(--color-primary-glow);
 }
 .primary:hover:not(:disabled) {
-  background: var(--color-accent-hover, #cc0812);
-  box-shadow: 0 8px 28px rgba(229, 9, 20, 0.35);
-  filter: brightness(1.08);
+  background: var(--color-primary-hover);
+  box-shadow: 0 10px 28px var(--color-primary-glow);
+  transform: translateY(-2px);
 }
 .primary:active:not(:disabled) {
   filter: brightness(0.92);
   box-shadow: none;
 }
 
+/* Secondary — neutral surface CTA (watchlist, cancel, “Change password”) */
 .secondary {
-  background: var(--color-surface);
-  color: var(--color-text-primary);
+  background: var(--color-surface-raised);
+  color: var(--color-text-primary, var(--color-text));
   border: 1px solid var(--color-border);
+  box-shadow: none;
 }
-.secondary:hover {
-  background: var(--color-surface-hover);
-  border-color: var(--color-accent);
+.secondary:hover:not(:disabled) {
+  background: var(--color-surface-hover, var(--color-hover));
+  border-color: var(--border-strong, var(--color-border-hover));
+  transform: translateY(-1px);
+}
+.secondary:active:not(:disabled) {
+  filter: brightness(0.95);
+  transform: none;
+}
+
+/* Danger — irreversible actions */
+.danger {
+  background: var(--color-error);
+  color: var(--on-primary, #ffffff);
+  box-shadow: 0 4px 18px color-mix(in oklab, var(--color-error) 40%, transparent);
+}
+.danger:hover:not(:disabled) {
+  background: color-mix(in oklab, var(--color-error) 88%, #000000);
+  box-shadow: 0 8px 26px color-mix(in oklab, var(--color-error) 48%, transparent);
+  transform: translateY(-2px);
+}
+.danger:active:not(:disabled) {
+  filter: brightness(0.92);
+  box-shadow: none;
 }
 
 .ghost {
-  background: transparent;
-  color: var(--color-text-secondary);
-  border: 1px solid transparent;
+  background: var(--color-primary-muted);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary-border);
 }
-.ghost:hover {
-  background: var(--color-surface);
-  color: var(--color-text-primary);
-  border-color: var(--color-border);
+.ghost:hover:not(:disabled) {
+  background: rgba(192,132,252,0.18);
+  transform: translateY(-1px);
 }
 
-.danger {
-  background: var(--color-error);
-  color: var(--color-text-primary);
-  box-shadow: 0 4px 16px oklch(62% 0.22 27 / 0.3);
+.subtle {
+  background: rgba(255,255,255,0.05);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
 }
-.danger:hover {
-  filter: brightness(1.15);
+.subtle:hover:not(:disabled) {
+  background: rgba(255,255,255,0.09);
+  color: var(--color-text);
+  transform: translateY(-1px);
 }
 
 /* ── Sizes ─────────────────────────────────── */
@@ -128,6 +149,11 @@
 .iconOnly.lg {
   width: calc(var(--space-6, 48px) + var(--space-2, 8px));
   min-width: calc(var(--space-6, 48px) + var(--space-2, 8px));
+}
+
+/* FAB shape — pair with `iconOnly` for round floating control */
+.fab {
+  border-radius: var(--radius-full, 9999px);
 }
 
 /* CSS tooltip для icon-only кнопок */
@@ -176,6 +202,15 @@
   border-top-color: var(--color-text-primary);
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
+}
+
+.primary.loading::after,
+.danger.loading::after {
+  border-top-color: var(--on-primary, #ffffff);
+}
+
+.ghost.loading::after {
+  border-top-color: var(--color-primary);
 }
 
 @keyframes spin {

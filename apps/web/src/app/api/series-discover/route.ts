@@ -10,6 +10,13 @@ import {
 
 const DISCOVER_RATE_LIMIT = 60
 
+function ensureTwoSeriesGenres(genres: string[] | undefined): string[] {
+  const normalized = (genres ?? []).map((g) => String(g).trim()).filter(Boolean).slice(0, 2)
+  if (normalized.length === 0) return ['SERIES', 'TV']
+  if (normalized.length === 1) return [normalized[0]!, 'SERIES']
+  return normalized
+}
+
 function urlSearchParamsToDiscoverRecord(
   sp: URLSearchParams
 ): Record<string, string | string[] | undefined> {
@@ -59,13 +66,25 @@ export async function GET(request: NextRequest) {
 
   try {
     const data = await discoverSeriesBrowse(input, mode, comingYear)
-    const results = await enrichSeriesShelfRuntime(data.results.map(mapTmdbSeriesRowToShelfItem))
-    return NextResponse.json({
-      results,
-      page: data.page,
-      total_pages: data.total_pages,
-      total_results: data.total_results,
-    })
+    const baseResults = data.results.map(mapTmdbSeriesRowToShelfItem)
+    const withRuntime = await enrichSeriesShelfRuntime(baseResults)
+    const results = withRuntime.map((item) => ({
+      ...item,
+      genres: ensureTwoSeriesGenres(item.genres),
+    }))
+    return NextResponse.json(
+      {
+        results,
+        page: data.page,
+        total_pages: data.total_pages,
+        total_results: data.total_results,
+      },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=1800',
+        },
+      }
+    )
   } catch (e) {
     const message = e instanceof Error ? e.message : 'Discover failed'
     return NextResponse.json({ error: message }, { status: 502 })

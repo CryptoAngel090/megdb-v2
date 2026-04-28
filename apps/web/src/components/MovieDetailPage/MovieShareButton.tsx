@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import { useCallback, useEffect, useId, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
+import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './MovieShareButton.module.css'
 
 type Props = {
@@ -13,6 +14,8 @@ type Props = {
   unstyled?: boolean | undefined
   /** Optional icon / markup before the label (e.g. hero CTAs). */
   icon?: ReactNode | undefined
+  /** Icon-only trigger — sets `aria-label` and hides the visible “Share” label. */
+  iconOnly?: boolean | undefined
 }
 
 type ShareTarget = {
@@ -65,7 +68,7 @@ function useShareUrl(): string {
   return typeof window !== 'undefined' ? window.location.href : ''
 }
 
-export function MovieShareButton({ title, className, unstyled, icon }: Props) {
+export function MovieShareButton({ title, className, unstyled, icon, iconOnly }: Props) {
   const [open, setOpen] = useState(false)
   const [portalReady, setPortalReady] = useState(false)
   const [canNativeShare, setCanNativeShare] = useState(false)
@@ -142,7 +145,7 @@ export function MovieShareButton({ title, className, unstyled, icon }: Props) {
             initial={{ opacity: 0, scale: 0.94, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 8 }}
-            transition={{ type: 'spring', stiffness: 420, damping: 30 }}
+            transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className={styles.modalHeader}>
@@ -159,8 +162,7 @@ export function MovieShareButton({ title, className, unstyled, icon }: Props) {
                 aria-label="Close share dialog"
               >
                 <svg
-                  width="18"
-                  height="18"
+                  className={`${iconSlot.block} ${iconSlot.inline18}`}
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -181,8 +183,7 @@ export function MovieShareButton({ title, className, unstyled, icon }: Props) {
                 >
                   <span className={styles.actionIcon} aria-hidden>
                     <svg
-                      width="22"
-                      height="22"
+                      className={`${iconSlot.block} ${iconSlot.inline22}`}
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -202,8 +203,7 @@ export function MovieShareButton({ title, className, unstyled, icon }: Props) {
               <button type="button" className={styles.actionRow} onClick={() => void copyLink()}>
                 <span className={styles.actionIcon} aria-hidden>
                   <svg
-                    width="22"
-                    height="22"
+                    className={`${iconSlot.block} ${iconSlot.inline22}`}
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -256,9 +256,10 @@ export function MovieShareButton({ title, className, unstyled, icon }: Props) {
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
         aria-expanded={open}
+        aria-label={iconOnly ? `Share ${title}` : undefined}
       >
         {icon}
-        Share
+        {iconOnly ? null : 'Share'}
       </button>
       {portalReady ? createPortal(modal, document.body) : null}
     </>

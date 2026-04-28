@@ -1,8 +1,19 @@
 import { TvSeriesDetailPageApp, generateTvSeriesDetailMetadata } from '@/lib/tvSeriesDetailRoute'
+import { getTopSeriesIdsForStaticParams } from '@/lib/tmdb'
 import styles from './page.module.css'
 
-/** Must match `TV_SERIES_DETAIL_REVALIDATE`; Next.js only accepts a literal here. */
+/** @sync `ROUTE_REVALIDATE_MEDIA_DETAIL` in `@/lib/cachePolicy` */
 export const revalidate = 3600
+
+/**
+ * Pre-render the top 200 most popular TV series at build time.
+ * Converts these pages from Dynamic (ƒ) to ISR (●), eliminating cold-start
+ * TTFB for the titles users are most likely to visit.
+ */
+export async function generateStaticParams() {
+  const ids = await getTopSeriesIdsForStaticParams(200)
+  return ids.map((id) => ({ id: String(id) }))
+}
 
 type Props = {
   params: Promise<{ id: string }>

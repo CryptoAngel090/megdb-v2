@@ -5,8 +5,8 @@
   bottom: max(32px, env(safe-area-inset-bottom, 0px));
   right: 20px;
   z-index: 500;
-  width: 44px;
-  height: 44px;
+  width: var(--touch-square);
+  height: var(--touch-square);
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.15);
   background: rgba(20, 20, 20, 0.92);
@@ -24,13 +24,13 @@
 }
 
 .btn:hover {
-  border-color: var(--primary, #e50914);
+  border-color: var(--primary);
   background: rgba(30, 30, 30, 0.98);
   color: #fff;
 }
 
 .btn:focus-visible {
-  outline: 2px solid var(--color-accent, #e50914);
+  outline: 2px solid var(--color-accent);
   outline-offset: 3px;
 }
 

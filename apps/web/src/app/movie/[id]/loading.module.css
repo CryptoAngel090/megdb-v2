@@ -38,7 +38,7 @@
 }
 
 .line {
-  height: 14px;
+  height: var(--icon-inline-14);
   border-radius: 6px;
   background: #1a1a1a;
   border: 1px solid #2a2a2a;
@@ -84,7 +84,7 @@
 }
 
 .castLine {
-  height: 10px;
+  height: var(--icon-inline-10);
   border-radius: 4px;
   background: #252525;
 }

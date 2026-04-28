@@ -6,7 +6,8 @@
 
 ## Session start
 
-- Read `PROGRESS.md` for where we left off and what is next.
+- **Mandatory:** Read repo-root `PROGRESS.md` first (Cursor rule `99-progress-session.mdc` enforces this).
+- After substantive work, update `PROGRESS.md`: **Last focus**, **Next**, and one **Recent log** line.
 - Do not open files that are not needed for the current task.
 - After loading context, reply: `Context loaded. Last step: [X]. Next: [Y].`
 

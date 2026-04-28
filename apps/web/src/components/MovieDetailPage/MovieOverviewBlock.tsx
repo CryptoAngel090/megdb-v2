@@ -8,7 +8,7 @@ type MovieOverviewBlockProps = {
 }
 
 export function MovieOverviewBlock({ text }: MovieOverviewBlockProps) {
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded] = useState(true)
   const isCollapsed = !expanded
 
   return (

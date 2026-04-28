@@ -1,10 +1,8 @@
-type Bezier = [number, number, number, number]
-
-const spring: Bezier = [0.22, 1, 0.36, 1]
+const ease: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94]
 
 export const searchBarVariants = {
   idle: { boxShadow: '0 0 0 0px transparent' },
-  focused: { boxShadow: '0 0 0 0px transparent', transition: { duration: 0.2, ease: spring } },
+  focused: { boxShadow: '0 0 0 0px transparent', transition: { duration: 0.2, ease } },
 }
 
 export const dropdownVariants = {
@@ -17,11 +15,10 @@ export const dropdownVariants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.2, ease: spring },
+    transition: { duration: 0.2, ease },
   },
 }
 
-/** Instant open/close when user prefers reduced motion */
 export const dropdownVariantsReduced = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0 } },

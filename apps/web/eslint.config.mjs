@@ -2,6 +2,7 @@ import nextPlugin from '@next/eslint-plugin-next'
 import rootConfig from '../../eslint.config.mjs'
 
 export default [
+  { ignores: ['scripts/**'] },
   ...rootConfig,
   {
     plugins: {

@@ -1,11 +1,8 @@
 import type { Variants } from 'framer-motion'
 
-type Bezier = [number, number, number, number]
+const EASE_OUT: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94]
+const EASE_CINEMA: [number, number, number, number] = [0.16, 1, 0.3, 1]
 
-const spring: Bezier = [0.22, 1, 0.36, 1]
-const bounce: Bezier = [0.34, 1.56, 0.64, 1]
-
-/** No large motion (y/scale), only short opacity crossfade — OK for prefers-reduced-motion */
 const subtleFade = { duration: 0.38, ease: 'easeOut' as const }
 const subtleFadeFast = { duration: 0.28, ease: 'easeOut' as const }
 
@@ -19,7 +16,7 @@ export function buildHeroContentVariants(reduceMotion: boolean): Variants {
   }
   return {
     hidden: { opacity: 0, y: 32 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: spring } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE_CINEMA } },
     exit: { opacity: 0, y: -16, transition: { duration: 0.4 } },
   }
 }
@@ -33,7 +30,7 @@ export function buildHeroTitleVariants(reduceMotion: boolean): Variants {
   }
   return {
     hidden: { opacity: 0, y: 24 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.1, ease: spring } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.1, ease: EASE_CINEMA } },
   }
 }
 
@@ -83,14 +80,14 @@ export function buildHeroOverviewVariants(reduceMotion: boolean): Variants {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.55, delay: 0.32, ease: spring },
+      transition: { duration: 0.55, delay: 0.32, ease: EASE_OUT },
     },
   }
 }
 
 export const btnPrimaryVariants = {
   idle: { scale: 1 },
-  hover: { scale: 1.04, transition: { duration: 0.2, ease: bounce } },
+  hover: { scale: 1.04, transition: { duration: 0.2, ease: EASE_OUT } },
   tap: { scale: 0.97 },
 }
 
@@ -109,8 +106,8 @@ export function buildSlideVariants(reduceMotion: boolean): Variants {
     }
   }
   return {
-    enter: { opacity: 0, scale: 1.05 },
-    center: { opacity: 1, scale: 1, transition: { duration: 0.7, ease: spring } },
-    exit: { opacity: 0, scale: 0.95, transition: { duration: 0.5 } },
+    enter: { opacity: 0, scale: 1.04 },
+    center: { opacity: 1, scale: 1, transition: { duration: 0.7, ease: EASE_CINEMA } },
+    exit: { opacity: 0, scale: 0.97, transition: { duration: 0.5 } },
   }
 }

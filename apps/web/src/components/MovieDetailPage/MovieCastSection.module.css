@@ -13,23 +13,11 @@
   width: 100%;
   max-width: 100%;
   overflow: visible;
-  --cast-columns: 2;
-  --cast-gap: 0.75rem;
+  --cast-columns: var(--rail-tile-columns);
+  --cast-gap: var(--rail-tile-gap);
 }
 
-@container movie-cast (min-width: 24rem) {
-  .section {
-    --cast-columns: 3;
-  }
-}
-
-@container movie-cast (min-width: 40rem) {
-  .section {
-    --cast-columns: 4;
-  }
-}
-
-@container movie-cast (min-width: 64rem) {
+@media (min-width: 48rem) {
   .section {
     --cast-columns: 6;
   }
@@ -51,17 +39,17 @@
   margin: 0;
   font-size: clamp(1rem, 0.92rem + 0.35vw, 1.125rem);
   font-weight: var(--weight-bold);
-  color: #fff;
+  color: var(--color-primary);
   min-width: 0;
 }
 
 .castIcon {
-  color: #a0a0a0;
+  color: var(--color-text-secondary);
   flex-shrink: 0;
 }
 
 .count {
-  color: #555;
+  color: var(--color-text-muted);
   font-size: var(--text-caption);
   font-weight: var(--weight-regular);
 }
@@ -70,7 +58,7 @@
   width: 4px;
   height: 1.25rem;
   border-radius: 2px;
-  background: #e50914;
+  background: var(--color-primary);
   flex-shrink: 0;
 }
 
@@ -87,9 +75,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #2a2a2a;
-  background: #1a1a1a;
-  color: #a0a0a0;
+  border: 1px solid var(--color-primary-border);
+  background: color-mix(in oklab, var(--color-primary) 10%, transparent);
+  color: var(--color-primary);
   cursor: pointer;
   transition:
     background 0.15s ease,
@@ -100,7 +88,10 @@
 
 @media (hover: hover) and (pointer: fine) {
   .navBtn:hover {
-    filter: brightness(0.88);
+    border-color: color-mix(in oklab, var(--color-primary) 62%, transparent);
+    background: color-mix(in oklab, var(--color-primary) 22%, transparent);
+    color: var(--color-primary-hover);
+    filter: none;
   }
 }
 
@@ -138,22 +129,23 @@
 }
 
 .cardBox {
-  border-radius: 0.75rem;
+  border-radius: var(--person-card-radius);
   overflow: hidden;
-  background: #1a1a1a;
-  border: 1px solid #2a2a2a;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-md);
 }
 
 .photo {
   position: relative;
-  aspect-ratio: 3 / 4;
-  background: #252525;
+  aspect-ratio: var(--person-card-aspect);
+  background: var(--surface);
   overflow: hidden;
 }
 
 .photoImg {
   object-fit: cover;
-  object-position: top center;
+  object-position: center 8%;
 }
 
 .meta {
@@ -165,7 +157,7 @@
   font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
   line-height: var(--leading-snug);
-  color: #fff;
+  color: var(--color-text-primary);
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 1;
@@ -175,7 +167,7 @@
 .char {
   margin: 0.15rem 0 0;
   font-size: var(--text-xs);
-  color: #888;
+  color: var(--color-text-secondary);
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 1;

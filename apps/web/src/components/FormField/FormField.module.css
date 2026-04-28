@@ -39,13 +39,13 @@
   width: 100%;
   min-height: calc(var(--space-6) - var(--space-1));
   padding: var(--space-2-5) var(--space-3);
-  border-radius: var(--radius-input); /* rule 19: один радиус = 6px */
+  border-radius: 10px;
   font-size: var(--text-body);
   font-weight: var(--weight-regular);
   line-height: var(--leading-normal);
-  color: var(--text-primary);
-  background: var(--surface);
-  border: 1px solid var(--border);
+  color: var(--color-text);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
   outline: none;
   transition:
     border-color var(--duration-fast) var(--ease-out),
@@ -60,18 +60,18 @@
 }
 
 .input::placeholder {
-  color: var(--text-muted);
+  color: var(--color-text-subtle);
 }
 
 .input:hover:not(:disabled) {
-  border-color: rgba(255, 255, 255, 0.2);
-  background: var(--surface-hover);
+  border-color: var(--color-border-hover);
+  background: var(--color-surface-hover);
 }
 
 .input:focus {
-  border-color: var(--primary);
-  background: var(--surface-hover);
-  box-shadow: 0 0 0 3px var(--primary-muted);
+  border-color: var(--color-primary-border);
+  background: var(--color-surface-hover);
+  box-shadow: 0 0 0 3px var(--color-primary-muted);
 }
 
 .input:focus-visible {
@@ -86,12 +86,12 @@
 
 /* rule 72: error state — красная граница */
 .inputWrapError .input {
-  border-color: var(--color-error, #e50914);
-  background: rgba(229, 9, 20, 0.04);
+  border-color: var(--color-error);
+  background: color-mix(in oklab, var(--color-error) 4%, transparent);
 }
 
 .inputWrapError .input:focus {
-  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.15);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-error) 15%, transparent);
 }
 
 /* rule 72: inline error под полем */
@@ -103,7 +103,7 @@
   font-size: var(--text-caption);
   font-weight: var(--weight-medium);
   line-height: var(--leading-caption);
-  color: var(--color-error, #e50914);
+  color: var(--color-error);
   /* Плавное появление */
   animation: errorSlideIn var(--duration-fast) var(--ease-out);
 }

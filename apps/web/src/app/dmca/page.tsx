@@ -2,19 +2,20 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalDocument, LegalNote } from '@/components/LegalDocument/LegalDocument'
 import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
-import { discoverSocialMeta } from '@/lib/seoSocial'
+import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
+/** @sync `ROUTE_REVALIDATE_STATIC_COPY` in `@/lib/cachePolicy` */
 export const revalidate = 86_400
 
 const title = 'DMCA policy'
 const description =
-  'Copyright infringement notices, takedown procedure, counter-notice, and repeat infringer policy for MegDB under U.S. 17 U.S.C. § 512.'
+  'MegDB DMCA: agent contact, notice requirements under 17 U.S.C. § 512, counter-notification, repeat infringer policy, and TMDB/third-party asset context.'
 
 export const metadata: Metadata = {
   title,
   description,
-  alternates: { canonical: '/dmca' },
+  alternates: discoverPageAlternates('/dmca'),
   ...discoverSocialMeta(title, description, '/dmca'),
 }
 
@@ -23,7 +24,12 @@ const UPDATED = 'April 21, 2026'
 export default function DmcaPage() {
   return (
     <>
-      <WebPageJsonLd pathname="/dmca" title={title} description={description} />
+      <WebPageJsonLd
+        pathname="/dmca"
+        title={title}
+        description={description}
+        breadcrumbParent={{ name: 'Legal & privacy', pathname: '/privacy' }}
+      />
       <div className={styles.page}>
       <LegalDocument title="Digital Millennium Copyright Act (DMCA) policy" lastUpdated={UPDATED}>
         <h2 id="intro">1. Purpose</h2>

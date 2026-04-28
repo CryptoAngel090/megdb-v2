@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { ROUTE_REVALIDATE_MEDIA_DETAIL } from '@/lib/cachePolicy'
 
 const TMDB_API_KEY = process.env.TMDB_API_KEY
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3'
@@ -25,7 +26,7 @@ export async function GET(_request: Request, { params }: Params) {
   try {
     const response = await fetch(
       `${TMDB_BASE_URL}/tv/${encodeURIComponent(id)}/season/${season}?api_key=${TMDB_API_KEY}&language=en-US`,
-      { next: { revalidate: 3600 } }
+      { next: { revalidate: ROUTE_REVALIDATE_MEDIA_DETAIL } }
     )
 
     if (!response.ok) {

@@ -28,10 +28,8 @@ export function MoviePrimaryRatingsRow({
         <span className={tmdbDisplay === '—' ? styles.tmdbScoreMuted : styles.tmdbScore}>
           {tmdbDisplay}
         </span>
+        <span className={styles.tmdbLabel}>TMDB</span>
       </div>
-      <span className={styles.ratingsSep} aria-hidden>
-        ·
-      </span>
       <MovieUserRatingCard variant="strip" movieId={movieId} movieTitle={movieTitle} />
     </div>
   )

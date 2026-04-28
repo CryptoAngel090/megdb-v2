@@ -10,6 +10,8 @@ import {
   dropdownVariants,
   dropdownVariantsReduced,
 } from './SearchBar.animations'
+import { Button } from '@repo/ui/button'
+import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './SearchBar.module.css'
 
 const PLACEHOLDERS = ['Search movies...', 'Search actors...', 'Search series...']
@@ -182,9 +184,7 @@ export function SearchBar({ onFocus, onBlur, autoFocus }: SearchBarProps) {
         animate={isFocused ? 'focused' : 'idle'}
       >
         <svg
-          className={styles.searchIcon}
-          width="20"
-          height="20"
+          className={`${styles.searchIcon} ${iconSlot.block} ${iconSlot.md}`}
           fill="none"
           stroke="currentColor"
           strokeWidth="2"
@@ -207,7 +207,6 @@ export function SearchBar({ onFocus, onBlur, autoFocus }: SearchBarProps) {
           aria-label="Search movies, series, and people"
           aria-autocomplete="list"
           aria-controls="search-results"
-          aria-expanded={showDropdown}
         />
 
         {!query && !isFocused && (
@@ -218,7 +217,11 @@ export function SearchBar({ onFocus, onBlur, autoFocus }: SearchBarProps) {
         )}
 
         {query && (
-          <button
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            iconOnly
             className={styles.clearBtn}
             onClick={() => {
               setQuery('')
@@ -228,16 +231,16 @@ export function SearchBar({ onFocus, onBlur, autoFocus }: SearchBarProps) {
             aria-label="Clear search"
           >
             <svg
-              width="16"
-              height="16"
+              className={`${iconSlot.block} ${iconSlot.sm}`}
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
               viewBox="0 0 24 24"
+              aria-hidden
             >
               <path d="M18 6 6 18M6 6l12 12" />
             </svg>
-          </button>
+          </Button>
         )}
       </motion.div>
 
@@ -281,7 +284,7 @@ export function SearchBar({ onFocus, onBlur, autoFocus }: SearchBarProps) {
                         {result.posterPath ? (
                           <Image
                             src={`https://image.tmdb.org/t/p/w92${result.posterPath}`}
-                            alt=""
+                            alt={`${result.title} poster`}
                             width={40}
                             height={60}
                             className={styles.resultImg}

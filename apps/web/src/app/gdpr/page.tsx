@@ -2,19 +2,20 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalDocument, LegalNote } from '@/components/LegalDocument/LegalDocument'
 import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
-import { discoverSocialMeta } from '@/lib/seoSocial'
+import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
+/** @sync `ROUTE_REVALIDATE_STATIC_COPY` in `@/lib/cachePolicy` */
 export const revalidate = 86_400
 
 const title = 'GDPR & EU/UK data protection'
 const description =
-  'MegDB GDPR summary: legal bases, rights, supervisory authorities, transfers, and 2025–2026 EU Digital Omnibus context.'
+  'MegDB GDPR & UK GDPR page: ICO/EDPB links, rights (access, erasure, portability), SCCs for transfers, and how Digital Omnibus debates affect 2026 compliance reading.'
 
 export const metadata: Metadata = {
   title,
   description,
-  alternates: { canonical: '/gdpr' },
+  alternates: discoverPageAlternates('/gdpr'),
   ...discoverSocialMeta(title, description, '/gdpr'),
 }
 
@@ -23,7 +24,12 @@ const UPDATED = 'April 21, 2026'
 export default function GdprPage() {
   return (
     <>
-      <WebPageJsonLd pathname="/gdpr" title={title} description={description} />
+      <WebPageJsonLd
+        pathname="/gdpr"
+        title={title}
+        description={description}
+        breadcrumbParent={{ name: 'Legal & privacy', pathname: '/privacy' }}
+      />
       <div className={styles.page}>
       <LegalDocument title="GDPR & EU/UK data protection information" lastUpdated={UPDATED}>
         <h2 id="scope">1. Scope of this page</h2>

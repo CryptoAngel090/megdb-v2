@@ -1,24 +1,9 @@
 import Image from 'next/image'
+import { ExternalLink } from 'lucide-react'
 import type { MovieWatchProvidersUs } from '@/lib/tmdb'
 import { buildWatchProviderUrl, getImageUrl } from '@/lib/tmdb'
+import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './MovieWatchProvidersPanel.module.css'
-
-function IconExternal({ className }: { className?: string | undefined }) {
-  return (
-    <svg
-      className={className}
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      aria-hidden
-    >
-      <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
-    </svg>
-  )
-}
 
 function ProviderLink({
   providerId,
@@ -51,7 +36,7 @@ function ProviderLink({
         )}
       </div>
       <span className={styles.name}>{name}</span>
-      <IconExternal className={styles.ext ?? ''} />
+      <ExternalLink className={[iconSlot.block, iconSlot.inline12, styles.ext].filter(Boolean).join(' ')} aria-hidden />
     </a>
   )
 }

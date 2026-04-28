@@ -1,57 +1,31 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { HeroSection } from '@/components/HeroSection/HeroSection'
-import { MediaShelf } from '@/components/MediaShelf/MediaShelf'
-import { PopularActorsShelf } from '@/components/PopularActorsShelf/PopularActorsShelf'
-import {
-  getHeroItems,
-  getBestOf2026,
-  getTrendingNow,
-  getNewReleases,
-  getAcclaimedRecentMovies,
-  getBestMoviesAllTime,
-  getBestSeriesAllTime,
-  getPopularActors,
-} from '@/lib/tmdb'
+import { HomeDiscoverShelves } from '@/components/HomeDiscoverShelves/HomeDiscoverShelves'
+import { HomeShelvesFallbackClient } from '@/components/HomeDiscoverShelves/HomeShelvesFallbackClient'
+import { getHeroItems } from '@/lib/tmdb'
 import { HomeLcpPreloadLinks } from '@/components/HomeLcpPreloadLinks'
 import { buildHomeStructuredData } from '@/lib/jsonLdSite'
-import { discoverSocialMeta } from '@/lib/seoSocial'
+import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import styles from './page.module.css'
 
-/** 15m — must be ≤ fastest homepage TMDB tier so the route re-runs often enough for `fetch` caches to refresh. */
+/** @sync `ROUTE_REVALIDATE_HOME` in `@/lib/cachePolicy` */
 export const revalidate = 900
 
 const HOME_TITLE = 'MegDB — Trending movies & TV, new releases and all-time favorites'
 const HOME_DESCRIPTION =
-  'Browse trending movies and series, new this week, 2026 highlights, and coming soon picks. Explore top-rated films and shows and decide what to watch next.'
+  'English-first discovery: trending and new-release movie rails, acclaimed picks, best-of-2026, all-time film/TV charts, and popular actors — powered by TMDB metadata with fast search.'
 
 /** Homepage-only SEO — overrides root `layout` title template for `/` */
 export const metadata: Metadata = {
   title: { absolute: HOME_TITLE },
   description: HOME_DESCRIPTION,
-  alternates: { canonical: '/' },
+  alternates: discoverPageAlternates('/'),
   ...discoverSocialMeta(HOME_TITLE, HOME_DESCRIPTION, '/'),
 }
 
-export default async function HomePage() {
-  const [
-    heroItems,
-    bestOf2026,
-    trendingNow,
-    newReleases,
-    acclaimedRecent,
-    bestMovies,
-    bestSeries,
-    popularActors,
-  ] = await Promise.all([
-    getHeroItems().catch(() => []),
-    getBestOf2026().catch(() => []),
-    getTrendingNow().catch(() => []),
-    getNewReleases().catch(() => []),
-    getAcclaimedRecentMovies().catch(() => []),
-    getBestMoviesAllTime().catch(() => []),
-    getBestSeriesAllTime().catch(() => []),
-    getPopularActors(100).catch(() => []),
-  ])
+export default function HomePage() {
+  const shelfAreaClass = typeof styles.page === 'string' ? styles.page : ''
 
   const structuredData = buildHomeStructuredData({
     pageName: HOME_TITLE,
@@ -64,49 +38,29 @@ export default async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
+      <Suspense fallback={null}>
+        <HomeHeroSlot />
+      </Suspense>
+
+      <Suspense fallback={<HomeShelvesFallbackClient className={shelfAreaClass} />}>
+        <HomeDiscoverShelves className={shelfAreaClass} />
+      </Suspense>
+    </>
+  )
+}
+
+async function HomeHeroSlot() {
+  const heroItems = await getHeroItems().catch(() => [])
+
+  if (heroItems.length === 0) return null
+
+  return (
+    <>
       <HomeLcpPreloadLinks
         heroSlides={heroItems}
-        shelfFallbacks={[bestOf2026, trendingNow, newReleases, acclaimedRecent, bestMovies, bestSeries]}
+        shelfFallbacks={[]}
       />
-      {heroItems.length > 0 && <HeroSection slides={heroItems} />}
-
-      <div className={styles.page}>
-        {bestOf2026.length > 0 && (
-          <MediaShelf title="Best of 2026" items={bestOf2026} viewAllHref="/movies?year=2026" />
-        )}
-        {trendingNow.length > 0 && (
-          <MediaShelf
-            title="Trending Now"
-            items={trendingNow}
-            viewAllHref="/movies?sort=trending"
-          />
-        )}
-        {newReleases.length > 0 && (
-          <MediaShelf title="New This Week" items={newReleases} viewAllHref="/movies" />
-        )}
-        {acclaimedRecent.length > 0 && (
-          <MediaShelf
-            title="Best New Movies"
-            items={acclaimedRecent}
-            viewAllHref="/movies?sort=acclaimed"
-          />
-        )}
-        {bestMovies.length > 0 && (
-          <MediaShelf
-            title="Best Movies of All Time"
-            items={bestMovies}
-            viewAllHref="/movies?sort=top"
-          />
-        )}
-        {bestSeries.length > 0 && (
-          <MediaShelf
-            title="Best Series of All Time"
-            items={bestSeries}
-            viewAllHref="/series?sort=top"
-          />
-        )}
-        {popularActors.length > 0 && <PopularActorsShelf actors={popularActors} />}
-      </div>
+      <HeroSection slides={heroItems} />
     </>
   )
 }

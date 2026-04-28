@@ -11,58 +11,59 @@
 
 @layer tokens {
   :root {
-    /* ── PRIMARY — #E50914 (MegDB / Netflix-style red) ─
+    /* ── PRIMARY — violet accent system ─
      CTAs, ratings, active states, hover accents — all derived from this.
   ─────────────────────────────────────────── */
-    --primary: #e50914;
-    --primary-hover: #cc0812; /* -10% lightness */
-    --primary-active: #b00710; /* -20% lightness */
-    --primary-muted: rgba(229, 9, 20, 0.12);
-    --primary-border: rgba(229, 9, 20, 0.3);
-    --primary-glow: rgba(229, 9, 20, 0.22);
+    --primary: var(--color-primary);
+    --primary-hover: var(--color-primary-hover);
+    --primary-active: #b678fb;
+    --primary-muted: var(--color-primary-muted);
+    --primary-border: var(--color-primary-border);
+    --primary-glow: var(--color-primary-glow);
     --on-primary: #ffffff; /* text on primary */
 
     /* ── BACKGROUND — #121212 ───────────────────
      Page background; steps slightly lighter for elevation.
   ─────────────────────────────────────────── */
-    --bg: #121212;
-    --bg-elevated: #181818; /* navbar, sticky */
-    --bg-overlay: rgba(18, 18, 18, 0.92);
+    --bg: #0b1622;
+    --bg-elevated: #111d2e;
+    --bg-overlay: rgba(11, 22, 34, 0.92);
 
     /* ── SURFACE — #1F1F1F ──────────────────────
      Cards, modals, dropdowns — steps of ~+8 lightness.
   ─────────────────────────────────────────── */
-    --surface: #1f1f1f;
-    --surface-hover: #272727;
-    --surface-raised: #2f2f2f;
-    --surface-overlay: #383838;
+    --surface: #111d2e;
+    --surface-hover: #1f3044;
+    --surface-raised: #182638;
+    --surface-overlay: #263a52;
+    --surface-elevated: #2d4460;
 
     /* ── BORDER — surface-relative tints ─────────*/
-    /* Site-wide thin red outline (requested). */
-    --border: rgba(229, 9, 20, 0.18);
-    --border-strong: rgba(229, 9, 20, 0.3);
+    /* Site-wide thin accent outline. */
+    --border: rgba(255, 255, 255, 0.07);
+    --border-strong: rgba(255, 255, 255, 0.14);
     /** Slightly thicker outline when emphasis is needed (posters, list panel, header). */
     --border-width-ui: 2px;
 
     /* ── TEXT — white scale ─────────────────────*/
-    --text-primary: #ffffff; /* 21:1 on bg   ✅ WCAG AAA */
-    --text-secondary: #aaaaaa; /* 7.1:1 on bg  ✅ WCAG AAA */
-    --text-muted: #8a8a8a; /* 5.3:1 on bg  ✅ WCAG AA  */
+    --text-primary: #eef3ff;
+    --text-secondary: #8fa8c8;
+    --text-muted: #4a6480;
     /* De-emphasized copy: same hue scale as muted. Controls: use RULE 5 `opacity: 0.4` on the node, not a near-bg gray. */
     --text-disabled: var(--text-muted);
 
     /* ── GLASS — blurred surface ───────────────*/
-    --glass-bg: rgba(31, 31, 31, 0.8);
-    --glass-border: rgba(229, 9, 20, 0.18);
-    --glass-bg-nav: rgba(18, 18, 18, 0.88);
-    --glass-border-nav: rgba(229, 9, 20, 0.14);
+    --glass-bg: rgba(17, 29, 46, 0.8);
+    --glass-border: rgba(192, 132, 252, 0.28);
+    --glass-bg-nav: rgba(11, 22, 34, 0.88);
+    --glass-border-nav: rgba(255, 255, 255, 0.14);
 
     /* ── FUNCTIONAL — minimal set ─────────────*/
-    --color-success: #46d369;
-    --color-error: #e50914;
-    --color-warning: #f59e0b;
-    --color-info: #3b82f6;
-    --color-overlay: rgba(0, 0, 0, 0.75);
+    --color-success: #22c55e;
+    --color-error: #ef4444;
+    --color-warning: #fbbf24;
+    --color-info: #38bdf8;
+    --color-overlay: rgba(8, 20, 36, 0.78);
 
     /* Legacy aliases — keep in sync with tokens above */
     --color-bg: var(--bg);
@@ -70,18 +71,25 @@
     --color-surface: var(--surface);
     --color-surface-hover: var(--surface-hover);
     --color-surface-raised: var(--surface-raised);
+    --color-hover: var(--surface-hover);
+    --color-modal: var(--surface-overlay);
+    --color-elevated: var(--surface-elevated);
     --color-border: var(--border);
     --color-border-subtle: var(--border);
-    --color-text-primary: var(--text-primary); /* #FFFFFF  21:1  */
-    --color-text-secondary: var(--text-secondary); /* #AAAAAA   7.1:1 */
-    --color-text-muted: var(--text-muted); /* #8A8A8A   5.3:1 */
+    --color-text: var(--text-primary);
+    --color-text-primary: var(--text-primary);
+    --color-text-secondary: var(--text-secondary);
+    --color-text-muted: var(--text-secondary);
+    --color-text-subtle: var(--text-muted);
     --color-text-disabled: var(
       --text-disabled
     ); /* alias → muted; pair with opacity for disabled controls */
     --color-accent: var(--primary);
     --color-accent-hover: var(--primary-hover);
     --color-accent-muted: var(--primary-muted);
-    --color-rating: oklch(75% 0.15 85); /* MegDB star / rating gold — muted vs 80%/0.18 */
+    --color-gold: #fbbf24;
+    --color-blue: #38bdf8;
+    --color-rating: var(--color-gold);
     --shadow-glow: 0 0 40px var(--primary-glow);
 
     /* ── Typography ─────────────────────────────
@@ -110,7 +118,12 @@
     --text-body: clamp(0.9375rem, 0.86rem + 0.32vw, 1.125rem);
     --text-small: clamp(0.6875rem, 0.64rem + 0.2vw, 0.75rem);
     --text-caption: clamp(0.75rem, 0.7rem + 0.2vw, 0.8125rem);
-    --text-label: 10px; /* micro-label; fixed role size */
+    /**
+     * Micro-label (badges, meta chips): fluid rem so it scales with user font settings
+     * (2025–2026 practice: avoid fixed px micro-type — see W3C / design-token guidance).
+     * Stays visually below `--text-caption` (Rule 14).
+     */
+    --text-label: clamp(0.625rem, 0.58rem + 0.1vw, 0.6875rem);
     /** Comfortable reading line length in prose (not a hard cap on all UI) */
     --prose-max: 65ch;
     /** Section vertical gaps — fluid */
@@ -148,15 +161,20 @@
     --tracking-widest: 0.15em;
 
     /* ── Spacing (8pt grid) ─────────────────────*/
-    --touch-target: 44px; /* Apple HIG minimum; use for buttons, icon hit areas */
-    --space-1: 4px;
-    --space-2: 8px;
-    --space-3: 16px;
-    --space-4: 24px;
-    --space-5: 32px;
-    --space-6: 48px;
-    --space-7: 64px;
-    --space-8: 96px;
+    /**
+     * Touch / control heights:
+     * - WCAG 2.2 AA SC 2.5.8: minimum pointer target 24×24 CSS px (w3.org/TR/WCAG22/).
+     * - `--touch-target` / `--control-height-sm`: 44px — project baseline for primary controls (Apple HIG–aligned comfort).
+     */
+    --touch-target: 44px;
+    --space-1: var(--ds-space-1);
+    --space-2: var(--ds-space-2);
+    --space-3: var(--ds-space-3);
+    --space-4: var(--ds-space-4);
+    --space-5: var(--ds-space-5);
+    --space-6: var(--ds-space-6);
+    --space-7: var(--ds-space-7);
+    --space-8: var(--ds-space-8);
 
     /**
    * Derived steps — same 4px rhythm; prefer over raw px in components.
@@ -165,6 +183,61 @@
     --space-3-5: calc(var(--space-3) + var(--space-1)); /* 20px */
     --space-4-5: calc(var(--space-2) + var(--space-2) + var(--space-1) / 2); /* 18px */
     --space-5-5: calc(var(--space-5) + var(--space-1)); /* 36px */
+
+    /* ── Icon slots & circular hit areas (canonical — use instead of raw px in modules) ─ */
+    --icon-size-sm: 1rem; /* 16px — dense inline icons */
+    --icon-size-md: 1.25rem; /* 20px */
+    --icon-size-lg: 1.5rem; /* 24px — default icon slot in toolbars / cards */
+    /** Round scroll / carousel / modal close — equals calc(var(--space-5) + var(--space-2)) = 40px (>24px AA). */
+    --hit-area-round-md: calc(var(--space-5) + var(--space-2));
+    /** Rectangular control min heights */
+    --control-height-sm: var(--touch-target); /* 44px */
+    --control-height-md: var(--space-6); /* 48px */
+    --control-height-lg: calc(var(--space-6) + var(--space-2)); /* 56px */
+
+    /**
+     * Square pointer targets (width = height) — use instead of raw 28–44px in *.module.css.
+     * Maps to the same rhythm as `theme/tokens/size.ts` where applicable.
+     */
+    --touch-square: var(--touch-target);
+    --hit-square-40: var(--hit-area-round-md);
+    --hit-square-36: var(--space-5-5);
+    --hit-square-32: var(--space-5);
+    --hit-square-28: calc(var(--space-5) - var(--space-2));
+
+    /** Fixed inline icon boxes (px-derived; rem icons stay on --icon-size-*). */
+    --icon-inline-10: calc(var(--space-2) + var(--space-1) / 2);
+    --icon-inline-12: calc(var(--space-2) * 2 - var(--space-1));
+    --icon-inline-14: calc(var(--space-3) - var(--space-1) / 2);
+    --icon-inline-18: calc(var(--space-3) + var(--space-1) / 2);
+    --icon-inline-22: calc(var(--space-3) + var(--space-2) - var(--space-1) / 2);
+
+    /** Micro shapes (carousel dots, hero chevrons) — only where calc(grid) is unreadable. */
+    --icon-dot: 0.6875rem; /* 11px */
+    --icon-inline-13: 0.8125rem; /* 13px */
+    --icon-chevron-hero: 1.0625rem; /* 17px */
+    /** Between 14px and 16px slots (nav marks, dense glyphs). */
+    --icon-inline-15: calc(var(--icon-inline-14) + 1px);
+    /** Large toolbar / tab icons (e.g. 28×28 artboard). */
+    --icon-size-xl: calc(var(--space-4) + var(--space-1));
+
+    /** Compact control min-heights (between grid steps). */
+    --min-control-34: calc(var(--space-5) + var(--space-1) / 2);
+    --min-control-42: calc(var(--space-6) - var(--space-2) + var(--space-1) / 2);
+    --min-control-52: calc(var(--space-6) + var(--space-1));
+
+    /** Padding / gap shortcuts (prefer over orphan px in components). */
+    --space-stack-10: calc(var(--space-2) + var(--space-1) / 2);
+    --space-inline-14: calc(var(--space-3) - var(--space-1) / 2);
+    --space-gap-6: calc(var(--space-2) - var(--space-1) / 2);
+    --space-block-9: calc(var(--space-2) + var(--space-1) / 4);
+    --space-gap-5: calc(var(--space-1) * 1.25);
+    --skeleton-title-height: calc(var(--space-3) + var(--space-2) + var(--space-1) / 4);
+
+    /** Non-border hairlines (progress bars, separators). */
+    --line-hairline: 1px;
+    --line-progress: 3px;
+
     --layout-pill-inner-min: calc(var(--space-6) + var(--space-2) + var(--space-1)); /* 60px */
     --layout-pill-inner-min-lg: calc(var(--space-7) + var(--space-1)); /* 68px */
 
@@ -200,32 +273,32 @@
    * Circle icon targets: border-radius: 50% (not a token — intentional shape).
    * --radius-full — geometric “max” rounding (e.g. scrollbar thumbs); alias of pill cap.
    */
-    --radius-xs: 2px;
-    --radius-sm: 4px;
-    --radius-md: 6px;
-    --radius-lg: 8px;
-    --radius-xl: 12px;
-    --radius-2xl: 16px;
-    --radius-3xl: 24px;
-    --radius-full: 9999px;
+    --radius-xs: var(--ds-ui-radius-xs);
+    --radius-sm: var(--ds-ui-radius-sm);
+    --radius-md: var(--ds-ui-radius-md);
+    --radius-lg: var(--ds-ui-radius-lg);
+    --radius-xl: var(--ds-ui-radius-xl);
+    --radius-2xl: var(--ds-ui-radius-two-xl);
+    --radius-3xl: var(--ds-ui-radius-three-xl);
+    --radius-full: var(--ds-ui-radius-full);
     --radius-pill: var(--radius-full);
 
-    --radius-card: 10px;
-    --radius-button: 12px;
-    --radius-badge: 6px;
-    --radius-input: 6px;
-    --radius-glass: 8px;
+    --radius-card: var(--ds-ui-radius-card);
+    --radius-button: var(--ds-ui-radius-button);
+    --radius-badge: var(--ds-ui-radius-badge);
+    --radius-input: var(--ds-ui-radius-input);
+    --radius-glass: var(--ds-ui-radius-glass);
 
     /* ── Shadows ────────────────────────────────*/
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
-    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.7);
-    --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.85);
+    --shadow-sm: 0 2px 8px rgba(7, 18, 33, 0.42);
+    --shadow-md: 0 8px 24px rgba(7, 18, 33, 0.56);
+    --shadow-lg: 0 24px 60px rgba(7, 18, 33, 0.68);
 
     /* ── Typography scale aliases — 01-css.mdc ─────────────────────
      * Canonical names for consistency pass (Пункт 1).
      * Prefer semantic names (--text-body, --text-h1) in new components.
      */
-    --text-xs:   var(--text-label);   /* 10px */
+    --text-xs:   var(--text-label);   /* micro label */
     --text-sm:   var(--text-small);   /* clamp(11px, …, 12px) */
     --text-base: var(--text-body);    /* clamp(15px, …, 18px) */
     --text-lg:   var(--text-h4);      /* clamp(18px, …, 20px) */
@@ -234,15 +307,22 @@
     --text-3xl:  var(--text-h1);      /* clamp(28px, …, 40px) */
 
     /* ── Color alias — 01-css.mdc name ── */
-    --color-primary: var(--primary);  /* alias; value stays #e50914 */
+    --color-primary: #c084fc;
+
+    /* ── New color variables for selection and scrollbar ── */
+    --color-primary-hover: #cb96fd;
+    --color-primary-glow: rgba(192, 132, 252, 0.38);
+    --color-primary-muted: rgba(192, 132, 252, 0.10);
+    --color-primary-border: rgba(192, 132, 252, 0.28);
+    --color-border-hover: rgba(255, 255, 255, 0.14);
 
     /* ── Shadow — card elevation ── */
-    --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.45);
+    --shadow-card: 0 4px 14px rgba(7, 18, 33, 0.44);
 
     /* ── Spacing — extended scale (8pt rhythm) ── */
-    --space-9:  128px;
-    --space-10: 160px;
-    --space-12: 192px;
+    --space-9: var(--ds-space-9);
+    --space-10: var(--ds-space-10);
+    --space-12: var(--ds-space-12);
 
     /* ── Animation ──────────────────────────────*/
     --duration-instant: 100ms;
@@ -255,10 +335,8 @@
 
     --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
     --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-    /* Spring hover / press (checklist — same curve as --ease-spring) */
-    --spring-duration: 0.4s;
-    --spring-easing: var(--ease-spring);
+    /* Removed spring overshoot — smooth deceleration everywhere */
+    /* --ease-spring removed — use --ease-out or --ease-decel instead */
     --ease-decel: cubic-bezier(0, 0, 0.2, 1);
     --ease-cinema: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -276,6 +354,33 @@
 
     /** Poster frame — strict 2:3 everywhere (MediaCard, skeletons). */
     --media-card-poster-aspect: 2 / 3;
+
+    /**
+     * MediaCard poster chrome — use in `MediaCard.module.css` instead of raw hex/rgba.
+     */
+    --media-card-poster-border: var(--border);
+    --media-card-poster-fill: var(--surface);
+    --media-card-panel-radius: calc(var(--radius-card) + var(--space-1));
+    --media-card-overlay-stop-strong: color-mix(in oklab, var(--bg) 92%, transparent);
+    --media-card-overlay-stop-mid: color-mix(in oklab, var(--bg-elevated) 56%, transparent);
+    --media-card-overlay-stop-soft: color-mix(in oklab, var(--surface-raised) 28%, transparent);
+    --media-card-rating-badge-bg: color-mix(in oklab, var(--bg-elevated) 82%, transparent);
+    --media-card-rating-badge-border: color-mix(in oklab, var(--color-rating) 50%, transparent);
+    --media-card-badge-surface: var(--surface);
+
+    /**
+     * Rail tile — semantic aliases (same values as `--media-card-rail-*`).
+     * Use for any horizontal shelf where tile geometry must match (movies, people, collections).
+     * Rationale: W3C Design Tokens CG stable **2025.10** — prefer named aliases over duplicating
+     * dimensions across tools/code; spacing scale stays 4/8pt-derived (`--space-*`).
+     * Pointer targets: WCAG 2.2 **2.5.8** minimum 24×24 CSS px; MegDB comfort baseline remains `--touch-target` (44px).
+     */
+    --rail-tile-gap: var(--media-card-rail-gap);
+    --rail-tile-columns: var(--media-card-rail-columns);
+    --rail-tile-poster-aspect: var(--media-card-poster-aspect);
+    /** Unified people/actor cards geometry across shelves and detail blocks. */
+    --person-card-aspect: 2 / 3;
+    --person-card-radius: var(--radius-xl);
 
     /* ── Z-index (single stack; avoid ad-hoc 99999) ─────────────────
    * Content layers 0–99 stay local. Global UI uses these only.
