@@ -1,7 +1,7 @@
 import type { MediaType } from '@repo/types'
 import { searchMovies, searchTvShows } from './tmdb'
 
-export function toSlug(text: string): string {
+function toSlug(text: string): string {
   return text
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, '')
@@ -86,7 +86,7 @@ export function detailPathForShelfItem(item: {
   )
 }
 
-export function parseSlug(slug: string): { query: string; year: number | null } {
+function parseSlug(slug: string): { query: string; year: number | null } {
   const yearMatch = slug.match(/-(\d{4})$/)
   if (yearMatch) {
     const year = Number(yearMatch[1])
