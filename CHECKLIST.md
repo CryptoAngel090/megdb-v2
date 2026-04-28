@@ -10,6 +10,7 @@
 - Fixed invalid GitHub workflow YAML keys with colons to unblock `knip` parsing.
 - Generated machine-readable knip baseline report: `.reports/knip-baseline.json`.
 - Executed first cleanup batch: deleted 18 files flagged by knip as `Unused files` in `apps/web`.
+- Executed second cleanup batch: removed all knip-reported `unused dependencies` and `unused devDependencies` across root/apps/packages.
 
 ### Metrics (Before -> After)
 
@@ -19,6 +20,8 @@
 - tsc errors: 0 -> 0
 - knip issues: N/A (tool missing) -> 57 reported items
 - knip unused files: 18 -> 0
+- knip unused deps/devDeps: 7 -> 0
+- knip remaining issue payload (`.reports/knip-baseline.json`): 105 (exports/types-focused)
 - biome diagnostics: N/A (tool missing) -> 643 errors / 145 warnings / 38 infos
 - tests: 68/68 -> 68/68
 
@@ -30,5 +33,5 @@
 ### Next first command
 
 ```bash
-pnpm exec knip --reporter compact --max-show-issues=200
+pnpm exec knip --fix --fix-type exports --max-show-issues=200
 ```

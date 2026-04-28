@@ -2,15 +2,18 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Stage 1 baseline finalized: fixed invalid YAML in `.github/workflows/generate-manifest.yml`, unblocked `knip` scan, and generated machine-readable inventory at `.reports/knip-baseline.json`.
+**Last focus:** Stage 1 cleanup batch #2 completed: removed knip-reported unused dependencies/devDependencies across root/apps/packages, refreshed `.reports/knip-baseline.json`, and re-verified `type-check` + `knip`.
 
-**Next:** Execute first safe cleanup batch from knip baseline (unused files/exports in `apps/web`) with small deletions, verification, and atomic commits.
+**Next:** Continue Stage 1 with low-risk cleanup of knip `unused exports/types` in small atomic batches, with verification and commit after each batch.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-28 — Stage 1 cleanup batch #2: removed all knip-reported unused deps/devDeps (`apps/web`, `apps/admin`, `apps/api`, `packages/db`, `packages/ui`, root); refreshed `.reports/knip-baseline.json`; current knip payload is export/type-heavy.
 - 2026-04-28 — Stage 1 baseline report finalized: fixed workflow YAML parse blocker for `knip` and exported `.reports/knip-baseline.json` for cleanup planning.
+- 2026-04-28 — Cleared all active local host servers (`:3000/:3100/:5000`), pruned pnpm cache, and launched a clean new web host on `:3000` for fresh Lighthouse/perf runs.
+- 2026-04-28 — Ultra Lighthouse pass: added `/categories` SEO contract metadata+JSON-LD, disabled card prefetch fan-out, switched metadata icons/logo to `/icon`, added `/notifications` route to remove 404s, and improved SearchBar/Hero/MediaCard accessibility; production Lighthouse now `SEO 100`, `Best Practices 100`, `Accessibility 91`, `Performance 49`.
 - 2026-04-28 — Stage 1 bootstrap complete: installed `knip`/`biome`, added `biome.json` + `knip.json` + root scripts, captured initial static-cleanup debt, and documented current blocker (`knip` parse error on `.github/workflows/generate-manifest.yml`).
 - 2026-04-28 — Stage 0 baseline snapshot complete: counted repo files/dirs, captured runtime versions, verified `type-check`/`test` pass, logged current `build` failure (`MovieComments.tsx` no-misused-promises), and recorded missing `knip` in `CHECKLIST.md`.
 - 2026-04-28 — `/register` QA pass: page responds 200, API registration success/conflict verified, copy normalized to `Username`, removed inline style residue, and improved error fallback to include HTTP status when API error body is missing.
