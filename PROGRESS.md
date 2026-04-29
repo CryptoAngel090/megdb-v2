@@ -2,14 +2,15 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Completed full-file status classification pass (`KEEP`/`TRIM`/`SPLIT`/`MOVE`/`DELETE_CANDIDATE`) for all tracked files and exported registry artifacts to `reports/repo-map/` for safe cleanup sequencing.
+**Last focus:** Executed status-driven Batch #1: moved root diagnostic artifact (`grep-output.txt` → `reports/diagnostics/`) and removed low-risk `DELETE_CANDIDATE` diagnostics (`.playwright-mcp` snapshots + web Lighthouse JSON outputs) with no source/runtime code changes.
 
-**Next:** Execute status-driven cleanup in small batches (`MOVE` + artifact `DELETE_CANDIDATE` first), then rerun web gates before each commit.
+**Next:** Continue with Batch #2 (`TRIM` shortlist) using per-file dead-slice proofs and green verification gates before commit.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-29 — Batch #1 completed from status map: moved root diagnostic output into `reports/diagnostics/` and removed verified low-risk `DELETE_CANDIDATE` artifacts (`.playwright-mcp` pages + `apps/web/.seo/lighthouse-home-mobile*.json`), then reran SEO quick verification.
 - 2026-04-29 — Classified every tracked file into `KEEP/TRIM/SPLIT/MOVE/DELETE_CANDIDATE` and exported `reports/repo-map/registry-file-status-classification.csv` + `status-counts.csv` (411 keep, 31 trim, 39 split, 8 move, 13 delete-candidate) for rule-based cleanup execution.
 - 2026-04-29 — Batch #4 safe artifacts pass: deleted low-risk diagnostic files (Lighthouse JSON + layout snapshot PNG outputs), confirmed only artifact deletions in diff, and reran `pnpm --filter @repo/web verify:seo:quick` successfully.
 - 2026-04-29 — Ran automatic audit suite for cleanup candidates: `knip` returned clean, root `pnpm type-check` failed in `@repo/api` with existing module-mode TS1295/TS1287 errors, and `pnpm biome ci .` flagged 2 fixable issues (format in `apps/web/next-env.d.ts`, import ordering in `MoviesDiscoverPage.tsx`); exported no-incoming-edge candidate list to `reports/repo-map/no-incoming-edges-candidates.csv` and validated protected files via usage search.
