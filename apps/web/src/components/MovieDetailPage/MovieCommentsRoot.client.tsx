@@ -10,7 +10,7 @@ const MovieCommentsClient = dynamic(() => import('./MovieComments'), {
   loading: () => <div className={styles.lazyPlaceholder} aria-hidden />,
 })
 
-export interface MovieCommentsRootProps {
+interface MovieCommentsRootProps {
   tmdbMovieId: number
   movieTitle: string
   mediaKind: DetailMediaKind

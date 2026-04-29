@@ -2,14 +2,15 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Applied Biome safe auto-fixes repository-wide via `biome check --write` (format + organize imports), producing a large but expected style-only delta; auto-fix pass reported `103` fixed files with `13` remaining manual diagnostics.
+**Last focus:** Stage B batch #1 completed with conservative dead-code cleanup outside route/SEO core: removed unused helper files (`lib/featureFlags.ts`, `lib/shelfAnimations.ts`) and narrowed unused exports/types (`MediaCardSkeleton`, `MediaShelfSkeletonLightProps`, `MovieCommentsRootProps`) to internal scope; verification gates and detail chunk baseline remained stable.
 
-**Next:** Treat the Biome rewrite as an isolated style batch: commit separately, then reconfirm critical web gate (`verify:seo:quick`) and continue dependency cleanup only after style baseline is stable.
+**Next:** Continue Stage B in tiny batches (tmdb/discover/entity-adjacent only when confidence is high), keeping strict stop rules for route-group/metadata/SEO-script touched helpers.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-29 — Step 9 Stage B batch #1: removed 2 unused local helpers and 3 unused exported symbols/types; `@repo/web` build/type-check/SEO quick + `/movie/1318447` smoke stayed green, and detail route baseline held at `9 / 172,781` bytes.
 - 2026-04-29 — Biome style batch: ran `npx @biomejs/biome check --write .` (safe fixes), applied broad formatting/import-order updates (~103 files) and left 13 manual diagnostics for later non-style cleanup.
 - 2026-04-29 — Step 8 Stage A batch #1: removed unused root `babel-plugin-react-compiler`; verified green `@repo/web` type-check/build/SEO quick, and confirmed `knip` now reports only `@next/bundle-analyzer` as remaining unused devDependency candidate while existing Biome/Knip debt persists.
 - 2026-04-29 — Step 6 reinstall pass: removed all workspace `node_modules` (about `1526.8 MB`) and reinstalled from unchanged `pnpm-lock.yaml`; post-reinstall web type-check/build/SEO quick + `/movie/1318447` smoke are green, while `biome ci` and `knip` surfaced existing lint/dead-code debt.

@@ -1,7 +1,7 @@
 import shelfStyles from './MediaShelf.module.css'
 import lightStyles from './MediaShelfSkeletonLight.module.css'
 
-export interface MediaShelfSkeletonLightProps {
+interface MediaShelfSkeletonLightProps {
   count?: number
 }
 
