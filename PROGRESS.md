@@ -2,14 +2,15 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Executed status-driven Batch #2 (`TRIM` shortlist): removed a proven dead `NewsletterForm` error-state branch in `FooterClient` (state never set to `error`) while preserving current footer behavior.
+**Last focus:** Executed another Batch #2 `TRIM` micro-pass in footer: removed unused `isNew` flag from footer link model/data (`Footer.tsx`) since it is never rendered/consumed.
 
-**Next:** Continue `TRIM` on shortlist files with explicit dead-path evidence (one-file micro-batches) and verification gates before each commit.
+**Next:** Continue `TRIM` micro-batches on shortlist files where dead branches/properties are provably unreachable, keeping verification green between commits.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-29 — Batch #2 trim micro-pass #2: removed unused `isNew` field from `apps/web/src/components/Footer/Footer.tsx` footer link interface and data (no consumer path), then revalidated checks.
 - 2026-04-29 — Batch #2 trim micro-pass: in `apps/web/src/components/Footer/FooterClient.tsx` removed unreachable newsletter `error` status branch and narrowed state union to `idle|loading|success`; lint/SEO checks remain green.
 - 2026-04-29 — Batch #1 completed from status map: moved root diagnostic output into `reports/diagnostics/` and removed verified low-risk `DELETE_CANDIDATE` artifacts (`.playwright-mcp` pages + `apps/web/.seo/lighthouse-home-mobile*.json`), then reran SEO quick verification.
 - 2026-04-29 — Classified every tracked file into `KEEP/TRIM/SPLIT/MOVE/DELETE_CANDIDATE` and exported `reports/repo-map/registry-file-status-classification.csv` + `status-counts.csv` (411 keep, 31 trim, 39 split, 8 move, 13 delete-candidate) for rule-based cleanup execution.

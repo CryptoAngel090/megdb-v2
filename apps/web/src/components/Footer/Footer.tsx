@@ -17,7 +17,6 @@ import {
 interface FooterLink {
   href: string
   label: string
-  isNew?: boolean
 }
 
 interface FooterSection {
@@ -36,7 +35,7 @@ const FOOTER_SECTIONS: readonly FooterSection[] = [
       { href: '/cartoons', label: 'Cartoons' },
       { href: '/tvshows', label: 'TV Shows' },
       { href: '/categories', label: 'Categories' },
-      { href: '/movies/random', label: 'Random Pick', isNew: true },
+      { href: '/movies/random', label: 'Random Pick' },
     ],
   },
   {
