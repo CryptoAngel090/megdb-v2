@@ -1,0 +1,94 @@
+.watchTableSection {
+  margin-top: clamp(1.75rem, 4vw, 2.5rem);
+}
+
+.sectionHeading {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.45rem, 1.5vw, 0.6rem);
+  margin: 0 0 0.35rem;
+  font-size: clamp(1rem, 0.92rem + 0.35vw, 1.125rem);
+  font-weight: var(--weight-bold);
+  color: var(--color-primary);
+}
+
+.sectionBar {
+  width: 4px;
+  height: 1.25rem;
+  border-radius: 2px;
+  background: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.watchLead {
+  margin: 0 0 clamp(0.75rem, 2vw, 1rem);
+  font-size: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem);
+  line-height: var(--leading-mid);
+  color: color-mix(in oklab, var(--color-primary) 72%, white 28%);
+}
+
+.tableScroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-inline: var(--movie-gutter-safe-l);
+  border-radius: clamp(0.625rem, 2vw, 1rem);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem);
+}
+
+.table th {
+  text-align: left;
+  padding: clamp(0.5rem, 2vw, 0.75rem) clamp(0.65rem, 2.5vw, 1rem);
+  font-size: clamp(9px, 0.58rem + 0.15vw, 10px);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.table td {
+  padding: clamp(0.5rem, 2vw, 0.75rem) clamp(0.65rem, 2.5vw, 1rem);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: #fff;
+}
+
+.trAlt {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.typePill {
+  display: inline-block;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-pill);
+}
+
+.typeStream {
+  background: rgba(52, 211, 153, 0.15);
+  color: #6ee7b7;
+}
+
+.typeFree {
+  background: rgba(96, 165, 250, 0.15);
+  color: #93c5fd;
+}
+
+.typeRent {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fcd34d;
+}
+
+.typeBuy {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.5);
+}

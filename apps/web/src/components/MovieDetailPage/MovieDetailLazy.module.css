@@ -1,0 +1,41 @@
+@keyframes detailLazyPulse {
+  from {
+    opacity: 0.38;
+  }
+
+  to {
+    opacity: 0.72;
+  }
+}
+
+.lazySection {
+  border-radius: var(--radius-lg, 0.5rem);
+  background: var(--surface-raised);
+  min-block-size: clamp(4rem, 12vw, 7rem);
+  margin-block-end: var(--space-6);
+  animation: detailLazyPulse 1.1s ease-in-out infinite alternate;
+}
+
+.belowFoldStreamFallback {
+  margin-block-end: var(--space-6);
+}
+
+.belowFoldStreamFallbackInner {
+  border-radius: var(--radius-lg, 0.5rem);
+  background: var(--surface-raised);
+  min-block-size: clamp(3rem, 8vw, 5rem);
+  opacity: 0.45;
+  animation: detailLazyPulse 1.1s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lazySection {
+    animation: none;
+    opacity: 0.52;
+  }
+
+  .belowFoldStreamFallbackInner {
+    animation: none;
+    opacity: 0.42;
+  }
+}

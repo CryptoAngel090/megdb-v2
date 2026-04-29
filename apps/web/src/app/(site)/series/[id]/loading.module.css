@@ -1,0 +1,104 @@
+.root {
+  min-height: 100svh;
+  background: var(--bg);
+  padding-top: var(--layout-header-clearance);
+}
+
+.hero {
+  position: relative;
+  min-height: clamp(17.5rem, 82dvh, 57.5rem);
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+.shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0.03) 12%,
+    rgba(255, 255, 255, 0.08) 26%,
+    rgba(255, 255, 255, 0.03) 40%
+  );
+  background-size: 220% 100%;
+  animation: shimmerSlide 1.2s linear infinite;
+}
+
+.main {
+  max-width: min(72rem, 100%);
+  margin: 0 auto;
+  padding: clamp(1.5rem, 3.5vw, 2rem) clamp(0.75rem, 0.55rem + 2.4vw, 1.75rem)
+    clamp(2.5rem, 5vw, 3rem);
+}
+
+.firstFold {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1rem, 3vw, 1.5rem);
+}
+
+.posterSkWrap {
+  display: flex;
+  justify-content: center;
+}
+
+.posterSk {
+  position: relative;
+  width: clamp(136px, 42vw, 186px);
+  aspect-ratio: 2 / 3;
+  border-radius: 0.85rem;
+  border: 1px solid #2a2a2a;
+  background: #171717;
+  overflow: hidden;
+}
+
+.summarySk {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.line {
+  height: 0.95rem;
+  border-radius: 6px;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+}
+
+.lineTitle {
+  width: min(75%, 22rem);
+  height: 1.3rem;
+}
+
+.lineMeta {
+  width: min(52%, 14rem);
+}
+
+.lineBody {
+  width: min(94%, 44rem);
+}
+
+.lineBodyShort {
+  width: min(66%, 30rem);
+}
+
+@media (min-width: 48rem) {
+  .firstFold {
+    grid-template-columns: clamp(13rem, 18vw, 15rem) minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(1rem, 2.5vw, 1.65rem);
+  }
+
+  .posterSkWrap {
+    justify-content: flex-start;
+  }
+}
+
+@keyframes shimmerSlide {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}

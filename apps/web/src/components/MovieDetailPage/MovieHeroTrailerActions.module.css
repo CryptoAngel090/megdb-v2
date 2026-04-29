@@ -1,0 +1,141 @@
+.heroMobileTrailerActions {
+  display: none;
+}
+
+@media (max-width: 47.999rem) {
+  .heroMobileTrailerActions {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 100%;
+    margin-top: var(--space-2);
+    box-sizing: border-box;
+  }
+
+  .heroMobileTrailerPrimaryRow {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 0.5rem;
+    width: 100%;
+    flex: 1 1 100%;
+    box-sizing: border-box;
+  }
+
+  .heroMobileTrailerPrimaryRow > .heroMobileTrailerBtnPrimary,
+  .heroMobileTrailerPrimaryRow > .heroMobileTrailerBtnSecondary {
+    flex: 1 1 calc(50% - 0.25rem);
+    min-width: min(100%, 8.5rem);
+  }
+
+  .heroMobileTrailerActions .heroMobileTrailerBtnSecondary {
+    flex: 1 1 calc(50% - 0.25rem);
+    min-width: min(100%, 8.5rem);
+  }
+
+  .heroMobileTrailerActions .heroMobileTrailerPrimaryRowSingle > .heroMobileTrailerBtnSecondary {
+    flex: 1 1 100%;
+  }
+}
+
+.heroMobileTrailerIcon {
+  flex-shrink: 0;
+  width: var(--icon-inline-18);
+  height: var(--icon-inline-18);
+}
+
+.heroMobileTrailerBtnPrimary {
+  flex: 1;
+  min-width: min(5rem, 100%);
+  min-height: var(--touch-target);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2-5) var(--space-4-5);
+  border: none;
+  border-radius: var(--radius-button);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  font-family: inherit;
+  color: #fff;
+  cursor: pointer;
+  text-align: center;
+  text-shadow: 0 0.5px 0 rgba(0, 0, 0, 0.35);
+  background: var(--color-primary);
+  box-shadow: 0 2px 10px var(--color-primary-border);
+  transition:
+    filter 0.15s ease,
+    transform 0.1s ease;
+  -webkit-tap-highlight-color: color-mix(in oklab, var(--color-primary) 25%, transparent);
+}
+
+.heroMobileTrailerBtnPrimary:hover {
+  filter: brightness(1.12);
+}
+
+.heroMobileTrailerBtnPrimary:active {
+  transform: scale(0.98);
+}
+
+.heroMobileTrailerBtnPrimary:focus-visible {
+  outline: 2px solid rgba(250, 204, 21, 0.95);
+  outline-offset: 2px;
+}
+
+.heroMobileTrailerBtnSecondary {
+  flex: 1;
+  min-width: min(5rem, 100%);
+  min-height: var(--touch-target);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2-5) var(--space-4-5);
+  border-radius: var(--radius-button);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  font-family: inherit;
+  color: #f0f0f0;
+  text-decoration: none;
+  text-shadow: 0 0.5px 0 rgba(0, 0, 0, 0.45);
+  background: #3a3a3a;
+  border: 1px solid #4a4a4a;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    filter 0.15s ease,
+    transform 0.1s ease;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0.08);
+}
+
+.heroMobileTrailerBtnSecondary:hover {
+  background: #484848;
+  border-color: #5c5c5c;
+  filter: brightness(1.08);
+}
+
+.heroMobileTrailerBtnSecondary:active {
+  transform: scale(0.98);
+}
+
+.heroMobileTrailerBtnSecondary:focus-visible {
+  outline: 2px solid rgba(250, 204, 21, 0.95);
+  outline-offset: 2px;
+}
+
+.heroMobileTrailerBtnWatchlistOn {
+  background: color-mix(in oklab, var(--color-primary) 18%, transparent);
+  border-color: color-mix(in oklab, var(--color-primary) 55%, transparent);
+  color: #fff;
+}
+
+.heroMobileTrailerBtnWatchlistOn:hover {
+  background: color-mix(in oklab, var(--color-primary) 26%, transparent);
+  border-color: color-mix(in oklab, var(--color-primary) 70%, transparent);
+}

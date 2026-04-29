@@ -1,0 +1,631 @@
+/* ═══════════════════════════════════════════════════════════════════
+   HeaderV2 — MegDB 2026
+   Architecture:
+     Desktop  ≥1024px : Logo | Search | Nav (Movies·Series·Watchlist) | Actions
+     Tablet   768–1023: Logo | Search | [Bell · Menu]
+     Mobile   <768px  : Logo | [Bell · Menu]  →  Bottom Navigation (5 tabs)
+
+   Design principles:
+     · Token-only colors — no raw hex
+     · Desktop-first cascade (max-width queries)
+     · Scroll-aware: transparent → glass on scroll > 20px
+     · Bottom nav on mobile (app-like, not squeezed desktop)
+     · WCAG 2.2 AA: 44px tap targets, visible focus rings
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Root wrapper ──────────────────────────────────────────────── */
+.root {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: var(--z-header, 1000);
+  display: flex;
+  justify-content: center;
+  padding-block-start: calc(env(safe-area-inset-top, 0px) + 8px);
+  padding-inline: var(--space-4);
+  pointer-events: none;
+  transition: padding-block-start var(--duration-normal) var(--ease-out);
+}
+
+.rootScrolled {
+  padding-block-start: calc(env(safe-area-inset-top, 0px) + 4px);
+}
+
+/* ── Inner bar ─────────────────────────────────────────────────── */
+.inner {
+  pointer-events: auto;
+  inline-size: min(var(--container-max, 1440px), 100%);
+  block-size: 60px;
+
+  display: grid;
+  grid-template-columns: auto minmax(0, 380px) 1fr auto;
+  align-items: center;
+  gap: var(--space-2);
+  padding-inline: var(--space-3);
+
+  background: var(--bg);
+  border: 1px solid var(--glass-border-nav);
+  border-radius: var(--radius-pill);
+
+  transition:
+    background var(--duration-normal) var(--ease-out),
+    border-color var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out),
+    backdrop-filter var(--duration-normal) var(--ease-out);
+}
+
+/* Scrolled state: glass effect */
+.rootScrolled .inner {
+  background: var(--glass-bg-nav);
+  border-color: var(--glass-border-nav);
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  box-shadow:
+    0 1px 0 var(--border),
+    0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Logo ──────────────────────────────────────────────────────── */
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-block-size: 44px;
+  padding-inline-end: var(--space-2);
+  text-decoration: none;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  outline: none;
+}
+
+.logo:focus-visible {
+  outline: 2px solid var(--primary, var(--color-primary));
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* Logo icon: primary-colored rounded square, white M glyph */
+.logoIcon {
+  flex-shrink: 0;
+  color: var(--primary, var(--color-primary));
+  display: block;
+  transition: filter var(--duration-fast) var(--ease-out);
+}
+
+.logo:hover .logoIcon {
+  filter: drop-shadow(0 0 8px var(--color-primary-glow, rgba(192, 132, 252, 0.45)));
+}
+
+/* Wordmark */
+.logoWord {
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: var(--weight-extrabold);
+  letter-spacing: -0.035em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.logoMeg {
+  color: var(--text-primary);
+}
+
+.logoDB {
+  color: var(--primary, var(--color-primary));
+  letter-spacing: -0.02em;
+}
+
+/* ── Search slot ───────────────────────────────────────────────── */
+.search {
+  min-width: 0;
+}
+
+/* ── Desktop navigation ────────────────────────────────────────── */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.navList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.navItem {
+  position: relative;
+}
+
+.navItemWithMenu {
+  z-index: 2;
+}
+
+.navLink {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 38px;
+  padding-inline: 14px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.01em;
+  color: var(--text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out);
+}
+
+.navLink:hover {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+}
+
+.navLink:focus-visible {
+  outline: 2px solid var(--primary, var(--color-primary));
+  outline-offset: 2px;
+}
+
+/* Active nav link */
+.navLinkActive {
+  color: var(--text-primary);
+  background: color-mix(in oklab, var(--primary, var(--color-primary)) 13%, var(--surface-raised));
+}
+
+/* Active indicator dot */
+.navLinkActive::after {
+  content: '';
+  position: absolute;
+  inset-block-end: 4px;
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--primary, var(--color-primary));
+}
+
+/* ── Browse genres dropdown ────────────────────────────────────── */
+.browseMenu {
+  position: absolute;
+  inset-block-start: calc(100% + var(--space-2));
+  inset-inline-start: 0;
+  inline-size: min(38rem, 72vw);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-3);
+  animation: fadeIn var(--duration-fast) var(--ease-out) both;
+}
+
+.browseMenuTitle {
+  margin: 0 0 var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--text-small);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.browseMenuGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-1);
+}
+
+.browseMenuItem {
+  min-block-size: 36px;
+  padding-inline: var(--space-2);
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out);
+}
+
+.browseMenuItem:hover {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+}
+
+.browseMenuItem:focus-visible {
+  outline: 2px solid var(--primary, var(--color-primary));
+  outline-offset: 1px;
+}
+
+.browseMenuItemActive {
+  color: var(--primary, var(--color-primary));
+  background: color-mix(in oklab, var(--primary, var(--color-primary)) 12%, transparent);
+}
+
+/* ── Action buttons ────────────────────────────────────────────── */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* Shared icon button (bell, etc.) */
+.iconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 38px;
+  min-inline-size: 38px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.iconBtn:hover {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+.iconBtn:focus-visible {
+  outline: 2px solid var(--primary, var(--color-primary));
+  outline-offset: 2px;
+}
+
+.iconBtn:active {
+  transform: scale(0.93);
+}
+
+/* CTA auth buttons */
+.ctaBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 38px;
+  padding-inline: 18px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
+.ctaBtn:hover {
+  background: var(--surface-hover);
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+.ctaBtn:focus-visible {
+  outline: 2px solid var(--primary, var(--color-primary));
+  outline-offset: 2px;
+}
+
+/* Primary filled CTA */
+.ctaPrimary {
+  background: var(--primary, var(--color-primary));
+  border-color: var(--primary, var(--color-primary));
+  color: var(--on-primary, #fff);
+}
+
+.ctaPrimary:hover {
+  background: var(--primary-hover, var(--color-primary-hover));
+  border-color: var(--primary-hover, var(--color-primary-hover));
+}
+
+/* ── Mobile menu/hamburger button ──────────────────────────────── */
+.menuBtn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 38px;
+  min-inline-size: 38px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
+.menuBtn:hover {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
+}
+
+.menuBtn:focus-visible {
+  outline: 2px solid var(--primary, var(--color-primary));
+  outline-offset: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Mobile menu sheet (overlay drawer)
+   ═══════════════════════════════════════════════════════════════════ */
+.sheetBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-header, 1000) + 1);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: fadeIn var(--duration-normal) var(--ease-out) both;
+}
+
+.sheet {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+  inset-block-end: 0;
+  z-index: calc(var(--z-header, 1000) + 2);
+  inline-size: min(320px, 88vw);
+  background: var(--surface);
+  border-inline-start: 1px solid var(--border-strong);
+  padding-block-start: calc(env(safe-area-inset-top, 0px) + 72px);
+  padding-block-end: calc(env(safe-area-inset-bottom, 0px) + 24px);
+  padding-inline: var(--space-4);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  animation: slideInRight var(--duration-normal) var(--ease-out) both;
+}
+
+.sheetLink {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-block-size: 52px;
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: var(--weight-semibold);
+  color: var(--text-secondary);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out);
+}
+
+.sheetLink:hover {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+}
+
+.sheetLinkActive {
+  color: var(--primary, var(--color-primary));
+  background: color-mix(in oklab, var(--primary, var(--color-primary)) 10%, transparent);
+}
+
+.sheetDivider {
+  height: 1px;
+  background: var(--border);
+  margin-block: var(--space-2);
+}
+
+.sheetAuthGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-block-start: auto;
+}
+
+.sheetAuthBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 48px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: var(--weight-semibold);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
+.sheetAuthSignIn {
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.sheetAuthSignIn:hover {
+  background: var(--surface-hover);
+}
+
+.sheetAuthSignUp {
+  border: 1px solid transparent;
+  background: var(--primary, var(--color-primary));
+  color: var(--on-primary, #fff);
+}
+
+.sheetAuthSignUp:hover {
+  background: var(--primary-hover, var(--color-primary-hover));
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Bottom navigation (mobile only — ≤767px)
+   5 tabs: Home · Search · Browse · Watchlist · Profile
+   ═══════════════════════════════════════════════════════════════════ */
+.bottomNav {
+  display: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   RESPONSIVE — tablet (≤1023px)
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 1023px) {
+  .root {
+    padding-inline: var(--space-3);
+  }
+
+  .inner {
+    grid-template-columns: auto 1fr auto;
+    block-size: 56px;
+  }
+
+  /* Hide desktop nav and text-CTAs — show menu button */
+  .nav,
+  .ctaBtn {
+    display: none;
+  }
+
+  .menuBtn {
+    display: inline-flex;
+  }
+
+  .browseMenu {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   RESPONSIVE — mobile (≤767px)
+   Top bar: Logo + actions only (no inline search)
+   Bottom nav takes over navigation + search
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+  .root {
+    padding-inline: var(--space-2);
+    padding-block-start: calc(env(safe-area-inset-top, 0px) + 6px);
+  }
+
+  .inner {
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+    block-size: 52px;
+    padding-inline: var(--space-3);
+    border-radius: var(--radius-xl);
+  }
+
+  /* Hide search bar from top bar on mobile — lives in bottom nav */
+  .search {
+    display: none;
+  }
+
+  /* Show bottom navigation */
+  .bottomNav {
+    display: flex;
+    position: fixed;
+    inset-block-end: 0;
+    inset-inline: 0;
+    z-index: var(--z-header, 1000);
+    align-items: stretch;
+    background: var(--bg);
+    border-block-start: 1px solid var(--border-strong);
+    padding-block-end: max(env(safe-area-inset-bottom, 0px), 4px);
+    backdrop-filter: blur(16px) saturate(1.3);
+    -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  }
+}
+
+/* ── Bottom nav items ──────────────────────────────────────────── */
+.bnItem {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-block-size: 52px;
+  padding-inline: var(--space-1);
+  color: var(--text-muted);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--duration-fast) var(--ease-out);
+  border-radius: 0;
+}
+
+.bnItem:active {
+  background: var(--surface-hover);
+}
+
+.bnItemActive {
+  color: var(--primary, var(--color-primary));
+}
+
+.bnLabel {
+  font-size: 10px;
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* ── Animations ────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* ── Reduced motion ────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .sheetBackdrop,
+  .sheet {
+    animation: none;
+  }
+
+  .iconBtn,
+  .ctaBtn,
+  .navLink,
+  .bnItem,
+  .inner {
+    transition: none;
+  }
+}

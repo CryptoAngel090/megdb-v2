@@ -1,0 +1,126 @@
+.faq {
+  max-width: 58rem;
+  margin-inline: auto;
+  margin-top: clamp(1.75rem, 4.5vw, 2.75rem);
+}
+
+.sectionHeading {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.45rem, 1.5vw, 0.6rem);
+  margin: 0 0 0.35rem;
+  font-size: clamp(1rem, 0.92rem + 0.35vw, 1.125rem);
+  font-weight: var(--weight-bold);
+  color: var(--color-primary);
+}
+
+.sectionBar {
+  width: 4px;
+  height: 1.25rem;
+  border-radius: 2px;
+  background: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.faqList {
+  border-radius: clamp(0.625rem, 2vw, 1rem);
+  border: 1px solid color-mix(in oklab, var(--poster-solid-tone, #101820) 72%, white 10%);
+  background: color-mix(in oklab, #0a0c0d 48%, var(--poster-solid-tone, #101820) 52%);
+  overflow: hidden;
+}
+
+.faqDetails {
+  background: color-mix(in oklab, #0a0c0d 56%, var(--poster-solid-tone, #101820) 44%);
+  border-bottom: 1px solid color-mix(in oklab, var(--poster-solid-tone, #101820) 74%, white 9%);
+}
+
+.faqDetails:last-child {
+  border-bottom: 0;
+}
+
+.faqDetails[open] {
+  background: color-mix(in oklab, #0a0c0d 44%, var(--poster-solid-tone, #101820) 56%);
+}
+
+.faqSummaryBtn {
+  list-style: none;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: clamp(0.95rem, 2.5vw, 1.15rem) clamp(1rem, 3vw, 1.25rem);
+}
+
+.faqSummaryBtn::-webkit-details-marker {
+  display: none;
+}
+
+.faqSummaryBtn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+.faqQ {
+  margin: 0;
+  font-size: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem);
+  font-weight: var(--weight-semibold);
+  color: rgba(255, 255, 255, 0.85);
+  line-height: var(--leading-snug);
+}
+
+.faqToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  flex-shrink: 0;
+  transition:
+    transform 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.faqDetails[open] .faqToggle {
+  transform: rotate(45deg);
+  color: #fff;
+  border-color: color-mix(in oklab, var(--color-primary) 65%, transparent);
+}
+
+.faqContent {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.28s ease,
+    opacity 0.2s ease;
+  padding: 0 clamp(1rem, 3vw, 1.25rem) clamp(0.95rem, 2.5vw, 1.15rem);
+}
+
+.faqDetails[open] .faqContent {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.faqContentInner {
+  overflow: hidden;
+}
+
+.faqA {
+  margin: 0;
+  font-size: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem);
+  line-height: var(--leading-normal);
+  color: rgba(255, 255, 255, 0.45);
+  max-width: 65ch;
+}

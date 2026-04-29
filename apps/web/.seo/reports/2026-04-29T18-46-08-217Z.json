@@ -2,16 +2,16 @@
   "version": 1,
   "suite": "verify:seo-quick",
   "ok": true,
-  "startedAt": "2026-04-29T22:07:44.596Z",
-  "finishedAt": "2026-04-29T22:07:50.827Z",
-  "elapsedMs": 6231,
+  "startedAt": "2026-04-29T18:46:02.481Z",
+  "finishedAt": "2026-04-29T18:46:08.217Z",
+  "elapsedMs": 5736,
   "checks": [
     {
       "id": "contracts",
       "command": "pnpm run verify:seo:contracts",
       "ok": true,
       "exitCode": 0,
-      "elapsedMs": 1088,
+      "elapsedMs": 1095,
       "stdout": "> @repo/web@0.1.0 verify:seo:contracts C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-contracts.mjs\n\nSEO contracts OK: 35 route files checked.",
       "stderr": ""
     },
@@ -20,7 +20,7 @@
       "command": "pnpm run verify:jsonld",
       "ok": true,
       "exitCode": 0,
-      "elapsedMs": 1039,
+      "elapsedMs": 984,
       "stdout": "> @repo/web@0.1.0 verify:jsonld C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-jsonld-coverage.mjs\n\nJSON-LD coverage OK: 34 page.tsx files checked.",
       "stderr": ""
     },
@@ -29,7 +29,7 @@
       "command": "pnpm run verify:seo:infra",
       "ok": true,
       "exitCode": 0,
-      "elapsedMs": 1049,
+      "elapsedMs": 931,
       "stdout": "> @repo/web@0.1.0 verify:seo:infra C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-infra.mjs\n\nSEO infra OK: 10 files + layout metadata invariants checked.",
       "stderr": ""
     },
@@ -38,7 +38,7 @@
       "command": "pnpm run verify:seo:noindex",
       "ok": true,
       "exitCode": 0,
-      "elapsedMs": 972,
+      "elapsedMs": 923,
       "stdout": "> @repo/web@0.1.0 verify:seo:noindex C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-noindex-robots.mjs\n\nSEO noindex/robots OK: 8 disallow rules + noindex route invariants checked.",
       "stderr": ""
     },
@@ -47,7 +47,7 @@
       "command": "pnpm run verify:seo:sitemap",
       "ok": true,
       "exitCode": 0,
-      "elapsedMs": 1003,
+      "elapsedMs": 869,
       "stdout": "> @repo/web@0.1.0 verify:seo:sitemap C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-sitemap-contract.mjs\n\nSEO sitemap contract OK: 22 required routes and 12 exclusions checked.",
       "stderr": ""
     },
@@ -56,7 +56,7 @@
       "command": "pnpm run verify:seo:canonical",
       "ok": true,
       "exitCode": 0,
-      "elapsedMs": 1076,
+      "elapsedMs": 931,
       "stdout": "> @repo/web@0.1.0 verify:seo:canonical C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-canonical-contract.mjs\n\nSEO canonical contract OK: 4 discover canonical modules verified.",
       "stderr": ""
     }

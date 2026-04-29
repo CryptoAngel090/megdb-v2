@@ -1,35 +1,35 @@
 {
   "version": 1,
   "suite": "verify:seo-quick",
-  "ok": true,
-  "startedAt": "2026-04-29T22:07:44.596Z",
-  "finishedAt": "2026-04-29T22:07:50.827Z",
-  "elapsedMs": 6231,
+  "ok": false,
+  "startedAt": "2026-04-29T17:29:25.629Z",
+  "finishedAt": "2026-04-29T17:29:34.627Z",
+  "elapsedMs": 8997,
   "checks": [
     {
       "id": "contracts",
       "command": "pnpm run verify:seo:contracts",
-      "ok": true,
-      "exitCode": 0,
-      "elapsedMs": 1088,
-      "stdout": "> @repo/web@0.1.0 verify:seo:contracts C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-contracts.mjs\n\nSEO contracts OK: 35 route files checked.",
-      "stderr": ""
+      "ok": false,
+      "exitCode": 1,
+      "elapsedMs": 1690,
+      "stdout": "> @repo/web@0.1.0 verify:seo:contracts C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-contracts.mjs\n\n ELIFECYCLE  Command failed with exit code 1.",
+      "stderr": "SEO contracts failed: missing metadata contract in 1 file(s):\n- C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\(site)\\person\\[id]\\page.tsx\nSEO contracts failed: missing canonical contract in 1 file(s):\n- C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\(site)\\person\\[id]\\page.tsx\nSEO contracts failed: missing social contract in 1 file(s):\n- C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\(site)\\person\\[id]\\page.tsx"
     },
     {
       "id": "jsonld",
       "command": "pnpm run verify:jsonld",
-      "ok": true,
-      "exitCode": 0,
-      "elapsedMs": 1039,
-      "stdout": "> @repo/web@0.1.0 verify:jsonld C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-jsonld-coverage.mjs\n\nJSON-LD coverage OK: 34 page.tsx files checked.",
-      "stderr": ""
+      "ok": false,
+      "exitCode": 1,
+      "elapsedMs": 1503,
+      "stdout": "> @repo/web@0.1.0 verify:jsonld C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-jsonld-coverage.mjs\n\n ELIFECYCLE  Command failed with exit code 1.",
+      "stderr": "JSON-LD coverage check failed. Missing structured data wiring in 1 page(s):\n- C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\(site)\\person\\[id]\\page.tsx"
     },
     {
       "id": "infra",
       "command": "pnpm run verify:seo:infra",
       "ok": true,
       "exitCode": 0,
-      "elapsedMs": 1049,
+      "elapsedMs": 1406,
       "stdout": "> @repo/web@0.1.0 verify:seo:infra C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-infra.mjs\n\nSEO infra OK: 10 files + layout metadata invariants checked.",
       "stderr": ""
     },
@@ -38,7 +38,7 @@
       "command": "pnpm run verify:seo:noindex",
       "ok": true,
       "exitCode": 0,
-      "elapsedMs": 972,
+      "elapsedMs": 1417,
       "stdout": "> @repo/web@0.1.0 verify:seo:noindex C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-noindex-robots.mjs\n\nSEO noindex/robots OK: 8 disallow rules + noindex route invariants checked.",
       "stderr": ""
     },
@@ -47,7 +47,7 @@
       "command": "pnpm run verify:seo:sitemap",
       "ok": true,
       "exitCode": 0,
-      "elapsedMs": 1003,
+      "elapsedMs": 1467,
       "stdout": "> @repo/web@0.1.0 verify:seo:sitemap C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-sitemap-contract.mjs\n\nSEO sitemap contract OK: 22 required routes and 12 exclusions checked.",
       "stderr": ""
     },
@@ -56,7 +56,7 @@
       "command": "pnpm run verify:seo:canonical",
       "ok": true,
       "exitCode": 0,
-      "elapsedMs": 1076,
+      "elapsedMs": 1510,
       "stdout": "> @repo/web@0.1.0 verify:seo:canonical C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-canonical-contract.mjs\n\nSEO canonical contract OK: 4 discover canonical modules verified.",
       "stderr": ""
     }
