@@ -13,7 +13,7 @@ interface NavLink {
   icon: React.ReactNode
 }
 
-interface HeaderMobileDrawerProps {
+export interface HeaderMobileDrawerProps {
   menuOpen: boolean
   drawerRef: RefObject<HTMLDivElement | null>
   drawerSearchContainerRef: RefObject<HTMLDivElement | null>

@@ -2,14 +2,17 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Split `MoviesDiscoverPage` (~1471 lines) by responsibility: `*.types.ts`, `*.constants.ts`, `*.helpers.ts`, `*.hooks.ts`, `MoviesDiscoverPageChrome` / `DesktopFilters` / `MobileFiltersModal` / `Results` / `VirtuosoGrid`; main `MoviesDiscoverPage.tsx` is now ~245 lines (orchestration only). `pnpm exec tsc --noEmit` in `apps/web` green.
+**Last focus:** `Header.tsx` slim orchestration (~20 lines): all state/effects in `Header.hooks.ts` (`useHeaderShell`), desktop chrome via `HeaderDesktopBar` (mega-menu uses `HeaderMegaMenuPanel`), mobile via `HeaderMobileDrawer`. `pnpm exec tsc --noEmit` in `apps/web` green.
 
-**Next:** Optional split for `MoviesDiscoverPageMobileFiltersModal.tsx` (~556 lines) or CSS slice of `MovieDetailPage.module.css`; optional `next build` smoke.
+**Next:** Optional split `MoviesDiscoverPageMobileFiltersModal.tsx` or `MovieDetailPage.module.css`; optional `next build` smoke.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-30 — Header orchestration: `useHeaderShell` in `Header.hooks.ts` + `HeaderDesktopBar` wiring; `Header.tsx` ~20 lines (under 250 target).
+- 2026-04-30 — Local prod host: cleared `apps/web/.next`, `.turbo`, `apps/web/.turbo`, `apps/web/node_modules/.cache`; stopped listeners on 3000/3100/3400/3401/5000/8080; `pnpm --filter @repo/web build` OK; `next start` on **http://localhost:3100** (HTTP 200).
+- 2026-04-30 — Header split: `HeaderMobileDrawer` + `HeaderMegaMenuPanel` + `Header.constants.ts`; removed duplicated drawer/mega-menu markup from `Header.tsx`.
 - 2026-04-30 — Discover page split: extracted types/constants/helpers/hooks + `Chrome`/`Results`/Virtuoso wrappers from `MoviesDiscoverPage.tsx` (main file now under 250 lines).
 - 2026-04-30 — TMDB entry: deleted monolith body of `tmdb.ts`; file is now re-exports from `tmdb.facade.ts` only (split `tmdb.*` modules are the source of truth).
 - 2026-04-30 — Git: committed **MegDB v1** on branch `chore/safety-checkpoint-start` (trailer open handshake, YouTube `frame-src`/`child-src` in middleware, PROGRESS). Unstaged: `tsbuildinfo`, `.seo/reports/*` dumps, other `??` facades/splits.
