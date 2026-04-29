@@ -407,12 +407,6 @@
   font-weight: 700;
 }
 
-.newsletterError {
-  font-size: 12px;
-  color: var(--primary);
-  margin: 0;
-}
-
 /* ── Nav outer + column dividers ─────────────────────── */
 
 .navOuter {

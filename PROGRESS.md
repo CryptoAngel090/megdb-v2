@@ -2,14 +2,15 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Executed another Batch #2 `TRIM` micro-pass in footer: removed unused `isNew` flag from footer link model/data (`Footer.tsx`) since it is never rendered/consumed.
+**Last focus:** Executed Batch #2 `TRIM` micro-pass #3: removed dead `newsletterError` CSS block from `Footer.module.css` after the corresponding footer error-state render path was removed.
 
-**Next:** Continue `TRIM` micro-batches on shortlist files where dead branches/properties are provably unreachable, keeping verification green between commits.
+**Next:** Continue `TRIM` micro-batches with explicit dead-reference proof (`rg` + component usage) before each commit.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-29 — Batch #2 trim micro-pass #3: deleted unused `.newsletterError` style in `apps/web/src/components/Footer/Footer.module.css` (no remaining component reference), then reran verification.
 - 2026-04-29 — Batch #2 trim micro-pass #2: removed unused `isNew` field from `apps/web/src/components/Footer/Footer.tsx` footer link interface and data (no consumer path), then revalidated checks.
 - 2026-04-29 — Batch #2 trim micro-pass: in `apps/web/src/components/Footer/FooterClient.tsx` removed unreachable newsletter `error` status branch and narrowed state union to `idle|loading|success`; lint/SEO checks remain green.
 - 2026-04-29 — Batch #1 completed from status map: moved root diagnostic output into `reports/diagnostics/` and removed verified low-risk `DELETE_CANDIDATE` artifacts (`.playwright-mcp` pages + `apps/web/.seo/lighthouse-home-mobile*.json`), then reran SEO quick verification.
