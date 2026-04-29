@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import styles from './error.module.css'
 
-export default function Error({
+export default function GlobalError({
   error,
   reset,
 }: {

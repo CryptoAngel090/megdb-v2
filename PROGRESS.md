@@ -2,14 +2,15 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Stage D boundary cleanup pass completed: minimized `@repo/types` public surface to `MediaType` only after usage audit (active imports are web-only `MediaType`), with green web gates and unchanged detail-route baseline.
+**Last focus:** Step 12 final validation pass completed after a dedicated Biome debt-fix batch (non-cleanup logic only): gates are green for `@repo/web` type-check, `biome ci`, `knip` (with existing config hints only), web build, SEO quick, `/movie/1318447` smoke (HTTP 200), and detail route chunk baseline remained stable at `9 / 172,781`.
 
-**Next:** Choose whether to continue Stage C abandoned-experiment contours or pause cleanup at current milestone; if continuing, keep one contour per commit with strict route/SEO-core isolation.
+**Next:** Decide whether to checkpoint this Step 12 validation/debt-fix batch in a separate commit or keep it uncommitted while moving to the next targeted cleanup contour.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-29 — Step 12 final validation: fixed Biome debt blockers (`useAwait` wrappers, empty noop blocks, naming/format lints) without changing cleanup scope, then validated `type-check` + `biome ci` + `knip` + `@repo/web build` + `verify:seo:quick` + smoke `/movie/1318447` (200); detail baseline stayed `9 / 172,781`.
 - 2026-04-29 — Step 11 Stage D: reduced `packages/types/src/index.ts` to `MediaType` public export only; `knip` stayed clean and web type-check/build/SEO quick + smoke/detail-baseline remained stable (`9 / 172,781`).
 - 2026-04-29 — Step 10 Stage C contour #1: removed abandoned detail-shell experiment wiring (`detailShellOptimizationEnabled` prop path + middleware `x-pathname` header write); build/SEO quick/smoke/detail-baseline all remained stable (`9 / 172,781`).
 - 2026-04-29 — Step 9 Stage B batch #3: added audited `knip` ignores for `MovieDetailPageLite`, `MovieHeroBackdropCarousel`, and `@next/bundle-analyzer` (config-backed false positives); `knip` is now clean and web/type/build/SEO/smoke/detail-baseline checks stayed green (`9 / 172,781`).

@@ -30,7 +30,7 @@ function GalleryIcon({ className }: { className?: string | undefined }) {
   )
 }
 
-function CloseIcon({ className }: { className?: string | undefined }) {
+function _CloseIcon({ className }: { className?: string | undefined }) {
   return (
     <svg
       className={className}

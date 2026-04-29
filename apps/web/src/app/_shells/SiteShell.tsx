@@ -12,9 +12,7 @@ export function SiteShell({ children }: SiteShellProps) {
     <>
       <DesignThemeProvider />
       {process.env.NODE_ENV !== 'production' && <PerformanceMonitor />}
-      <AppChrome>
-        {children}
-      </AppChrome>
+      <AppChrome>{children}</AppChrome>
     </>
   )
 }

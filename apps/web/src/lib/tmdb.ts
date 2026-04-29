@@ -4630,7 +4630,7 @@ export function discoverTvShowsFetchKey(state: TvShowsDiscoverState): string {
   return e.map(([k, v]) => `${k}=${v}`).join('&')
 }
 
-export async function discoverTvShowsBrowse(
+export function discoverTvShowsBrowse(
   input: DiscoverSeriesBrowseInput,
   mode: 'discover' | 'trending',
   comingYear?: number
@@ -4649,7 +4649,7 @@ export function mapTmdbTvShowRowToShelfItem(m: TmdbRawMedia): ShelfItem {
   }
 }
 
-export async function enrichTvShowsShelfRuntime(items: ShelfItem[]): Promise<ShelfItem[]> {
+export function enrichTvShowsShelfRuntime(items: ShelfItem[]): Promise<ShelfItem[]> {
   return enrichSeriesShelfRuntime(items)
 }
 

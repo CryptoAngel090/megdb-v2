@@ -12,7 +12,7 @@ export function usePrefersReducedMotion(): boolean {
 }
 
 function subscribe(onChange: () => void): () => void {
-  if (typeof window === 'undefined') return () => {}
+  if (typeof window === 'undefined') return () => void 0
   const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
   mq.addEventListener('change', onChange)
   return () => mq.removeEventListener('change', onChange)

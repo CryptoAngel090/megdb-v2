@@ -54,12 +54,10 @@ export const movieRouter = router({
 
     return result.data
   }),
-  ensureVisualMetadata: publicProcedure
-    .input(ensureVisualMetadataSchema)
-    .mutation(async ({ input }) => {
-      return ensureMovieVisualMetadata({
-        tmdbMovieId: input.tmdbMovieId,
-        tmdbBackdropPath: input.tmdbBackdropPath ?? null,
-      })
-    }),
+  ensureVisualMetadata: publicProcedure.input(ensureVisualMetadataSchema).mutation(({ input }) => {
+    return ensureMovieVisualMetadata({
+      tmdbMovieId: input.tmdbMovieId,
+      tmdbBackdropPath: input.tmdbBackdropPath ?? null,
+    })
+  }),
 })

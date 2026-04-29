@@ -6,5 +6,3 @@ export const appRouter = router({
   users: userRouter,
   movies: movieRouter,
 })
-
-type AppRouter = typeof appRouter

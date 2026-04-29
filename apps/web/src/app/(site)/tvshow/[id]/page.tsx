@@ -8,7 +8,7 @@ type Props = {
   params: Promise<{ id: string }>
 }
 
-export async function generateMetadata(props: Props) {
+export function generateMetadata(props: Props) {
   return generateTvSeriesDetailMetadata(props, 'tvshow')
 }
 

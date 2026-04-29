@@ -433,10 +433,10 @@ function SettingsTab({ user, onUserUpdate }: { user: User; onUserUpdate: (u: Use
       <div className={`${styles.settingsCard} ${styles.dangerZone}`}>
         <h3 className={`${styles.settingsTitle} ${styles.dangerTitle}`}>Danger Zone</h3>
         <div className={styles.dangerActions}>
-          <Button type="button" variant="secondary" size="md" onClick={() => {}}>
+          <Button type="button" variant="secondary" size="md" onClick={() => void 0}>
             Change Password
           </Button>
-          <Button type="button" variant="danger" size="md" onClick={() => {}}>
+          <Button type="button" variant="danger" size="md" onClick={() => void 0}>
             Delete Account
           </Button>
         </div>

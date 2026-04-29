@@ -533,7 +533,7 @@ export function MediaCard({
   return <div className={styles.cardTapWrapper}>{inner}</div>
 }
 
-function MediaCardSkeleton({ cardSize = 'md' }: { cardSize?: CardSizeKey }) {
+function _MediaCardSkeleton({ cardSize = 'md' }: { cardSize?: CardSizeKey }) {
   return (
     <div
       className={`${styles.skeletonRoot} ${SKELETON_CARD_SIZE_MOD[cardSize]}`}

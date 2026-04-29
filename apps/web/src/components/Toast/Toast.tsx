@@ -37,7 +37,7 @@ const ToastContext = createContext<ToastContextValue | null>(null)
 export function useToast(): ToastContextValue {
   const ctx = useContext(ToastContext)
   if (!ctx) {
-    const noop = () => {}
+    const noop = () => void 0
     return {
       show: noop,
       success: noop,
