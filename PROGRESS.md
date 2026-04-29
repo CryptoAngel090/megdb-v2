@@ -2,14 +2,18 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Step 0 ultra-safe baseline freeze completed: created branch `chore/ultra-safe-cleanup`, validated web gates (`type-check`, `build`, `verify:seo:quick`), confirmed production smoke-check `GET /movie/1318447 = HTTP 200`, and captured detail-route chunk baseline `9 chunks / 172,354 bytes` (`shared 58,025`, `first-party 114,329`).
+**Last focus:** Re-established clean post-purge baseline on rebuilt artifacts: `@repo/web` gates are green (`type-check`, `build`, `verify:seo:quick`), `/movie/1318447` smoke is HTTP 200, and deterministic detail-route baseline is stable at `9 chunks / 172,781 bytes` (`58,025 shared / 114,756 first-party`).
 
-**Next:** Start cleanup only from this frozen baseline; if any hidden regression appears (detail routes/SEO/page shell), immediately roll back to this checkpoint and restore stability before continuing.
+**Next:** Move to isolated dependency-layer cleanup planning (`node_modules`/store) with strict before/after snapshots and no lockfile changes unless explicitly approved.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-29 — Step 3 clean baseline pass: reran key local checks after cache purge (`@repo/web` type-check/build/SEO quick all green), reconfirmed `/movie/1318447` smoke 200, and fixed post-purge deterministic detail baseline at `9 / 172,781` bytes.
+- 2026-04-29 — Step 2 completed: cleaned rebuildable cache/build artifacts only (`apps/admin/.next`, all `.turbo`, `apps/web/.seo/reports` stale history, `lighthouse-runs`, temp outputs), reclaimed ~170.8 MB pre-build, passed `@repo/web` type-check/build/SEO quick, smoke-checked `/movie/1318447` (200), and measured `/(detail)/movie/[id]/page` at `9 / 172,781` bytes (`58,025 shared / 114,756 first-party`).
+- 2026-04-29 — Ultra-safe cleanup Step 1 done: removed `apps/web/.next` (183 MB), validated green `@repo/web` gates (`type-check`, `verify:seo:quick`, `build`), and confirmed localhost smoke on `:3100` (`/series` + `/movie/1318447` -> 200) after controlled server restart from `apps/web`.
+- 2026-04-29 — Resolved localhost `ChunkLoadError`/MIME fallback on `:3100`: `ServiceWorkerRegistration` now unregisters SW + clears `megdb-*` caches on localhost, `sw.js` uses network-first for `/_next/static/chunks/*`; rebuilt/restarted web and smoke-verified `/series` + `/movie/1318447` with HTTP 200.
 - 2026-04-29 — Re-ran freeze baseline gates successfully (`@repo/web` type-check/build/verify:seo:quick), measured `/(detail)/movie/[id]/page` at `9 / 172,354` bytes, and verified production `/movie/1318447` HTTP 200; created safety branch `chore/ultra-safe-cleanup` for rollback-ready cleanup start.
 - 2026-04-29 — Final CSP style fix: removed nonce from `style-src` (`style-src 'self' 'unsafe-inline'`) because browsers ignore `unsafe-inline` when nonce is present; rebuilt and restarted `apps/web` on `:3100`, verified live header reflects new policy.
 - 2026-04-29 — Stage 17 CDN cache pass: set `Cache-Control` for `/_next/static/*` (`max-age=31536000, immutable`), `/images/*` (`max-age=2592000`), `/api/movies/*` (`s-maxage=3600, stale-while-revalidate=86400`), and HTML routes via middleware (`s-maxage=300, stale-while-revalidate=600`); web type-check green.
