@@ -2,14 +2,17 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Safety checkpoint start fixed and validated on dedicated branch `chore/safety-checkpoint-start`: green `@repo/web` `type-check`, `build`, `verify:seo:quick`, smoke `GET /movie/1318447` (`HTTP 200`), and measured detail route baseline `/(detail)/movie/[id]/page` at `9 / 172,781` bytes (`58,025 shared / 114,756 first-party`).
+**Last focus:** Safe Batch #4 diagnostic cleanup completed: removed low-risk lighthouse/layout snapshot artifacts only (root `lh-*.json`, `apps/web/layout-check-*.png`, `apps/web/.seo/lh-movie-1318447.json`, `reports/lh-movie-ultra*.json`) with no source/runtime changes, and re-validated `@repo/web verify:seo:quick` (green).
 
-**Next:** Create checkpoint commit on `chore/safety-checkpoint-start` with current verified baselines and mandatory gate list, then proceed to Contour #2 structural cleanup.
+**Next:** Plan next medium-risk cleanup contour from audit candidates (unused exports/helpers/types) with per-file incoming-edge proof before any removal.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-29 — Batch #4 safe artifacts pass: deleted low-risk diagnostic files (Lighthouse JSON + layout snapshot PNG outputs), confirmed only artifact deletions in diff, and reran `pnpm --filter @repo/web verify:seo:quick` successfully.
+- 2026-04-29 — Ran automatic audit suite for cleanup candidates: `knip` returned clean, root `pnpm type-check` failed in `@repo/api` with existing module-mode TS1295/TS1287 errors, and `pnpm biome ci .` flagged 2 fixable issues (format in `apps/web/next-env.d.ts`, import ordering in `MoviesDiscoverPage.tsx`); exported no-incoming-edge candidate list to `reports/repo-map/no-incoming-edges-candidates.csv` and validated protected files via usage search.
+- 2026-04-29 — Built repository map artifacts in `reports/repo-map`: exported tracked file/folder lists, per-file line counts, import/export inventories, import graph edges, curated critical entrypoints, and full role/risk/size/usage registry for cleanup planning.
 - 2026-04-29 — Created safety branch `chore/safety-checkpoint-start` and ran mandatory start gates: `@repo/web` `type-check`, `build`, `verify:seo:quick`, smoke `/movie/1318447` (`HTTP 200`), plus route chunk measure for `/(detail)/movie/[id]/page` (`9 / 172,781`; shared `58,025`, first-party `114,756`).
 - 2026-04-29 — Reintroduced `VirtuosoGrid` for `MoviesDiscoverPage` with strict wrapper components (`List` + `Item`) and overscan restore; removed temporary manual `Load more` grid path, rebuilt clean from `.next`, and restarted `next start` on `:3100`.
 - 2026-04-29 — Final fix for `/movies` thin cards: replaced `VirtuosoGrid` render in `MoviesDiscoverPage` with regular CSS grid mapping + `Load more` control; preserved existing fetch/pagination logic and confirmed web type-check/lints are green.
