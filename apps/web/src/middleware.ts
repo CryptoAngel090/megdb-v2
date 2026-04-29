@@ -4,7 +4,6 @@ import { NextResponse } from 'next/server'
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   const requestHeaders = new Headers(request.headers)
-  requestHeaders.set('x-pathname', pathname)
   const nonce = btoa(crypto.randomUUID())
   const hostname = request.nextUrl.hostname
   const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1'

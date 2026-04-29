@@ -5,15 +5,14 @@ import { PerformanceMonitor } from '@/components/PerformanceMonitor/PerformanceM
 
 interface SiteShellProps {
   children: ReactNode
-  detailShellOptimizationEnabled: boolean
 }
 
-export function SiteShell({ children, detailShellOptimizationEnabled }: SiteShellProps) {
+export function SiteShell({ children }: SiteShellProps) {
   return (
     <>
       <DesignThemeProvider />
       {process.env.NODE_ENV !== 'production' && <PerformanceMonitor />}
-      <AppChrome detailShellOptimizationEnabled={detailShellOptimizationEnabled}>
+      <AppChrome>
         {children}
       </AppChrome>
     </>

@@ -2,14 +2,15 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Stage B batch #3 executed as mini-audit/config pass (no risky deletions): confirmed likely Knip false positives for detail-only fallback components and analyzer integration, then encoded explicit `knip` ignores (`MovieDetailPageLite`, `MovieHeroBackdropCarousel`, `@next/bundle-analyzer`) with stable verification and unchanged detail baseline.
+**Last focus:** Stage C contour #1 completed safely: removed dead detail-shell experiment plumbing (`detailShellOptimizationEnabled` prop chain in site shell/chrome and unused `x-pathname` middleware header) with unchanged route architecture and stable verification/baseline.
 
-**Next:** Continue Stage B with only high-confidence real dead-code candidates; keep using mini-audit first and prefer `knip` config entries over deletion when usage is indirect/dynamic/framework-coupled.
+**Next:** Continue Stage C one contour at a time (e.g., legacy fallback experiment modules) only with prior usage proof and strict no-mix policy between experiment cleanup and verifier logic.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-29 — Step 10 Stage C contour #1: removed abandoned detail-shell experiment wiring (`detailShellOptimizationEnabled` prop path + middleware `x-pathname` header write); build/SEO quick/smoke/detail-baseline all remained stable (`9 / 172,781`).
 - 2026-04-29 — Step 9 Stage B batch #3: added audited `knip` ignores for `MovieDetailPageLite`, `MovieHeroBackdropCarousel`, and `@next/bundle-analyzer` (config-backed false positives); `knip` is now clean and web/type/build/SEO/smoke/detail-baseline checks stayed green (`9 / 172,781`).
 - 2026-04-29 — Step 9 Stage B batch #2: removed 3 unused animation helper files (header/hero/search); `@repo/web` type-check/build/SEO quick and `/movie/1318447` smoke remained green, with unchanged detail route baseline (`9 / 172,781`).
 - 2026-04-29 — Step 9 Stage B batch #1: removed 2 unused local helpers and 3 unused exported symbols/types; `@repo/web` build/type-check/SEO quick + `/movie/1318447` smoke stayed green, and detail route baseline held at `9 / 172,781` bytes.

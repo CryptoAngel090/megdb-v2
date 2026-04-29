@@ -28,21 +28,16 @@ const NavigationProgress = dynamic(
 
 interface AppChromeProps {
   children: ReactNode
-  detailShellOptimizationEnabled?: boolean
 }
 
-export function AppChrome({ children, detailShellOptimizationEnabled = false }: AppChromeProps) {
-  const shellFlagClassName = detailShellOptimizationEnabled
-    ? 'layout-main layout-main--detail-opt'
-    : 'layout-main'
-
+export function AppChrome({ children }: AppChromeProps) {
   return (
     <SessionProvider>
       <ToastProvider>
         <DeferredRippleScroll />
         <NavigationProgress />
         <Header />
-        <main id="main-content" className={shellFlagClassName}>
+        <main id="main-content" className="layout-main">
           {children}
         </main>
         <Footer />
