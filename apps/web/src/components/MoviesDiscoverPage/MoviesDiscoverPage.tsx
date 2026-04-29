@@ -1,7 +1,7 @@
 'use client'
 
 import { usePathname, useRouter } from 'next/navigation'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { forwardRef, type ComponentProps, useCallback, useEffect, useRef, useState } from 'react'
 import { VirtuosoGrid } from 'react-virtuoso'
 import { MediaCard } from '@/components/MediaCard/MediaCard'
 import type {
@@ -150,6 +150,17 @@ type ActiveChip = { key: string; label: string; patch: Partial<MoviesFilterDraft
 const PREFETCH_LOOKAHEAD_PAGES = 2
 const VIRTUOSO_OVERSCAN_PX = 900
 
+const VirtuosoGridList = forwardRef<HTMLDivElement, ComponentProps<'div'>>((props, ref) => {
+  const className = props.className ? `${styles.grid} ${props.className}` : styles.grid
+  return <div {...props} ref={ref} className={className} />
+})
+
+VirtuosoGridList.displayName = 'VirtuosoGridList'
+
+function VirtuosoGridItem(props: ComponentProps<'div'>) {
+  const className = props.className ? `${styles.gridItem} ${props.className}` : styles.gridItem
+  return <div {...props} className={className} />
+}
 function getShelfItemKey(item: ShelfItem): string {
   return `${item.type}-${item.id}`
 }
@@ -1384,11 +1395,13 @@ export function MoviesDiscoverPage({
           <>
             <VirtuosoGrid<ShelfItem>
               className={styles.gridVirtuoso ?? ''}
-              listClassName={styles.grid ?? ''}
-              itemClassName={styles.gridItem ?? ''}
               totalCount={items.length}
               useWindowScroll
               overscan={VIRTUOSO_OVERSCAN_PX}
+              components={{
+                List: VirtuosoGridList,
+                Item: VirtuosoGridItem,
+              }}
               computeItemKey={(idx, item) => (item ? getShelfItemKey(item) : `idx-${idx}`)}
               endReached={() => void loadMore()}
               itemContent={(idx) => {

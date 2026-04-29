@@ -2,14 +2,22 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Step 12 final validation pass completed after a dedicated Biome debt-fix batch (non-cleanup logic only): gates are green for `@repo/web` type-check, `biome ci`, `knip` (with existing config hints only), web build, SEO quick, `/movie/1318447` smoke (HTTP 200), and detail route chunk baseline remained stable at `9 / 172,781`.
+**Last focus:** Safety checkpoint start fixed and validated on dedicated branch `chore/safety-checkpoint-start`: green `@repo/web` `type-check`, `build`, `verify:seo:quick`, smoke `GET /movie/1318447` (`HTTP 200`), and measured detail route baseline `/(detail)/movie/[id]/page` at `9 / 172,781` bytes (`58,025 shared / 114,756 first-party`).
 
-**Next:** Decide whether to checkpoint this Step 12 validation/debt-fix batch in a separate commit or keep it uncommitted while moving to the next targeted cleanup contour.
+**Next:** Create checkpoint commit on `chore/safety-checkpoint-start` with current verified baselines and mandatory gate list, then proceed to Contour #2 structural cleanup.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-29 — Created safety branch `chore/safety-checkpoint-start` and ran mandatory start gates: `@repo/web` `type-check`, `build`, `verify:seo:quick`, smoke `/movie/1318447` (`HTTP 200`), plus route chunk measure for `/(detail)/movie/[id]/page` (`9 / 172,781`; shared `58,025`, first-party `114,756`).
+- 2026-04-29 — Reintroduced `VirtuosoGrid` for `MoviesDiscoverPage` with strict wrapper components (`List` + `Item`) and overscan restore; removed temporary manual `Load more` grid path, rebuilt clean from `.next`, and restarted `next start` on `:3100`.
+- 2026-04-29 — Final fix for `/movies` thin cards: replaced `VirtuosoGrid` render in `MoviesDiscoverPage` with regular CSS grid mapping + `Load more` control; preserved existing fetch/pagination logic and confirmed web type-check/lints are green.
+- 2026-04-29 — Follow-up for `/movies` thin cards: fixed reduced-motion branch in `MediaCard.tsx` to keep `cardTapWrapper` sizing, and set `MoviesDiscoverPage.module.css` `.gridItem` to `width: 100%`/`min-width: 0`; web type-check+lints stay green.
+- 2026-04-29 — Fixed `/movies` invisible/thin card columns by setting `width: 100%` and `min-width: 0` on `MediaCard` wrappers (`cardTapWrapper`, `card`) so Virtuoso grid items no longer collapse under flex/min-content sizing.
+- 2026-04-29 — Fixed localhost runtime breakage on `:3100`: `middleware.ts` now sets explicit `connect-src` (local API/ws + https) and `no-store` for localhost HTML; rebuilt clean after `.next` purge and restarted `next start` with headers verified (`connect-src` present, localhost cache disabled).
+- 2026-04-29 — Contour #1 validation pass: after `.seo` timestamp cleanup, confirmed green `@repo/web` `type-check` + `build` + `verify:seo:quick` and green detail route chunk budget (`9 / 172,781`), with only `verify:seo:smoke` blocked by external `megdb.com` sitemap timeout.
+- 2026-04-29 — Contour #1 cleanup: removed all timestamped files from `apps/web/.seo/reports` to reduce repo noise while preserving tracked baseline artifacts (`latest.json` + route-chunk report) for verification continuity.
 - 2026-04-29 — Step 12 final validation: fixed Biome debt blockers (`useAwait` wrappers, empty noop blocks, naming/format lints) without changing cleanup scope, then validated `type-check` + `biome ci` + `knip` + `@repo/web build` + `verify:seo:quick` + smoke `/movie/1318447` (200); detail baseline stayed `9 / 172,781`.
 - 2026-04-29 — Step 11 Stage D: reduced `packages/types/src/index.ts` to `MediaType` public export only; `knip` stayed clean and web type-check/build/SEO quick + smoke/detail-baseline remained stable (`9 / 172,781`).
 - 2026-04-29 — Step 10 Stage C contour #1: removed abandoned detail-shell experiment wiring (`detailShellOptimizationEnabled` prop path + middleware `x-pathname` header write); build/SEO quick/smoke/detail-baseline all remained stable (`9 / 172,781`).

@@ -1,5 +1,7 @@
 /* ── MediaCard — Netflix style ──────────────── */
 .cardTapWrapper {
+  width: 100%;
+  min-width: 0;
   transition: transform 0.15s cubic-bezier(0.25, 0.1, 0, 1);
 }
 
@@ -9,6 +11,8 @@
 
 .card {
   position: relative;
+  width: 100%;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);

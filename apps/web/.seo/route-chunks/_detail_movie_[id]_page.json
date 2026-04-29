@@ -1,6 +1,6 @@
 {
   "route": "/(detail)/movie/[id]/page",
-  "generatedAt": "2026-04-29T03:02:54.782Z",
+  "generatedAt": "2026-04-29T12:44:40.639Z",
   "chunkCount": 9,
   "totalBytes": 172781,
   "sharedBytes": 58025,
@@ -12,27 +12,27 @@
       "firstPartyModules": []
     },
     {
-      "chunk": "/_next/static/chunks/16.zclhl8~v72.js",
+      "chunk": "/_next/static/chunks/16hu_03-3rpey.js",
       "bytes": 44209,
       "firstPartyModules": [
         "[project]/apps/web/src/components/MovieDetailPage/MovieTrailerBlock.client.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MovieTrailerBlock.client.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.client.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.client.tsx",
-        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx <module evaluation>",
-        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieCommentsRoot.client.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieCommentsRoot.client.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MovieHeroTrailerActions.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MovieHeroTrailerActions.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MovieUserRatingCard.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MovieUserRatingCard.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePrimarySummaryActions.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePrimarySummaryActions.tsx",
-        "[project]/apps/web/src/components/MovieDetailPage/MovieCommentsRoot.client.tsx <module evaluation>",
-        "[project]/apps/web/src/components/MovieDetailPage/MovieCommentsRoot.client.tsx"
+        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx"
       ]
     },
     {
-      "chunk": "/_next/static/chunks/0ikyc6a9u18-v.js",
+      "chunk": "/_next/static/chunks/1754bny1btsa1.js",
       "bytes": 40893,
       "firstPartyModules": [
         "[project]/apps/web/src/components/AppChrome/DetailAppChrome.tsx <module evaluation>",
@@ -43,16 +43,16 @@
         "[project]/apps/web/src/components/MovieDetailPage/MovieTrailerBlock.client.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.client.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.client.tsx",
-        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx <module evaluation>",
-        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieCommentsRoot.client.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieCommentsRoot.client.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MovieHeroTrailerActions.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MovieHeroTrailerActions.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MovieUserRatingCard.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MovieUserRatingCard.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePrimarySummaryActions.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePrimarySummaryActions.tsx",
-        "[project]/apps/web/src/components/MovieDetailPage/MovieCommentsRoot.client.tsx <module evaluation>",
-        "[project]/apps/web/src/components/MovieDetailPage/MovieCommentsRoot.client.tsx"
+        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx"
       ]
     },
     {
@@ -63,16 +63,16 @@
         "[project]/apps/web/src/components/MovieDetailPage/MovieTrailerBlock.client.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.client.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.client.tsx",
-        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx <module evaluation>",
-        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieCommentsRoot.client.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieCommentsRoot.client.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MovieHeroTrailerActions.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MovieHeroTrailerActions.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MovieUserRatingCard.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MovieUserRatingCard.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePrimarySummaryActions.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePrimarySummaryActions.tsx",
-        "[project]/apps/web/src/components/MovieDetailPage/MovieCommentsRoot.client.tsx <module evaluation>",
-        "[project]/apps/web/src/components/MovieDetailPage/MovieCommentsRoot.client.tsx"
+        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx"
       ]
     },
     {
@@ -104,16 +104,16 @@
         "[project]/apps/web/src/components/MovieDetailPage/MovieTrailerBlock.client.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.client.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.client.tsx",
-        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx <module evaluation>",
-        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieCommentsRoot.client.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieCommentsRoot.client.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MovieHeroTrailerActions.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MovieHeroTrailerActions.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MovieUserRatingCard.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MovieUserRatingCard.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePrimarySummaryActions.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePrimarySummaryActions.tsx",
-        "[project]/apps/web/src/components/MovieDetailPage/MovieCommentsRoot.client.tsx <module evaluation>",
-        "[project]/apps/web/src/components/MovieDetailPage/MovieCommentsRoot.client.tsx"
+        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx"
       ]
     },
     {
@@ -132,16 +132,16 @@
         "[project]/apps/web/src/components/MovieDetailPage/MovieTrailerBlock.client.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.client.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.client.tsx",
-        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx <module evaluation>",
-        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieCommentsRoot.client.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieCommentsRoot.client.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MovieHeroTrailerActions.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MovieHeroTrailerActions.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MovieUserRatingCard.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MovieUserRatingCard.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePrimarySummaryActions.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePrimarySummaryActions.tsx",
-        "[project]/apps/web/src/components/MovieDetailPage/MovieCommentsRoot.client.tsx <module evaluation>",
-        "[project]/apps/web/src/components/MovieDetailPage/MovieCommentsRoot.client.tsx"
+        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx"
       ]
     }
   ]

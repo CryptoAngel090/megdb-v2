@@ -7,6 +7,18 @@ export function middleware(request: NextRequest) {
   const nonce = btoa(crypto.randomUUID())
   const hostname = request.nextUrl.hostname
   const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1'
+  const connectSources = isLocalhost
+    ? [
+        "'self'",
+        'https:',
+        'http://localhost:5000',
+        'http://127.0.0.1:5000',
+        'ws://localhost:3000',
+        'ws://127.0.0.1:3000',
+        'ws://localhost:3100',
+        'ws://127.0.0.1:3100',
+      ]
+    : ["'self'", 'https:']
   const csp = [
     "default-src 'self'",
     // Temporary compatibility mode: Next runtime still injects inline scripts.
@@ -16,6 +28,7 @@ export function middleware(request: NextRequest) {
     // Keep style CSP compatibility for runtime style attributes.
     // When nonce is present, browsers ignore 'unsafe-inline' for style-src.
     `style-src 'self' 'unsafe-inline'`,
+    `connect-src ${connectSources.join(' ')}`,
     "img-src 'self' data: https: blob:",
     "font-src 'self'",
     "frame-ancestors 'none'",
@@ -51,7 +64,10 @@ export function middleware(request: NextRequest) {
     pathname !== '/manifest.webmanifest'
 
   if (isHtmlPageRequest) {
-    response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600')
+    response.headers.set(
+      'Cache-Control',
+      isLocalhost ? 'no-store, max-age=0' : 'public, s-maxage=300, stale-while-revalidate=600'
+    )
   }
 
   return response

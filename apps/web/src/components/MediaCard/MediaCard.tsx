@@ -522,7 +522,7 @@ export function MediaCard({
   )
 
   if (prefersReducedMotion) {
-    return <div>{inner}</div>
+    return <div className={styles.cardTapWrapper}>{inner}</div>
   }
 
   if (!shelfReveal) {
