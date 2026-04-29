@@ -169,7 +169,7 @@ export function ActiveNavLink({
 
 export function NewsletterForm() {
   const [email, setEmail] = useState('')
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle')
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
@@ -225,11 +225,6 @@ export function NewsletterForm() {
           )}
         </button>
       </div>
-      {status === 'error' && (
-        <p className={styles.newsletterError} role="alert">
-          Something went wrong. Try again.
-        </p>
-      )}
     </form>
   )
 }
