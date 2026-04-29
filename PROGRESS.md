@@ -2,14 +2,15 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Safe Batch #4 diagnostic cleanup completed: removed low-risk lighthouse/layout snapshot artifacts only (root `lh-*.json`, `apps/web/layout-check-*.png`, `apps/web/.seo/lh-movie-1318447.json`, `reports/lh-movie-ultra*.json`) with no source/runtime changes, and re-validated `@repo/web verify:seo:quick` (green).
+**Last focus:** Completed full-file status classification pass (`KEEP`/`TRIM`/`SPLIT`/`MOVE`/`DELETE_CANDIDATE`) for all tracked files and exported registry artifacts to `reports/repo-map/` for safe cleanup sequencing.
 
-**Next:** Plan next medium-risk cleanup contour from audit candidates (unused exports/helpers/types) with per-file incoming-edge proof before any removal.
+**Next:** Execute status-driven cleanup in small batches (`MOVE` + artifact `DELETE_CANDIDATE` first), then rerun web gates before each commit.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-29 — Classified every tracked file into `KEEP/TRIM/SPLIT/MOVE/DELETE_CANDIDATE` and exported `reports/repo-map/registry-file-status-classification.csv` + `status-counts.csv` (411 keep, 31 trim, 39 split, 8 move, 13 delete-candidate) for rule-based cleanup execution.
 - 2026-04-29 — Batch #4 safe artifacts pass: deleted low-risk diagnostic files (Lighthouse JSON + layout snapshot PNG outputs), confirmed only artifact deletions in diff, and reran `pnpm --filter @repo/web verify:seo:quick` successfully.
 - 2026-04-29 — Ran automatic audit suite for cleanup candidates: `knip` returned clean, root `pnpm type-check` failed in `@repo/api` with existing module-mode TS1295/TS1287 errors, and `pnpm biome ci .` flagged 2 fixable issues (format in `apps/web/next-env.d.ts`, import ordering in `MoviesDiscoverPage.tsx`); exported no-incoming-edge candidate list to `reports/repo-map/no-incoming-edges-candidates.csv` and validated protected files via usage search.
 - 2026-04-29 — Built repository map artifacts in `reports/repo-map`: exported tracked file/folder lists, per-file line counts, import/export inventories, import graph edges, curated critical entrypoints, and full role/risk/size/usage registry for cleanup planning.
