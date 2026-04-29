@@ -2,14 +2,18 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Executed obvious dead-code batch (single theme): removed unused footer CSS classes/keyframes for legacy “new badge” UI (`.newBadge`, `.newBadgeDot`, `pulse-red`) with zero references in current markup.
+**Last focus:** Fixed trailer playback blockers in local production: trailer open now survives hydration timing races, and CSP now allows YouTube embeds (`frame-src`/`child-src` for youtube + youtube-nocookie) so iframe is no longer blocked.
 
-**Next:** Continue obvious dead-code batches one theme at a time (unused imports/constants/helpers/types/exports/legacy branches), each followed by verification gates and checkpoint commit.
+**Next:** Recheck movie trailer playback on `http://localhost:3401` and tune only if any browser-specific issue remains.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-30 — Git: committed **MegDB v1** on branch `chore/safety-checkpoint-start` (trailer open handshake, YouTube `frame-src`/`child-src` in middleware, PROGRESS). Unstaged: `tsbuildinfo`, `.seo/reports/*` dumps, other `??` facades/splits.
+- 2026-04-30 — Local production compare: `pnpm exec next build` in `apps/web` (after removing untracked `MoviesDiscoverPage.facade.tsx` that broke TS — invalid `linkPrefetch` on `MediaCard`); `next start` on `http://localhost:3401` (3100 was EADDRINUSE).
+- 2026-04-30 — Trailer hotfix: added pending-open handshake in `movieTrailerEvents.ts` (`triggerMovieTrailerOpen` + `consumePendingMovieTrailerOpen`) and switched hero/summary trailer CTAs + modal listener to use it, fixing no-op trailer clicks before trailer block hydration; `@repo/web` type-check and lints are green.
+- 2026-04-30 — Trailer CSP fix in production: added `frame-src` and `child-src` allowances for `https://www.youtube.com` + `https://www.youtube-nocookie.com` in `apps/web/src/middleware.ts`, rebuilt web, and restarted `next start` on `http://localhost:3401`.
 - 2026-04-29 — Obvious dead-code batch: removed unreferenced footer badge styling (`.newBadge`, `.newBadgeDot`, `@keyframes pulse-red`) from `apps/web/src/components/Footer/Footer.module.css` after `rg` usage proof showed zero live references.
 - 2026-04-29 — Batch #2 trim micro-pass #3: deleted unused `.newsletterError` style in `apps/web/src/components/Footer/Footer.module.css` (no remaining component reference), then reran verification.
 - 2026-04-29 — Batch #2 trim micro-pass #2: removed unused `isNew` field from `apps/web/src/components/Footer/Footer.tsx` footer link interface and data (no consumer path), then revalidated checks.

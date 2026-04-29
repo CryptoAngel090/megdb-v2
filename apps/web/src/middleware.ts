@@ -31,6 +31,8 @@ export function middleware(request: NextRequest) {
     `connect-src ${connectSources.join(' ')}`,
     "img-src 'self' data: https: blob:",
     "font-src 'self'",
+    "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
+    "child-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
     "frame-ancestors 'none'",
     ...(isLocalhost ? [] : ['upgrade-insecure-requests']),
   ].join('; ')

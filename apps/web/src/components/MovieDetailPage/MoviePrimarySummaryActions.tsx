@@ -8,7 +8,7 @@ import { useToast } from '@/components/Toast/Toast'
 import { isInLocalWatchlist, toggleLocalWatchlistItem } from '@/lib/localWatchlist'
 import styles from './MoviePrimarySummaryPanel.module.css'
 import { MovieShareButton } from './MovieShareButton'
-import { OPEN_MOVIE_TRAILER_EVENT } from './movieTrailerEvents'
+import { triggerMovieTrailerOpen } from './movieTrailerEvents'
 
 interface MoviePrimarySummaryActionsProps {
   movieId: number
@@ -110,7 +110,7 @@ export function MoviePrimarySummaryActions({
   }, [mediaType, movieId])
 
   const openTrailer = useCallback(() => {
-    window.dispatchEvent(new CustomEvent(OPEN_MOVIE_TRAILER_EVENT))
+    triggerMovieTrailerOpen()
   }, [])
 
   const scrollToCast = useCallback(() => {

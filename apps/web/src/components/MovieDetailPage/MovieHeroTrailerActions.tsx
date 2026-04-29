@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useToast } from '@/components/Toast/Toast'
 import { isInLocalWatchlist, toggleLocalWatchlistItem } from '@/lib/localWatchlist'
 import styles from './MovieDetailPage.module.css'
-import { OPEN_MOVIE_TRAILER_EVENT } from './movieTrailerEvents'
+import { triggerMovieTrailerOpen } from './movieTrailerEvents'
 
 type Props = {
   movieId: number
@@ -132,7 +132,7 @@ export function MovieHeroTrailerActions({
   embedTitle,
 }: Props) {
   const openTrailer = () => {
-    window.dispatchEvent(new CustomEvent(OPEN_MOVIE_TRAILER_EVENT))
+    triggerMovieTrailerOpen()
   }
 
   const scrollToCast = useCallback(() => {

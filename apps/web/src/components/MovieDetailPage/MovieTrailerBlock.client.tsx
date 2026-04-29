@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import blockStyles from './MovieTrailerBlock.module.css'
-import { OPEN_MOVIE_TRAILER_EVENT } from './movieTrailerEvents'
+import { consumePendingMovieTrailerOpen, OPEN_MOVIE_TRAILER_EVENT } from './movieTrailerEvents'
 
 type MovieTrailerBlockClientProps = {
   sectionId: string
@@ -84,6 +84,9 @@ export function MovieTrailerBlockClient({
   useEffect(() => {
     const onOpen = () => openModal()
     window.addEventListener(OPEN_MOVIE_TRAILER_EVENT, onOpen)
+    if (consumePendingMovieTrailerOpen()) {
+      openModal()
+    }
     return () => window.removeEventListener(OPEN_MOVIE_TRAILER_EVENT, onOpen)
   }, [openModal])
 
