@@ -1,10 +1,10 @@
 'use client'
 
+import Image from 'next/image'
 import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
-import Image from 'next/image'
-import { getImageUrl } from '@/lib/tmdb'
 import iconSlot from '@/components/IconSlot/iconSlot.module.css'
+import { getImageUrl } from '@/lib/tmdb'
 import styles from './MoviePhotosSection.module.css'
 
 interface MoviePhotosSectionClientProps {
@@ -19,7 +19,13 @@ interface MoviePhotosSectionClientProps {
 
 function CloseIcon({ className }: { className?: string | undefined }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
       <path d="M18 6 6 18M6 6l12 12" />
     </svg>
   )
@@ -27,7 +33,13 @@ function CloseIcon({ className }: { className?: string | undefined }) {
 
 function ChevronLeftIcon({ className }: { className?: string | undefined }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
       <path d="m15 18-6-6 6-6" />
     </svg>
   )
@@ -35,13 +47,23 @@ function ChevronLeftIcon({ className }: { className?: string | undefined }) {
 
 function ChevronRightIcon({ className }: { className?: string | undefined }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
       <path d="m9 18 6-6-6-6" />
     </svg>
   )
 }
 
-export function MoviePhotosSectionClient({ sectionId, title, images }: MoviePhotosSectionClientProps) {
+export function MoviePhotosSectionClient({
+  sectionId,
+  title,
+  images,
+}: MoviePhotosSectionClientProps) {
   const [selected, setSelected] = useState<number | null>(null)
   const [portalReady, setPortalReady] = useState(false)
 

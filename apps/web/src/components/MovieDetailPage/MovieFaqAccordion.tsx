@@ -30,7 +30,12 @@ export function MovieFaqAccordion({ items, movieTitle }: Props) {
                   +
                 </span>
               </summary>
-              <div id={panelId} className={styles.faqContent} role="region" aria-labelledby={summaryId}>
+              <div
+                id={panelId}
+                className={styles.faqContent}
+                role="region"
+                aria-labelledby={summaryId}
+              >
                 <div className={styles.faqContentInner}>
                   <p className={styles.faqA}>{item.answer}</p>
                 </div>

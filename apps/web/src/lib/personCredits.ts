@@ -1,5 +1,5 @@
-import type { PersonCreditRowRaw } from '@/lib/tmdb'
 import { moviePath, seriesPath } from '@/lib/slug'
+import type { PersonCreditRowRaw } from '@/lib/tmdb'
 
 /** MegDB canonical path for a TMDB credit row (movies → /movie, TV → /series). */
 export function personCreditDetailPath(row: PersonCreditRowRaw): string {

@@ -1,9 +1,10 @@
 'use client'
+
 // client: spotlight, count-up, magnetic socials, active link, newsletter, lang switcher, last updated
 
-import { useEffect, useRef, useState, useCallback } from 'react'
-import { usePathname } from 'next/navigation'
 import { ArrowRight } from 'lucide-react'
+import { usePathname } from 'next/navigation'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './Footer.module.css'
 

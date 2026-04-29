@@ -1,8 +1,8 @@
-import Image from 'next/image'
 import { ExternalLink } from 'lucide-react'
+import Image from 'next/image'
+import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import type { MovieWatchProvidersUs } from '@/lib/tmdb'
 import { buildWatchProviderUrl, getImageUrl } from '@/lib/tmdb'
-import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './MovieWatchProvidersPanel.module.css'
 
 function ProviderLink({

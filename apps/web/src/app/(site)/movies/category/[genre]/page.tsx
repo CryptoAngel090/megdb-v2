@@ -3,6 +3,9 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { MosaicHeroLcpPreload } from '@/components/MosaicHeroLcpPreload'
 import { MoviesDiscoverPage } from '@/components/MoviesDiscoverPage/MoviesDiscoverPage'
+import { buildCollectionPageStructuredData } from '@/lib/jsonLdSite'
+import { getMovieGenreHubContent } from '@/lib/movieGenreHubContent'
+import { movieGenreSlugToId } from '@/lib/movieGenreRoute'
 import {
   getMoviesDiscoverCanonicalPath,
   getMoviesDiscoverDescription,
@@ -10,15 +13,13 @@ import {
   getMoviesDiscoverKeywords,
   getMoviesDiscoverTitle,
 } from '@/lib/moviesDiscoverCopy'
-import { buildCollectionPageStructuredData } from '@/lib/jsonLdSite'
-import { getMovieGenreHubContent } from '@/lib/movieGenreHubContent'
 import { buildGenreHubSnippetTemplate } from '@/lib/seoSnippetTemplates'
 import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import {
-  discoverMoviesBrowse,
   discoverFetchKey,
-  discoverStateToFetchParams,
+  discoverMoviesBrowse,
   discoverStateToBrowseInput,
+  discoverStateToFetchParams,
   enrichMovieShelfRuntime,
   getMovieGenresList,
   getMovieStudiosList,
@@ -28,7 +29,6 @@ import {
   moviesDiscoverActiveFilterKeys,
   parseMoviesDiscoverSearchParams,
 } from '@/lib/tmdb'
-import { movieGenreSlugToId } from '@/lib/movieGenreRoute'
 import hubStyles from './hub.module.css'
 
 /** @sync `ROUTE_REVALIDATE_DISCOVER_HUB` in `@/lib/cachePolicy` */

@@ -1,12 +1,12 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import type { MoviePageDetail } from '@/lib/tmdb'
-import { getImageUrl } from '@/lib/tmdb'
 import { movieGenrePathById } from '@/lib/movieGenreRoute'
 import type { DetailMediaKind } from '@/lib/slug'
+import type { MoviePageDetail } from '@/lib/tmdb'
+import { getImageUrl } from '@/lib/tmdb'
 import { MovieCastSection } from './MovieCastSection'
-import { MovieFaqAccordion } from './MovieFaqAccordion'
 import styles from './MovieDetailPage.module.css'
+import { MovieFaqAccordion } from './MovieFaqAccordion'
 
 interface MovieDetailPageLiteProps {
   movie: MoviePageDetail
@@ -78,7 +78,9 @@ export function MovieDetailPageLite({
                     <span key={genre.id}>
                       {index > 0 ? ', ' : ''}
                       <Link
-                        href={movieGenrePathById(String(genre.id)) ?? `${genreQueryPrefix}${genre.id}`}
+                        href={
+                          movieGenrePathById(String(genre.id)) ?? `${genreQueryPrefix}${genre.id}`
+                        }
                         className={styles.metaGenreLink}
                       >
                         {genre.name}
@@ -87,13 +89,17 @@ export function MovieDetailPageLite({
                   ))}
                 </p>
               ) : null}
-              {movie.overview.trim() ? <p className={styles.overview}>{movie.overview.trim()}</p> : null}
+              {movie.overview.trim() ? (
+                <p className={styles.overview}>{movie.overview.trim()}</p>
+              ) : null}
             </div>
           </div>
         </section>
 
         <MovieCastSection cast={movie.cast} />
-        {faqItems.length > 0 ? <MovieFaqAccordion items={faqItems} movieTitle={movie.title} /> : null}
+        {faqItems.length > 0 ? (
+          <MovieFaqAccordion items={faqItems} movieTitle={movie.title} />
+        ) : null}
       </div>
     </div>
   )

@@ -1,10 +1,10 @@
-import { useId } from 'react'
 import Image from 'next/image'
+import { useId } from 'react'
+import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import type { MovieBackdropStill } from '@/lib/tmdb'
 import { getImageUrl } from '@/lib/tmdb'
-import iconSlot from '@/components/IconSlot/iconSlot.module.css'
-import styles from './MoviePhotosSection.module.css'
 import { MoviePhotosSectionClient } from './MoviePhotosSection.client'
+import styles from './MoviePhotosSection.module.css'
 
 const BLUR =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
@@ -16,7 +16,13 @@ type Props = {
 
 function GalleryIcon({ className }: { className?: string | undefined }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
       <rect x="3" y="4" width="18" height="16" rx="2" />
       <circle cx="9" cy="10" r="1.5" />
       <path d="m6 17 4.2-4.2a1 1 0 0 1 1.4 0L15 16l2.1-2.1a1 1 0 0 1 1.4 0L20 15.4" />
@@ -26,7 +32,13 @@ function GalleryIcon({ className }: { className?: string | undefined }) {
 
 function CloseIcon({ className }: { className?: string | undefined }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
       <path d="M18 6 6 18M6 6l12 12" />
     </svg>
   )
@@ -34,7 +46,13 @@ function CloseIcon({ className }: { className?: string | undefined }) {
 
 function ChevronLeftIcon({ className }: { className?: string | undefined }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
       <path d="m15 18-6-6 6-6" />
     </svg>
   )
@@ -42,7 +60,13 @@ function ChevronLeftIcon({ className }: { className?: string | undefined }) {
 
 function ChevronRightIcon({ className }: { className?: string | undefined }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
       <path d="m9 18 6-6-6-6" />
     </svg>
   )
@@ -87,12 +111,7 @@ export function MoviePhotosSection({ images, title }: Props) {
 
       <div id={`${sectionId}-track`} className={styles.track}>
         {validImages.map((img, i) => (
-          <button
-            key={img.filePath}
-            type="button"
-            className={styles.thumb}
-            data-photo-index={i}
-          >
+          <button key={img.filePath} type="button" className={styles.thumb} data-photo-index={i}>
             <Image
               src={getImageUrl(img.filePath, 'w500')}
               alt={`${title} — still ${i + 1}`}

@@ -1,10 +1,10 @@
 {
   "route": "/(detail)/movie/[id]/page",
-  "generatedAt": "2026-04-29T02:25:03.571Z",
+  "generatedAt": "2026-04-29T03:02:54.782Z",
   "chunkCount": 9,
-  "totalBytes": 172354,
+  "totalBytes": 172781,
   "sharedBytes": 58025,
-  "firstPartyBytes": 114329,
+  "firstPartyBytes": 114756,
   "chunks": [
     {
       "chunk": "/_next/static/chunks/0m19xesi02l6i.js",
@@ -89,17 +89,17 @@
       ]
     },
     {
-      "chunk": "/_next/static/chunks/08s2ut08b9g27.js",
-      "bytes": 1028,
+      "chunk": "/_next/static/chunks/0on1o-kec-8oj.js",
+      "bytes": 1154,
       "firstPartyModules": [
+        "[project]/apps/web/src/components/ServiceWorkerRegistration.tsx <module evaluation>",
+        "[project]/apps/web/src/components/ServiceWorkerRegistration.tsx",
         "[project]/apps/web/src/app/error.tsx <module evaluation>",
-        "[project]/apps/web/src/app/error.tsx"
-      ]
-    },
-    {
-      "chunk": "/_next/static/chunks/0um5dqfnubm-2.js",
-      "bytes": 959,
-      "firstPartyModules": [
+        "[project]/apps/web/src/app/error.tsx",
+        "[project]/apps/web/src/components/AppChrome/DetailAppChrome.tsx <module evaluation>",
+        "[project]/apps/web/src/components/AppChrome/DetailAppChrome.tsx",
+        "[project]/apps/web/src/app/(detail)/movie/[id]/error.tsx <module evaluation>",
+        "[project]/apps/web/src/app/(detail)/movie/[id]/error.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MovieTrailerBlock.client.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MovieTrailerBlock.client.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.client.tsx <module evaluation>",
@@ -117,17 +117,17 @@
       ]
     },
     {
-      "chunk": "/_next/static/chunks/06nwjvw7g3dze.js",
-      "bytes": 727,
+      "chunk": "/_next/static/chunks/08s2ut08b9g27.js",
+      "bytes": 1028,
       "firstPartyModules": [
-        "[project]/apps/web/src/components/ServiceWorkerRegistration.tsx <module evaluation>",
-        "[project]/apps/web/src/components/ServiceWorkerRegistration.tsx",
         "[project]/apps/web/src/app/error.tsx <module evaluation>",
-        "[project]/apps/web/src/app/error.tsx",
-        "[project]/apps/web/src/components/AppChrome/DetailAppChrome.tsx <module evaluation>",
-        "[project]/apps/web/src/components/AppChrome/DetailAppChrome.tsx",
-        "[project]/apps/web/src/app/(detail)/movie/[id]/error.tsx <module evaluation>",
-        "[project]/apps/web/src/app/(detail)/movie/[id]/error.tsx",
+        "[project]/apps/web/src/app/error.tsx"
+      ]
+    },
+    {
+      "chunk": "/_next/static/chunks/0um5dqfnubm-2.js",
+      "bytes": 959,
+      "firstPartyModules": [
         "[project]/apps/web/src/components/MovieDetailPage/MovieTrailerBlock.client.tsx <module evaluation>",
         "[project]/apps/web/src/components/MovieDetailPage/MovieTrailerBlock.client.tsx",
         "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.client.tsx <module evaluation>",

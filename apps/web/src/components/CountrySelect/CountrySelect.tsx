@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
 import * as Flags from 'country-flag-icons/react/3x2'
+import { useEffect, useRef, useState } from 'react'
 import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './CountrySelect.module.css'
 

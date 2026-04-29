@@ -1,8 +1,8 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
-import Image from 'next/image'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
+import Image from 'next/image'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { getImageUrl, type PersonImageRow } from '@/lib/tmdb'
 import styles from './PersonPhotosRail.module.css'
 

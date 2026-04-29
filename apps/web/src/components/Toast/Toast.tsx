@@ -2,12 +2,12 @@
 
 import {
   createContext,
+  type ReactNode,
   useCallback,
   useContext,
   useEffect,
   useRef,
   useState,
-  type ReactNode,
 } from 'react'
 import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './Toast.module.css'

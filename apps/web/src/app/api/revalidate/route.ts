@@ -1,16 +1,16 @@
 import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
 import {
-  CACHE_TAG_TRENDING,
-  CACHE_TAG_HOME_MODERATE,
   CACHE_TAG_ALL_TIME,
-  CACHE_TAG_PEOPLE,
   CACHE_TAG_DISCOVER_MOVIES,
   CACHE_TAG_DISCOVER_TV,
+  CACHE_TAG_HOME_MODERATE,
   CACHE_TAG_MOVIES,
+  CACHE_TAG_PEOPLE,
+  CACHE_TAG_TRENDING,
   cacheTagMovie,
-  cacheTagTv,
   cacheTagPerson,
+  cacheTagTv,
 } from '@/lib/cachePolicy'
 
 /**

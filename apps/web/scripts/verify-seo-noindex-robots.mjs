@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, readdirSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import ts from 'typescript'
 import { extractRobotsDisallowLiterals, parseRobotsSource } from './robots-disallow-utils.mjs'
@@ -31,7 +31,9 @@ function resolveRouteFile(pathParts) {
   if (existsSync(defaultFile)) return defaultFile
 
   // Support App Router route groups: app/(group)/.../page.tsx
-  const appEntries = readdirSync(APP, { withFileTypes: true }).filter((entry) => entry.isDirectory())
+  const appEntries = readdirSync(APP, { withFileTypes: true }).filter((entry) =>
+    entry.isDirectory()
+  )
   for (const entry of appEntries) {
     if (!entry.name.startsWith('(') || !entry.name.endsWith(')')) continue
     const groupedFile = join(APP, entry.name, ...pathParts, 'page.tsx')
@@ -188,9 +190,7 @@ for (const route of NOINDEX_ROUTES) {
     routeIssues.push(`${routeFile} (missing noindex robots)`)
   }
   if (!hasCanonicalContractForHint(ast, route.canonicalHint, route.isDynamic)) {
-    routeIssues.push(
-      `${routeFile} (missing alternates canonical for hint: ${route.canonicalHint})`
-    )
+    routeIssues.push(`${routeFile} (missing alternates canonical for hint: ${route.canonicalHint})`)
   }
 }
 

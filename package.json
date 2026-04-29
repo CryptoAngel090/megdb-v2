@@ -59,7 +59,6 @@
     "@eslint/js": "^9.39.1",
     "@next/eslint-plugin-next": "^16.2.4",
     "@web-loom/design-core": "^0.5.6",
-    "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9.0.0",
     "globals": "^17.5.0",
     "husky": "^9.1.0",
@@ -74,13 +73,8 @@
     "vitest": "^4.1.4"
   },
   "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{css,md,json}": [
-      "prettier --write"
-    ]
+    "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
+    "*.{css,md,json}": ["prettier --write"]
   },
   "engines": {
     "node": ">=20",

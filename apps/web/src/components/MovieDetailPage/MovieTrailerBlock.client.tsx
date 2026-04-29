@@ -12,7 +12,11 @@ type MovieTrailerBlockClientProps = {
   embedTitle: string
 }
 
-export function MovieTrailerBlockClient({ sectionId, videoKey, embedTitle }: MovieTrailerBlockClientProps) {
+export function MovieTrailerBlockClient({
+  sectionId,
+  videoKey,
+  embedTitle,
+}: MovieTrailerBlockClientProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [portalReady, setPortalReady] = useState(false)
 

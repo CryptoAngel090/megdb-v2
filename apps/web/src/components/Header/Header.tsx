@@ -1,17 +1,17 @@
 'use client'
 
-import type { ReactNode } from 'react'
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { Button } from '@repo/ui/button'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { Button } from '@repo/ui/button'
-import { SearchBar } from '@/components/SearchBar/SearchBar'
-import { getNextSelectionIndex } from './drawerSearch.utils'
-import { getUser, clearUser } from '@/lib/auth-client'
-import { HeaderBreadcrumb, HeaderContextTint, useNavKeyboard } from './HeaderExtras'
+import type { ReactNode } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import iconSlot from '@/components/IconSlot/iconSlot.module.css'
+import { SearchBar } from '@/components/SearchBar/SearchBar'
+import { clearUser, getUser } from '@/lib/auth-client'
+import { getNextSelectionIndex } from './drawerSearch.utils'
 import styles from './Header.module.css'
+import { HeaderBreadcrumb, HeaderContextTint, useNavKeyboard } from './HeaderExtras'
 
 interface NavLink {
   href: string
@@ -655,10 +655,7 @@ export function Header() {
                   </button>
                   <>
                     {userMenuOpen && (
-                      <div
-                        ref={userMenuRef}
-                        className={styles.userDropdown}
-                      >
+                      <div ref={userMenuRef} className={styles.userDropdown}>
                         <Link href="/profile" className={styles.dropdownItem}>
                           Profile
                         </Link>
@@ -730,15 +727,9 @@ export function Header() {
       <>
         {menuOpen && (
           <>
-            <div
-              className={styles.backdrop}
-              onClick={() => setMenuOpen(false)}
-            />
+            <div className={styles.backdrop} onClick={() => setMenuOpen(false)} />
 
-            <div
-              ref={drawerRef}
-              className={styles.drawer}
-            >
+            <div ref={drawerRef} className={styles.drawer}>
               {/* Header */}
               <div className={styles.drawerHeader}>
                 <Link href="/" className={styles.drawerLogo} onClick={() => setMenuOpen(false)}>
@@ -947,9 +938,7 @@ export function Header() {
                   </Link>
                 </div>
                 {NAV_LINKS.map((link, i) => (
-                  <div
-                    key={link.href}
-                  >
+                  <div key={link.href}>
                     {link.href === '/categories' ? (
                       <div className={styles.drawerNested}>
                         <button

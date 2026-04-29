@@ -3,9 +3,9 @@
 
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
-import type { PersonCreditRowRaw } from '@/lib/tmdb'
-import { personCreditDetailPath } from '@/lib/personCredits'
 import { buildEntitySearchHref } from '@/lib/entitySearch'
+import { personCreditDetailPath } from '@/lib/personCredits'
+import type { PersonCreditRowRaw } from '@/lib/tmdb'
 import styles from './PersonFilmography.module.css'
 
 interface FranchiseCluster {

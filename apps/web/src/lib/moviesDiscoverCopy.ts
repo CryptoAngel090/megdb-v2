@@ -1,10 +1,10 @@
+import { buildCanonicalPath } from '@/lib/canonicalQuery'
 import {
   formatDiscoverLanguageCode,
   formatDiscoverRegionCode,
   formatDiscoverSortHuman,
   MOVIE_RUNTIME_BUCKET_LABELS,
 } from '@/lib/discoverCopyHelpers'
-import { buildCanonicalPath } from '@/lib/canonicalQuery'
 import { movieGenrePathById } from '@/lib/movieGenreRoute'
 import type {
   MoviesDiscoverState,

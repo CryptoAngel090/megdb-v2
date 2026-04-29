@@ -1,19 +1,19 @@
 import type { MediaType } from '@repo/types'
 import {
+  CACHE_TAG_ALL_TIME,
+  CACHE_TAG_HOME_MODERATE,
+  CACHE_TAG_MOVIES,
+  CACHE_TAG_PEOPLE,
+  CACHE_TAG_TRENDING,
+  cacheTagMovie,
+  cacheTagPerson,
+  cacheTagTv,
   FETCH_REVALIDATE_ALL_TIME,
   FETCH_REVALIDATE_DEFAULT,
   FETCH_REVALIDATE_ENRICHMENT,
   FETCH_REVALIDATE_FAST,
   FETCH_REVALIDATE_MODERATE,
   FETCH_REVALIDATE_PEOPLE,
-  CACHE_TAG_TRENDING,
-  CACHE_TAG_HOME_MODERATE,
-  CACHE_TAG_ALL_TIME,
-  CACHE_TAG_PEOPLE,
-  CACHE_TAG_MOVIES,
-  cacheTagMovie,
-  cacheTagTv,
-  cacheTagPerson,
 } from './cachePolicy'
 import { containsCyrillic } from './textScript'
 

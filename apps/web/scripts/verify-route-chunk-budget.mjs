@@ -56,13 +56,15 @@ function main() {
     const ok = check.actual <= check.max
     const status = ok ? 'PASS' : 'FAIL'
     console.log(
-      `[route-budget] ${status} ${check.label}: actual=${formatBytes(check.actual)} max=${formatBytes(check.max)}`,
+      `[route-budget] ${status} ${check.label}: actual=${formatBytes(check.actual)} max=${formatBytes(check.max)}`
     )
     if (!ok) failures.push(check)
   }
 
   if (failures.length > 0) {
-    throw new Error(`Route chunk budget failed (${failures.length} threshold violation${failures.length > 1 ? 's' : ''})`)
+    throw new Error(
+      `Route chunk budget failed (${failures.length} threshold violation${failures.length > 1 ? 's' : ''})`
+    )
   }
 }
 

@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
-import Image from 'next/image'
 import { Button } from '@repo/ui/button'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './SearchBar.module.css'
 
@@ -235,12 +235,7 @@ export function SearchBar({ onFocus, onBlur, autoFocus }: SearchBarProps) {
       {/* Newest releases first (API order); flat list so sort matches /search */}
       <>
         {showDropdown && (
-          <div
-            ref={dropdownRef}
-            id="search-results"
-            className={styles.dropdown}
-            role="listbox"
-          >
+          <div ref={dropdownRef} id="search-results" className={styles.dropdown} role="listbox">
             {isLoading ? (
               <div className={styles.loading}>
                 <div className={styles.spinner} />

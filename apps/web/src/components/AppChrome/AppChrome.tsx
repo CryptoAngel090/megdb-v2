@@ -1,9 +1,9 @@
 'use client'
 
-import type { ReactNode } from 'react'
 import dynamic from 'next/dynamic'
-import { ToastProvider } from '@/components/Toast/Toast'
+import type { ReactNode } from 'react'
 import { SessionProvider } from '@/components/Providers/SessionProvider'
+import { ToastProvider } from '@/components/Toast/Toast'
 
 const Header = dynamic(() => import('@/components/Header/Header').then((m) => m.Header), {
   ssr: false,
@@ -12,7 +12,8 @@ const Footer = dynamic(() => import('@/components/Footer/Footer').then((m) => m.
   ssr: false,
 })
 const DeferredRippleScroll = dynamic(
-  () => import('@/components/DeferredAppChrome/DeferredAppChrome').then((m) => m.DeferredRippleScroll),
+  () =>
+    import('@/components/DeferredAppChrome/DeferredAppChrome').then((m) => m.DeferredRippleScroll),
   { ssr: false }
 )
 const DeferredBackToTop = dynamic(
@@ -20,7 +21,8 @@ const DeferredBackToTop = dynamic(
   { ssr: false }
 )
 const NavigationProgress = dynamic(
-  () => import('@/components/NavigationProgress/NavigationProgress').then((m) => m.NavigationProgress),
+  () =>
+    import('@/components/NavigationProgress/NavigationProgress').then((m) => m.NavigationProgress),
   { ssr: false }
 )
 

@@ -21,4 +21,3 @@ export function isDetailRoutePathname(pathname: string): boolean {
     /^\/cartoon\/\d+/.test(pathname)
   )
 }
-

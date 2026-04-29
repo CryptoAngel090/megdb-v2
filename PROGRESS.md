@@ -2,14 +2,19 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Re-established clean post-purge baseline on rebuilt artifacts: `@repo/web` gates are green (`type-check`, `build`, `verify:seo:quick`), `/movie/1318447` smoke is HTTP 200, and deterministic detail-route baseline is stable at `9 chunks / 172,781 bytes` (`58,025 shared / 114,756 first-party`).
+**Last focus:** Applied Biome safe auto-fixes repository-wide via `biome check --write` (format + organize imports), producing a large but expected style-only delta; auto-fix pass reported `103` fixed files with `13` remaining manual diagnostics.
 
-**Next:** Move to isolated dependency-layer cleanup planning (`node_modules`/store) with strict before/after snapshots and no lockfile changes unless explicitly approved.
+**Next:** Treat the Biome rewrite as an isolated style batch: commit separately, then reconfirm critical web gate (`verify:seo:quick`) and continue dependency cleanup only after style baseline is stable.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-29 — Biome style batch: ran `npx @biomejs/biome check --write .` (safe fixes), applied broad formatting/import-order updates (~103 files) and left 13 manual diagnostics for later non-style cleanup.
+- 2026-04-29 — Step 8 Stage A batch #1: removed unused root `babel-plugin-react-compiler`; verified green `@repo/web` type-check/build/SEO quick, and confirmed `knip` now reports only `@next/bundle-analyzer` as remaining unused devDependency candidate while existing Biome/Knip debt persists.
+- 2026-04-29 — Step 6 reinstall pass: removed all workspace `node_modules` (about `1526.8 MB`) and reinstalled from unchanged `pnpm-lock.yaml`; post-reinstall web type-check/build/SEO quick + `/movie/1318447` smoke are green, while `biome ci` and `knip` surfaced existing lint/dead-code debt.
+- 2026-04-29 — Step 5 pnpm store pass: ran `pnpm store prune` in isolation; output `Removed 0 files / 0 packages` (store remained `991.1 MB`), confirming no stale removable artifacts in current store snapshot.
+- 2026-04-29 — Step 4 manager audit: verified single-manager reality (pnpm only) across monorepo; no secondary lockfiles/configs in project workspaces, only vendor example lockfiles under `node_modules` (ignored as external package contents).
 - 2026-04-29 — Step 3 clean baseline pass: reran key local checks after cache purge (`@repo/web` type-check/build/SEO quick all green), reconfirmed `/movie/1318447` smoke 200, and fixed post-purge deterministic detail baseline at `9 / 172,781` bytes.
 - 2026-04-29 — Step 2 completed: cleaned rebuildable cache/build artifacts only (`apps/admin/.next`, all `.turbo`, `apps/web/.seo/reports` stale history, `lighthouse-runs`, temp outputs), reclaimed ~170.8 MB pre-build, passed `@repo/web` type-check/build/SEO quick, smoke-checked `/movie/1318447` (200), and measured `/(detail)/movie/[id]/page` at `9 / 172,781` bytes (`58,025 shared / 114,756 first-party`).
 - 2026-04-29 — Ultra-safe cleanup Step 1 done: removed `apps/web/.next` (183 MB), validated green `@repo/web` gates (`type-check`, `verify:seo:quick`, `build`), and confirmed localhost smoke on `:3100` (`/series` + `/movie/1318447` -> 200) after controlled server restart from `apps/web`.

@@ -1,10 +1,11 @@
 'use client'
+
 // client: multi-step registration form state
 
-import { useState } from 'react'
+import { Button } from '@repo/ui/button'
 import Link from 'next/link'
 import { signIn } from 'next-auth/react'
-import { Button } from '@repo/ui/button'
+import { useState } from 'react'
 import { CountrySelect } from '@/components/CountrySelect/CountrySelect'
 import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './RegisterForm.module.css'

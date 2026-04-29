@@ -1,9 +1,12 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getMovieGenreHubContent } from '@/lib/movieGenreHubContent'
+import { buildEntitySearchHref } from '@/lib/entitySearch'
 import { buildCollectionPageStructuredData } from '@/lib/jsonLdSite'
+import { getMovieGenreHubContent } from '@/lib/movieGenreHubContent'
+import { movieGenreIdToSlug, movieGenreSlugToId } from '@/lib/movieGenreRoute'
 import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
+import { detailPathForShelfItem } from '@/lib/slug'
 import {
   discoverMoviesBrowse,
   discoverStateToBrowseInput,
@@ -14,9 +17,6 @@ import {
   mapTmdbMovieRowToShelfItem,
   parseMoviesDiscoverSearchParams,
 } from '@/lib/tmdb'
-import { movieGenreIdToSlug, movieGenreSlugToId } from '@/lib/movieGenreRoute'
-import { buildEntitySearchHref } from '@/lib/entitySearch'
-import { detailPathForShelfItem } from '@/lib/slug'
 import hubStyles from '../hub.module.css'
 
 /** @sync `ROUTE_REVALIDATE_DISCOVER_HUB` in `@/lib/cachePolicy` */

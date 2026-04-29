@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
 import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './TvSeriesEpisodes.module.css'
 

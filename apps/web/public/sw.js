@@ -1,4 +1,4 @@
-const SW_VERSION = 'v1'
+const SW_VERSION = 'v2'
 
 const CACHE_DOCS = `megdb-docs-${SW_VERSION}`
 const CACHE_STATIC = `megdb-static-${SW_VERSION}`
@@ -17,7 +17,9 @@ self.addEventListener('activate', (event) => {
     (async () => {
       const expectedCaches = new Set([CACHE_DOCS, CACHE_STATIC, CACHE_API_MOVIES, CACHE_POSTERS])
       const names = await caches.keys()
-      await Promise.all(names.map((name) => (expectedCaches.has(name) ? null : caches.delete(name))))
+      await Promise.all(
+        names.map((name) => (expectedCaches.has(name) ? null : caches.delete(name)))
+      )
       await self.clients.claim()
     })()
   )
@@ -47,7 +49,13 @@ self.addEventListener('fetch', (event) => {
     return
   }
 
-  // Static assets -> Cache First (JS/CSS/fonts/images)
+  // Next chunks -> Network First (avoid stale chunk manifest after deploy)
+  if (isNextChunkRequest(url)) {
+    event.respondWith(networkFirst(request, CACHE_STATIC))
+    return
+  }
+
+  // Static assets -> Cache First (CSS/fonts/images)
   if (isStaticRequest(url, request)) {
     event.respondWith(cacheFirst(request, CACHE_STATIC))
   }
@@ -69,14 +77,16 @@ function isPosterRequest(url, request) {
 function isStaticRequest(url, request) {
   if (url.origin !== self.location.origin) return false
 
-  if (url.pathname.startsWith('/_next/static/')) return true
-
   return (
     request.destination === 'script' ||
     request.destination === 'style' ||
     request.destination === 'font' ||
     request.destination === 'image'
   )
+}
+
+function isNextChunkRequest(url) {
+  return url.origin === self.location.origin && url.pathname.startsWith('/_next/static/chunks/')
 }
 
 async function networkFirst(request, cacheName) {

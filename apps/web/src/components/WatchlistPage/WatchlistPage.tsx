@@ -1,18 +1,18 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import type { MediaType } from '@repo/types'
 import Image from 'next/image'
 import Link from 'next/link'
-import type { MediaType } from '@repo/types'
-import { getImageUrl } from '@/lib/tmdb'
+import { useEffect, useMemo, useState } from 'react'
 import {
   clearLocalWatchlist,
   getLocalWatchlistItems,
+  type LocalWatchlistItem,
   moveLocalWatchlistItem,
   removeLocalWatchlistItems,
   toggleLocalWatchlistPinned,
-  type LocalWatchlistItem,
 } from '@/lib/localWatchlist'
+import { getImageUrl } from '@/lib/tmdb'
 import styles from './WatchlistPage.module.css'
 
 interface WatchlistMovie {

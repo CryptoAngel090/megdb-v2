@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
-import { headers } from 'next/headers'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
+import { headers } from 'next/headers'
+import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration'
 import { SEO_CONTACT_EMAIL, SEO_LAST_REVIEWED_AT, SEO_PUBLISHER_NAME } from '@/lib/seoFreshness'
 import { SITE_URL } from '@/lib/site'
-import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration'
 import '@/styles/globals.css'
 import '@/styles/design-tokens.generated.css'
 import '@/styles/tailwind.css'
@@ -25,6 +25,33 @@ const speculationRules = {
     },
   ],
 } as const
+
+const localhostServiceWorkerResetScript = `
+(() => {
+  try {
+    const host = window.location.hostname;
+    const isLocalhost = host === 'localhost' || host === '127.0.0.1';
+    if (!isLocalhost) return;
+    const marker = 'megdb-sw-reset-v1';
+    if (sessionStorage.getItem(marker) === '1') return;
+    sessionStorage.setItem(marker, '1');
+    const reset = async () => {
+      if ('serviceWorker' in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map((reg) => reg.unregister()));
+      }
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(
+          keys.filter((key) => key.startsWith('megdb-')).map((key) => caches.delete(key))
+        );
+      }
+      window.location.reload();
+    };
+    void reset();
+  } catch {}
+})();
+`
 
 const inter = Inter({
   subsets: ['latin', 'cyrillic'],
@@ -94,6 +121,10 @@ export default async function SiteRootLayout({ children }: { children: React.Rea
   return (
     <html lang="en" className={`${inter.variable} ${jakarta.variable}`}>
       <head>
+        <script
+          nonce={nonce}
+          dangerouslySetInnerHTML={{ __html: localhostServiceWorkerResetScript }}
+        />
         {/* Preconnect для быстрой загрузки TMDB изображений (улучшает LCP) */}
         <link rel="preconnect" href="https://image.tmdb.org" />
         <link rel="dns-prefetch" href="https://image.tmdb.org" />

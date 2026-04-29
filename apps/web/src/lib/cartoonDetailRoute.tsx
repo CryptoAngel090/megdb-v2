@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
-import { Suspense } from 'react'
 import { notFound, redirect } from 'next/navigation'
+import { Suspense } from 'react'
 import { HeroLcpPreloadLinks } from '@/components/MovieDetailPage/HeroLcpPreloadLinks'
 import { MovieDetailBelowFoldSuspenseFallback } from '@/components/MovieDetailPage/MovieDetailBelowFoldDynamics'
 import {
@@ -8,14 +8,14 @@ import {
   type MovieDetailPageNav,
 } from '@/components/MovieDetailPage/MovieDetailPage'
 import { MovieDetailStreamedBelowFold } from '@/components/MovieDetailPage/MovieDetailStreamedBelowFold'
-import { getMoviePageDataShellCached } from '@/lib/moviePageDataCache'
-import { getImageUrl, type MoviePageDetail } from '@/lib/tmdb'
 import { jsonLdMainEntityId, jsonLdSameAsTmdb, jsonLdYoutubeVideoId } from '@/lib/jsonLdEntity'
+import { getMoviePageDataShellCached } from '@/lib/moviePageDataCache'
 import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import { buildWatchSeoTitle } from '@/lib/seoTitles'
 import { SITE_URL } from '@/lib/site'
 import { cartoonPath, resolveMovieIdFromParam } from '@/lib/slug'
 import { containsCyrillic } from '@/lib/textScript'
+import { getImageUrl, type MoviePageDetail } from '@/lib/tmdb'
 
 const cartoonNav: MovieDetailPageNav = {
   backHref: '/cartoons',

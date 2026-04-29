@@ -1,10 +1,11 @@
+import { and, db, eq, movieComments, sql } from '@repo/db'
+import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
-import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
-import { z } from 'zod'
 import { Resend } from 'resend'
-import { and, db, eq, movieComments, sql } from '@repo/db'
+import { z } from 'zod'
+import { getCommentModerationEmail } from './emails/comment-moderation'
 import { appRouter } from './server/api/root'
 import {
   ensureMovieVisualMetadata,
@@ -14,7 +15,6 @@ import {
 } from './server/api/routers/movies/service'
 import { loginUser, registerOAuthUser, registerUser } from './server/api/routers/users/service'
 import { createTRPCContext } from './server/context'
-import { getCommentModerationEmail } from './emails/comment-moderation'
 
 const app = new Hono()
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null

@@ -1,16 +1,22 @@
 'use client'
 
-import Link from 'next/link'
-import Image from 'next/image'
-import { ViewTransition, type PointerEvent as ReactPointerEvent } from 'react'
-import { useCallback, useEffect, useRef, useState } from 'react'
 import type { MediaType } from '@repo/types'
-import { detailPathForShelfItem } from '@/lib/slug'
+import { Calendar, Clock } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import {
+  type PointerEvent as ReactPointerEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  ViewTransition,
+} from 'react'
+import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
 import type { PosterFocalPercent } from '@/lib/posterFaceFocalPoint'
 import { detectPosterFocalPoint } from '@/lib/posterFaceFocalPoint'
-import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
+import { detailPathForShelfItem } from '@/lib/slug'
 import type { CardSizeKey } from '@/theme/tokens/size'
-import { Calendar, Clock } from 'lucide-react'
 import styles from './MediaCard.module.css'
 
 const TMDB_IMAGE = 'https://image.tmdb.org/t/p'

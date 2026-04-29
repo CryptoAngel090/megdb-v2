@@ -2,13 +2,13 @@
 
 // client: watchlist toggle, trailer modal event, share popover, smooth scroll — same behavior as hero CTAs.
 
-import { useCallback, useEffect, useState } from 'react'
 import type { MediaType } from '@repo/types'
-import { isInLocalWatchlist, toggleLocalWatchlistItem } from '@/lib/localWatchlist'
+import { useCallback, useEffect, useState } from 'react'
 import { useToast } from '@/components/Toast/Toast'
+import { isInLocalWatchlist, toggleLocalWatchlistItem } from '@/lib/localWatchlist'
+import styles from './MoviePrimarySummaryPanel.module.css'
 import { MovieShareButton } from './MovieShareButton'
 import { OPEN_MOVIE_TRAILER_EVENT } from './movieTrailerEvents'
-import styles from './MoviePrimarySummaryPanel.module.css'
 
 interface MoviePrimarySummaryActionsProps {
   movieId: number
@@ -30,7 +30,13 @@ function BookmarkIcon({
   filled?: boolean | undefined
 }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2">
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill={filled ? 'currentColor' : 'none'}
+      stroke="currentColor"
+      strokeWidth="2"
+    >
       <path d="M6 4h12a1 1 0 0 1 1 1v16l-7-4-7 4V5a1 1 0 0 1 1-1z" />
     </svg>
   )
@@ -38,7 +44,13 @@ function BookmarkIcon({
 
 function ClapperboardIcon({ className }: { className?: string | undefined }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
       <path d="M4 7h16l-2 13H6L4 7z" />
       <path d="M6 7 4.5 4.5M10 7 8 4M14 7l-2-3M18 7l-1.5-2.5" />
     </svg>
@@ -47,7 +59,13 @@ function ClapperboardIcon({ className }: { className?: string | undefined }) {
 
 function UsersIcon({ className }: { className?: string | undefined }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
       <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
       <circle cx="9" cy="7" r="4" />
       <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
@@ -58,7 +76,13 @@ function UsersIcon({ className }: { className?: string | undefined }) {
 
 function ShareIcon({ className }: { className?: string | undefined }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
       <circle cx="18" cy="5" r="3" />
       <circle cx="6" cy="12" r="3" />
       <circle cx="18" cy="19" r="3" />

@@ -1,4 +1,6 @@
 import type { MetadataRoute } from 'next'
+import { SITE_URL } from '@/lib/site'
+import { detailPathForMedia, moviePath, personPath } from '@/lib/slug'
 import type { HeroItem, ShelfItem } from '@/lib/tmdb'
 import {
   discoverCartoonsBrowse,
@@ -16,8 +18,8 @@ import {
   getHeroItems,
   getNewReleases,
   getPopularActors,
-  getTrendingPeopleForSitemap,
   getTrendingNow,
+  getTrendingPeopleForSitemap,
   mapTmdbCartoonRowToShelfItem,
   mapTmdbMovieRowToShelfItem,
   mapTmdbSeriesRowToShelfItem,
@@ -27,8 +29,6 @@ import {
   parseSeriesDiscoverSearchParams,
   parseTvShowsDiscoverSearchParams,
 } from '@/lib/tmdb'
-import { SITE_URL } from '@/lib/site'
-import { detailPathForMedia, moviePath, personPath } from '@/lib/slug'
 
 const LIST_FALLBACK = new Set(['/movies', '/series', '/cartoons', '/tvshows'])
 

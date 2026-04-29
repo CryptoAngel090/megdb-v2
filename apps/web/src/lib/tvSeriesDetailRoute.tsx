@@ -1,22 +1,22 @@
 import type { Metadata } from 'next'
-import { Suspense } from 'react'
 import { notFound, permanentRedirect } from 'next/navigation'
+import { Suspense } from 'react'
 import { HeroLcpPreloadLinks } from '@/components/MovieDetailPage/HeroLcpPreloadLinks'
 import { MovieDetailBelowFoldSuspenseFallback } from '@/components/MovieDetailPage/MovieDetailBelowFoldDynamics'
-import { TvSeriesEpisodesLazy } from '@/components/MovieDetailPage/MovieDetailTvDynamics'
 import {
   MovieDetailPage,
   type MovieDetailPageNav,
 } from '@/components/MovieDetailPage/MovieDetailPage'
 import { MovieDetailStreamedBelowFold } from '@/components/MovieDetailPage/MovieDetailStreamedBelowFold'
-import { getTvPageDataShellCached } from '@/lib/moviePageDataCache'
-import { getImageUrl, type MoviePageDetail } from '@/lib/tmdb'
+import { TvSeriesEpisodesLazy } from '@/components/MovieDetailPage/MovieDetailTvDynamics'
 import { jsonLdMainEntityId, jsonLdSameAsTmdb, jsonLdYoutubeVideoId } from '@/lib/jsonLdEntity'
+import { getTvPageDataShellCached } from '@/lib/moviePageDataCache'
 import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import { buildWatchSeoTitle } from '@/lib/seoTitles'
 import { SITE_URL } from '@/lib/site'
 import { resolveTvSeriesIdFromParam, seriesPath } from '@/lib/slug'
 import { containsCyrillic } from '@/lib/textScript'
+import { getImageUrl, type MoviePageDetail } from '@/lib/tmdb'
 
 type TvSeriesRouteSegment = 'series' | 'tvshow' | 'tvshows'
 
@@ -295,7 +295,9 @@ export async function TvSeriesDetailPageApp({ params }: Props, segment: TvSeries
               movieTitle={data.title}
               cast={data.cast}
               variant="tv"
-              tvEpisodesSection={<TvSeriesEpisodesLazy seriesId={data.id} seriesTitle={data.title} />}
+              tvEpisodesSection={
+                <TvSeriesEpisodesLazy seriesId={data.id} seriesTitle={data.title} />
+              }
             />
           </Suspense>
         }

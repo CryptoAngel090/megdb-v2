@@ -1,12 +1,12 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import ts from 'typescript'
+import { extractRobotsDisallowLiterals, parseRobotsSource } from './robots-disallow-utils.mjs'
 import {
   policyTokenToRoute,
   routeToPageFile,
   routeToRobotsDisallow,
 } from './seo-consistency-core.mjs'
-import { extractRobotsDisallowLiterals, parseRobotsSource } from './robots-disallow-utils.mjs'
 
 const ROOT = process.cwd()
 const APP_DIR = join(ROOT, 'src', 'app')

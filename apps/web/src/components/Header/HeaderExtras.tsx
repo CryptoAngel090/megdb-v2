@@ -1,8 +1,9 @@
 'use client'
+
 // client: breadcrumb trail + context-aware backdrop color
 
-import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 import styles from './Header.module.css'
 

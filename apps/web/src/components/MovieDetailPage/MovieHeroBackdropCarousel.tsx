@@ -4,6 +4,7 @@
 
 import {
   createContext,
+  type ReactNode,
   useCallback,
   useContext,
   useEffect,
@@ -11,11 +12,10 @@ import {
   useMemo,
   useRef,
   useState,
-  type ReactNode,
 } from 'react'
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
-import { MovieHeroBackdropImage } from './MovieHeroBackdropImage'
 import styles from './MovieHeroBackdropCarousel.module.css'
+import { MovieHeroBackdropImage } from './MovieHeroBackdropImage'
 
 const AUTO_ROTATION_INTERVAL = 6000
 const SWIPE_THRESHOLD_PX = 50

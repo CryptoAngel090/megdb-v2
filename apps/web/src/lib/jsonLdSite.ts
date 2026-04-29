@@ -1,10 +1,10 @@
-import { SITE_URL } from '@/lib/site'
 import {
   SEO_CONTACT_EMAIL,
   SEO_FOUNDED_DATE,
   SEO_KNOWS_ABOUT,
   SEO_LAST_REVIEWED_AT,
 } from '@/lib/seoFreshness'
+import { SITE_URL } from '@/lib/site'
 
 /** Stable @id for Organization — reused on home and about for entity consolidation. */
 const ORGANIZATION_ID = `${SITE_URL}/#organization`

@@ -3,10 +3,10 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { jsonLdMainEntityId, jsonLdYoutubeVideoId } from '@/lib/jsonLdEntity'
 import { getMoviePageDataShellCached } from '@/lib/moviePageDataCache'
-import { moviePath } from '@/lib/slug'
 import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import { buildWatchSeoTitle } from '@/lib/seoTitles'
 import { SITE_URL } from '@/lib/site'
+import { moviePath } from '@/lib/slug'
 import styles from './page.module.css'
 
 /** @sync `ROUTE_REVALIDATE_MEDIA_DETAIL` in `@/lib/cachePolicy` */

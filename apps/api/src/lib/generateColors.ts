@@ -1,8 +1,8 @@
-import { encode } from 'blurhash'
-import { getColor } from 'colorthief'
 import { promises as fs } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { encode } from 'blurhash'
+import { getColor } from 'colorthief'
 import sharp from 'sharp'
 
 const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w500'

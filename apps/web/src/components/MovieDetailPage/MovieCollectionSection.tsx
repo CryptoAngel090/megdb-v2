@@ -1,7 +1,7 @@
+import { type DetailMediaKind, detailPathForMedia } from '@/lib/slug'
 import type { MoviePageCardItem } from '@/lib/tmdb'
-import { detailPathForMedia, type DetailMediaKind } from '@/lib/slug'
-import { MovieSimilarRailCard } from './MovieSimilarRailCard'
 import styles from './MovieCollectionSection.module.css'
+import { MovieSimilarRailCard } from './MovieSimilarRailCard'
 
 type Props = {
   title: string

@@ -1,13 +1,14 @@
 'use client'
+
 // client: needs useState for filters + spin animation + fetch on demand
 
-import { useState, useCallback, useRef } from 'react'
+import { ArrowRight, Calendar, Clock, Dice5, Filter, Play, RotateCw, Star } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { detailPathForShelfItem } from '@/lib/slug'
-import { movieGenrePathById } from '@/lib/movieGenreRoute'
-import { Dice5, Star, Clock, Calendar, Play, ArrowRight, Filter, RotateCw } from 'lucide-react'
+import { useCallback, useRef, useState } from 'react'
 import iconSlot from '@/components/IconSlot/iconSlot.module.css'
+import { movieGenrePathById } from '@/lib/movieGenreRoute'
+import { detailPathForShelfItem } from '@/lib/slug'
 import styles from './RandomMoviePage.module.css'
 
 // ── Types ────────────────────────────────────────────────
@@ -181,120 +182,116 @@ export function RandomMoviePage({ genres }: RandomMoviePageProps) {
 
         {/* Filter panel */}
         {showFilters && (
-          <section
-              id="filter-panel"
-              className={styles.filterPanel}
-              aria-label="Movie filters"
-          >
-              <div className={styles.filterGrid}>
-                {/* Genre */}
-                <div className={styles.filterGroup}>
-                  <label className={styles.filterLabel} htmlFor="filter-genre">
-                    Genre
-                  </label>
-                  <select
-                    id="filter-genre"
-                    className={styles.filterSelect}
-                    value={selectedGenre}
-                    onChange={(e) => setSelectedGenre(e.target.value)}
-                  >
-                    <option value="">Any genre</option>
-                    {genres.map((g) => (
-                      <option key={g.id} value={String(g.id)}>
-                        {g.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Year mode */}
-                <div className={styles.filterGroup}>
-                  <fieldset className={styles.filterFieldset}>
-                    <legend className={styles.filterLabel}>Year</legend>
-                    <div className={styles.yearModeRow}>
-                      {(['any', 'exact', 'decade'] as const).map((mode) => (
-                        <button
-                          key={mode}
-                          type="button"
-                          className={`${styles.yearModeBtn} ${yearMode === mode ? styles.yearModeBtnActive : ''}`}
-                          onClick={() => {
-                            setYearMode(mode)
-                            setSelectedYear('')
-                            setSelectedDecade('')
-                          }}
-                        >
-                          {mode === 'any' ? 'Any' : mode === 'exact' ? 'Exact' : 'Decade'}
-                        </button>
-                      ))}
-                    </div>
-                    {yearMode === 'exact' && (
-                      <select
-                        className={styles.filterSelect}
-                        value={selectedYear}
-                        onChange={(e) => setSelectedYear(e.target.value)}
-                        aria-label="Select exact year"
-                      >
-                        <option value="">Any year</option>
-                        {YEAR_OPTIONS.map((y) => (
-                          <option key={y} value={String(y)}>
-                            {y}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                    {yearMode === 'decade' && (
-                      <select
-                        className={styles.filterSelect}
-                        value={selectedDecade}
-                        onChange={(e) => setSelectedDecade(e.target.value)}
-                        aria-label="Select decade"
-                      >
-                        <option value="">Any decade</option>
-                        {decadeOptions.map((d) => (
-                          <option key={d.value} value={d.value}>
-                            {d.label}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                  </fieldset>
-                </div>
-
-                {/* Rating */}
-                <div className={styles.filterGroup}>
-                  <label className={styles.filterLabel} htmlFor="filter-rating">
-                    Min rating
-                  </label>
-                  <select
-                    id="filter-rating"
-                    className={styles.filterSelect}
-                    value={selectedRating}
-                    onChange={(e) => setSelectedRating(e.target.value)}
-                  >
-                    {RATING_OPTIONS.map((r) => (
-                      <option key={r.value} value={r.value}>
-                        {r.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+          <section id="filter-panel" className={styles.filterPanel} aria-label="Movie filters">
+            <div className={styles.filterGrid}>
+              {/* Genre */}
+              <div className={styles.filterGroup}>
+                <label className={styles.filterLabel} htmlFor="filter-genre">
+                  Genre
+                </label>
+                <select
+                  id="filter-genre"
+                  className={styles.filterSelect}
+                  value={selectedGenre}
+                  onChange={(e) => setSelectedGenre(e.target.value)}
+                >
+                  <option value="">Any genre</option>
+                  {genres.map((g) => (
+                    <option key={g.id} value={String(g.id)}>
+                      {g.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
-              {/* Reset filters */}
-              {activeFilterCount > 0 && (
-                <button
-                  className={styles.resetFilters}
-                  onClick={() => {
-                    setSelectedGenre('')
-                    setSelectedYear('')
-                    setSelectedDecade('')
-                    setSelectedRating('')
-                    setYearMode('any')
-                  }}
+              {/* Year mode */}
+              <div className={styles.filterGroup}>
+                <fieldset className={styles.filterFieldset}>
+                  <legend className={styles.filterLabel}>Year</legend>
+                  <div className={styles.yearModeRow}>
+                    {(['any', 'exact', 'decade'] as const).map((mode) => (
+                      <button
+                        key={mode}
+                        type="button"
+                        className={`${styles.yearModeBtn} ${yearMode === mode ? styles.yearModeBtnActive : ''}`}
+                        onClick={() => {
+                          setYearMode(mode)
+                          setSelectedYear('')
+                          setSelectedDecade('')
+                        }}
+                      >
+                        {mode === 'any' ? 'Any' : mode === 'exact' ? 'Exact' : 'Decade'}
+                      </button>
+                    ))}
+                  </div>
+                  {yearMode === 'exact' && (
+                    <select
+                      className={styles.filterSelect}
+                      value={selectedYear}
+                      onChange={(e) => setSelectedYear(e.target.value)}
+                      aria-label="Select exact year"
+                    >
+                      <option value="">Any year</option>
+                      {YEAR_OPTIONS.map((y) => (
+                        <option key={y} value={String(y)}>
+                          {y}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                  {yearMode === 'decade' && (
+                    <select
+                      className={styles.filterSelect}
+                      value={selectedDecade}
+                      onChange={(e) => setSelectedDecade(e.target.value)}
+                      aria-label="Select decade"
+                    >
+                      <option value="">Any decade</option>
+                      {decadeOptions.map((d) => (
+                        <option key={d.value} value={d.value}>
+                          {d.label}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </fieldset>
+              </div>
+
+              {/* Rating */}
+              <div className={styles.filterGroup}>
+                <label className={styles.filterLabel} htmlFor="filter-rating">
+                  Min rating
+                </label>
+                <select
+                  id="filter-rating"
+                  className={styles.filterSelect}
+                  value={selectedRating}
+                  onChange={(e) => setSelectedRating(e.target.value)}
                 >
-                  Clear all filters
-                </button>
-              )}
+                  {RATING_OPTIONS.map((r) => (
+                    <option key={r.value} value={r.value}>
+                      {r.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Reset filters */}
+            {activeFilterCount > 0 && (
+              <button
+                className={styles.resetFilters}
+                onClick={() => {
+                  setSelectedGenre('')
+                  setSelectedYear('')
+                  setSelectedDecade('')
+                  setSelectedRating('')
+                  setYearMode('any')
+                }}
+              >
+                Clear all filters
+              </button>
+            )}
           </section>
         )}
 
@@ -308,9 +305,7 @@ export function RandomMoviePage({ genres }: RandomMoviePageProps) {
             disabled={isSpinning}
             aria-label={isSpinning ? 'Finding a random movie…' : 'Pick a random movie'}
           >
-            <span
-              className={styles.spinBtnIcon}
-            >
+            <span className={styles.spinBtnIcon}>
               {hasSpun ? (
                 <RotateCw className={`${iconSlot.block} ${iconSlot.inline18}`} aria-hidden />
               ) : (
@@ -355,35 +350,79 @@ export function RandomMoviePage({ genres }: RandomMoviePageProps) {
         {/* Result card */}
         {movie && !isSpinning && (
           <article
-              key={movie.id}
-              className={styles.resultCard}
-              aria-label={`Random pick: ${movie.title}`}
+            key={movie.id}
+            className={styles.resultCard}
+            aria-label={`Random pick: ${movie.title}`}
           >
-              {/* Poster */}
-              <div className={`${styles.posterWrap} card-hover hover-lift-card`}>
-                {movie.posterPath ? (
-                  <Image
-                    src={`${TMDB_IMAGE}/w500${movie.posterPath}`}
-                    alt={`Poster for ${movie.title}`}
-                    fill
-                    className={styles.poster}
-                    sizes="(max-width: 639px) 140px, 220px"
-                    placeholder="blur"
-                    blurDataURL={POSTER_BLUR}
-                    priority
-                  />
-                ) : (
-                  <div className={styles.posterFallback} aria-hidden>
-                    🎬
-                  </div>
-                )}
+            {/* Poster */}
+            <div className={`${styles.posterWrap} card-hover hover-lift-card`}>
+              {movie.posterPath ? (
+                <Image
+                  src={`${TMDB_IMAGE}/w500${movie.posterPath}`}
+                  alt={`Poster for ${movie.title}`}
+                  fill
+                  className={styles.poster}
+                  sizes="(max-width: 639px) 140px, 220px"
+                  placeholder="blur"
+                  blurDataURL={POSTER_BLUR}
+                  priority
+                />
+              ) : (
+                <div className={styles.posterFallback} aria-hidden>
+                  🎬
+                </div>
+              )}
 
-                {/* Rating badge on poster */}
-                {movie.voteAverage > 0 && (
-                  <div
-                    className={styles.posterRating}
-                    style={{ color: getRatingColor(movie.voteAverage) }}
+              {/* Rating badge on poster */}
+              {movie.voteAverage > 0 && (
+                <div
+                  className={styles.posterRating}
+                  style={{ color: getRatingColor(movie.voteAverage) }}
+                  aria-hidden
+                >
+                  <Star
+                    className={`${iconSlot.block} ${iconSlot.inline14}`}
+                    fill="currentColor"
                     aria-hidden
+                  />
+                  {movie.voteAverage.toFixed(1)}
+                </div>
+              )}
+            </div>
+
+            {/* Info */}
+            <div className={styles.info}>
+              {/* Genres */}
+              {movie.genres.length > 0 && (
+                <div className={styles.genreRow} aria-label="Genres">
+                  {movie.genres.slice(0, 3).map((g) => (
+                    <span key={g} className={styles.genrePill}>
+                      {g}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              <h2 className={styles.movieTitle}>{movie.title}</h2>
+
+              {/* Meta row */}
+              <div className={styles.metaRow} role="group" aria-label="Movie details">
+                {movie.releaseDate && (
+                  <span className={styles.metaItem}>
+                    <Calendar className={`${iconSlot.block} ${iconSlot.inline14}`} aria-hidden />
+                    {new Date(movie.releaseDate).getFullYear()}
+                  </span>
+                )}
+                {movie.runtime != null && movie.runtime > 0 && (
+                  <span className={styles.metaItem}>
+                    <Clock className={`${iconSlot.block} ${iconSlot.inline14}`} aria-hidden />
+                    {formatRuntime(movie.runtime)}
+                  </span>
+                )}
+                {movie.voteAverage > 0 && (
+                  <span
+                    className={styles.metaItem}
+                    style={{ color: getRatingColor(movie.voteAverage) }}
                   >
                     <Star
                       className={`${iconSlot.block} ${iconSlot.inline14}`}
@@ -391,120 +430,73 @@ export function RandomMoviePage({ genres }: RandomMoviePageProps) {
                       aria-hidden
                     />
                     {movie.voteAverage.toFixed(1)}
-                  </div>
+                    <span className={styles.metaRatingLabel}>
+                      {getRatingLabel(movie.voteAverage)}
+                    </span>
+                  </span>
+                )}
+                {movie.voteCount > 0 && (
+                  <span className={styles.metaItem}>{formatVotes(movie.voteCount)} votes</span>
                 )}
               </div>
 
-              {/* Info */}
-              <div className={styles.info}>
-                {/* Genres */}
-                {movie.genres.length > 0 && (
-                  <div className={styles.genreRow} aria-label="Genres">
-                    {movie.genres.slice(0, 3).map((g) => (
-                      <span key={g} className={styles.genrePill}>
-                        {g}
-                      </span>
-                    ))}
-                  </div>
-                )}
+              {/* Overview */}
+              {movie.overview && <p className={styles.overview}>{movie.overview}</p>}
 
-                <h2 className={styles.movieTitle}>{movie.title}</h2>
-
-                {/* Meta row */}
-                <div className={styles.metaRow} role="group" aria-label="Movie details">
-                  {movie.releaseDate && (
-                    <span className={styles.metaItem}>
-                      <Calendar className={`${iconSlot.block} ${iconSlot.inline14}`} aria-hidden />
-                      {new Date(movie.releaseDate).getFullYear()}
-                    </span>
-                  )}
-                  {movie.runtime != null && movie.runtime > 0 && (
-                    <span className={styles.metaItem}>
-                      <Clock className={`${iconSlot.block} ${iconSlot.inline14}`} aria-hidden />
-                      {formatRuntime(movie.runtime)}
-                    </span>
-                  )}
-                  {movie.voteAverage > 0 && (
-                    <span
-                      className={styles.metaItem}
-                      style={{ color: getRatingColor(movie.voteAverage) }}
-                    >
-                      <Star
-                        className={`${iconSlot.block} ${iconSlot.inline14}`}
-                        fill="currentColor"
-                        aria-hidden
-                      />
-                      {movie.voteAverage.toFixed(1)}
-                      <span className={styles.metaRatingLabel}>
-                        {getRatingLabel(movie.voteAverage)}
-                      </span>
-                    </span>
-                  )}
-                  {movie.voteCount > 0 && (
-                    <span className={styles.metaItem}>{formatVotes(movie.voteCount)} votes</span>
-                  )}
-                </div>
-
-                {/* Overview */}
-                {movie.overview && <p className={styles.overview}>{movie.overview}</p>}
-
-                {/* Actions */}
-                <div className={styles.actions}>
-                  <Link
-                    href={detailPathForShelfItem({
-                      type: 'movie',
-                      title: movie.title,
-                      releaseDate: movie.releaseDate,
-                    })}
-                    className={styles.actionPrimary}
-                    aria-label={`View details for ${movie.title}`}
-                  >
-                    <Play
-                      className={`${iconSlot.block} ${iconSlot.inline18}`}
-                      fill="currentColor"
-                      aria-hidden
-                    />
-                    View details
-                  </Link>
-                  <button
-                    type="button"
-                    className={styles.actionSecondary}
-                    onClick={() => {
-                      void fetchRandom()
-                    }}
-                    aria-label="Pick another random movie"
-                  >
-                    <RotateCw className={`${iconSlot.block} ${iconSlot.inline18}`} aria-hidden />
-                    Another one
-                  </button>
-                  <Link
-                    href={movieGenrePathById(selectedGenre) ?? '/movies'}
-                    className={styles.actionGhost}
-                    aria-label="Browse similar movies"
-                  >
-                    Browse similar
-                    <ArrowRight className={`${iconSlot.block} ${iconSlot.sm}`} aria-hidden />
-                  </Link>
-                </div>
+              {/* Actions */}
+              <div className={styles.actions}>
+                <Link
+                  href={detailPathForShelfItem({
+                    type: 'movie',
+                    title: movie.title,
+                    releaseDate: movie.releaseDate,
+                  })}
+                  className={styles.actionPrimary}
+                  aria-label={`View details for ${movie.title}`}
+                >
+                  <Play
+                    className={`${iconSlot.block} ${iconSlot.inline18}`}
+                    fill="currentColor"
+                    aria-hidden
+                  />
+                  View details
+                </Link>
+                <button
+                  type="button"
+                  className={styles.actionSecondary}
+                  onClick={() => {
+                    void fetchRandom()
+                  }}
+                  aria-label="Pick another random movie"
+                >
+                  <RotateCw className={`${iconSlot.block} ${iconSlot.inline18}`} aria-hidden />
+                  Another one
+                </button>
+                <Link
+                  href={movieGenrePathById(selectedGenre) ?? '/movies'}
+                  className={styles.actionGhost}
+                  aria-label="Browse similar movies"
+                >
+                  Browse similar
+                  <ArrowRight className={`${iconSlot.block} ${iconSlot.sm}`} aria-hidden />
+                </Link>
               </div>
+            </div>
           </article>
         )}
 
         {/* Skeleton while spinning */}
         {isSpinning && (
-          <div
-              className={styles.skeleton}
-              aria-hidden
-            >
-              <div className={styles.skeletonPoster} />
-              <div className={styles.skeletonInfo}>
-                <div className={styles.skeletonGenres} />
-                <div className={styles.skeletonTitle} />
-                <div className={styles.skeletonMeta} />
-                <div className={styles.skeletonText} />
-                <div className={styles.skeletonText} style={{ width: '80%' }} />
-                <div className={styles.skeletonText} style={{ width: '60%' }} />
-              </div>
+          <div className={styles.skeleton} aria-hidden>
+            <div className={styles.skeletonPoster} />
+            <div className={styles.skeletonInfo}>
+              <div className={styles.skeletonGenres} />
+              <div className={styles.skeletonTitle} />
+              <div className={styles.skeletonMeta} />
+              <div className={styles.skeletonText} />
+              <div className={styles.skeletonText} style={{ width: '80%' }} />
+              <div className={styles.skeletonText} style={{ width: '60%' }} />
+            </div>
           </div>
         )}
 

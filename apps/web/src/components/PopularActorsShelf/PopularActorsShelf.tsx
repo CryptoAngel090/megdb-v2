@@ -3,13 +3,13 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
-import type { PopularActorItem } from '@/lib/tmdb'
-import { getImageUrl } from '@/lib/tmdb'
+import iconSlot from '@/components/IconSlot/iconSlot.module.css'
+import { ShelfRevealShell } from '@/components/ShelfRevealShell/ShelfRevealShell'
 import { PERSON_PROFILE_IMAGE_SIZES, PERSON_PROFILE_IMAGE_TMDB_SIZE } from '@/lib/imageSizes'
 // Spring animations removed per request — interactions now use instant or simple CSS transitions
 import { personPath } from '@/lib/slug'
-import { ShelfRevealShell } from '@/components/ShelfRevealShell/ShelfRevealShell'
-import iconSlot from '@/components/IconSlot/iconSlot.module.css'
+import type { PopularActorItem } from '@/lib/tmdb'
+import { getImageUrl } from '@/lib/tmdb'
 import styles from './PopularActorsShelf.module.css'
 
 interface PopularActorsShelfProps {
@@ -97,7 +97,11 @@ export function PopularActorsShelf({ actors }: PopularActorsShelfProps) {
         <div ref={rowRef} className={styles.row}>
           {actors.map((actor, i) => (
             <div key={actor.id} className={styles.cardMotionWrap}>
-              <Link href={personPath(actor.id, actor.name)} className={styles.card} title={actor.name}>
+              <Link
+                href={personPath(actor.id, actor.name)}
+                className={styles.card}
+                title={actor.name}
+              >
                 <div className={styles.avatarWrap}>
                   {actor.profilePath ? (
                     <Image

@@ -1,5 +1,5 @@
-import { TvSeriesDetailPageApp, generateTvSeriesDetailMetadata } from '@/lib/tvSeriesDetailRoute'
 import { getTopSeriesIdsForStaticParams } from '@/lib/tmdb'
+import { generateTvSeriesDetailMetadata, TvSeriesDetailPageApp } from '@/lib/tvSeriesDetailRoute'
 import styles from './page.module.css'
 
 /** @sync `ROUTE_REVALIDATE_MEDIA_DETAIL` in `@/lib/cachePolicy` */

@@ -20,9 +20,6 @@ importers:
       '@web-loom/design-core':
         specifier: ^0.5.6
         version: 0.5.6
-      babel-plugin-react-compiler:
-        specifier: ^1.0.0
-        version: 1.0.0
       eslint:
         specifier: ^9.0.0
         version: 9.39.4(jiti@2.6.1)
@@ -5839,6 +5836,7 @@ snapshots:
   babel-plugin-react-compiler@1.0.0:
     dependencies:
       '@babel/types': 7.29.0
+    optional: true
 
   balanced-match@1.0.2: {}
 

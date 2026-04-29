@@ -4,10 +4,10 @@ import Link from 'next/link'
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { MediaCard } from '@/components/MediaCard/MediaCard'
 import { ShelfRevealShell } from '@/components/ShelfRevealShell/ShelfRevealShell'
-// Spring animations removed per request — interactions now use instant or simple CSS transitions
-import styles from './MediaShelf.module.css'
 import type { ShelfItem } from '@/lib/tmdb'
 import type { CardSizeKey } from '@/theme/tokens/size'
+// Spring animations removed per request — interactions now use instant or simple CSS transitions
+import styles from './MediaShelf.module.css'
 
 interface MediaShelfProps {
   title: string

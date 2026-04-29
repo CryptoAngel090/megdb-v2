@@ -1,6 +1,6 @@
 import { useId } from 'react'
-import blockStyles from './MovieTrailerBlock.module.css'
 import { MovieTrailerBlockClient } from './MovieTrailerBlock.client'
+import blockStyles from './MovieTrailerBlock.module.css'
 
 type MovieTrailerBlockProps = {
   videoKey: string

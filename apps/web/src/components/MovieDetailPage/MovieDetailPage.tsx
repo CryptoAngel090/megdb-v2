@@ -1,17 +1,16 @@
-import { ViewTransition, type ReactNode } from 'react'
+import { ChevronLeft, Clock, Star } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { type ReactNode, ViewTransition } from 'react'
+import { FadeInView } from '@/components/FadeInView/FadeInView'
+import iconSlot from '@/components/IconSlot/iconSlot.module.css'
+import { blurHashToDataUrl } from '@/lib/blurhashToDataUrl'
+import { movieGenrePathById } from '@/lib/movieGenreRoute'
+import type { DetailMediaKind } from '@/lib/slug'
+import { containsCyrillic } from '@/lib/textScript'
 import type { MoviePageDetail } from '@/lib/tmdb'
 import { getImageUrl } from '@/lib/tmdb'
-import { containsCyrillic } from '@/lib/textScript'
-import type { DetailMediaKind } from '@/lib/slug'
-import { movieGenrePathById } from '@/lib/movieGenreRoute'
-import { blurHashToDataUrl } from '@/lib/blurhashToDataUrl'
-import { MovieShareButton } from './MovieShareButton'
-import { MovieWatchProvidersPanel } from './MovieWatchProvidersPanel'
-import { MovieHeroBackdropImage } from './MovieHeroBackdropImage'
-import { MovieHeroTrailerActions } from './MovieHeroTrailerActions'
-import { MoviePrimarySummaryPanel } from './MoviePrimarySummaryPanel'
+import { MovieCommentsRoot } from './MovieCommentsRoot.client'
 import {
   MovieCastSectionLazy,
   MovieCollectionSectionLazy,
@@ -19,11 +18,12 @@ import {
   MoviePhotosSectionLazy,
   MovieTrailerBlockLazy,
 } from './MovieDetailBelowFoldDynamics'
-import { MovieCommentsRoot } from './MovieCommentsRoot.client'
-import { FadeInView } from '@/components/FadeInView/FadeInView'
-import { ChevronLeft, Star, Clock } from 'lucide-react'
-import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './MovieDetailPage.module.css'
+import { MovieHeroBackdropImage } from './MovieHeroBackdropImage'
+import { MovieHeroTrailerActions } from './MovieHeroTrailerActions'
+import { MoviePrimarySummaryPanel } from './MoviePrimarySummaryPanel'
+import { MovieShareButton } from './MovieShareButton'
+import { MovieWatchProvidersPanel } from './MovieWatchProvidersPanel'
 
 const POSTER_BLUR =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
@@ -338,155 +338,155 @@ export function MovieDetailPage({
   return (
     <div id="movie-detail-page" className={styles.page}>
       <header className={styles.hero}>
-          <div
-            className={
-              heroCarouselEnabled
-                ? `${styles.heroBackdropReveal} ${styles.heroBackdropRevealCarousel}`
-                : styles.heroBackdropReveal
-            }
-          >
-            {/* Desktop: landscape backdrop fits wide screens, no carousel */}
-            {backdropUrl && (
-              <div className={`${styles.heroMediaFill} ${styles.heroDesktopBg}`}>
-                <MovieHeroBackdropImage
-                  focalAssetKey={`${movie.id}-hero-bd-${movie.backdropPath ?? ''}`}
-                  disableAutoFocal
-                  src={getImageUrl(movie.backdropPath, 'original')}
-                  alt=""
-                  fill
-                  priority
-                  fetchPriority="high"
-                  sizes="100vw"
-                  style={{
-                    objectPosition: '100% 20%',
-                    transform: 'scale(1.08) translateX(12%)',
-                  }}
-                  className={styles.heroImgCover}
-                  placeholder="blur"
-                  blurDataURL={heroBlurDataURL}
-                />
-              </div>
-            )}
-            {!posterBlurSrc && !backdropUrl && <div className={styles.heroSolid} />}
-            <div className={styles.heroTint} />
-            <div className={styles.heroVignette} />
+        <div
+          className={
+            heroCarouselEnabled
+              ? `${styles.heroBackdropReveal} ${styles.heroBackdropRevealCarousel}`
+              : styles.heroBackdropReveal
+          }
+        >
+          {/* Desktop: landscape backdrop fits wide screens, no carousel */}
+          {backdropUrl && (
+            <div className={`${styles.heroMediaFill} ${styles.heroDesktopBg}`}>
+              <MovieHeroBackdropImage
+                focalAssetKey={`${movie.id}-hero-bd-${movie.backdropPath ?? ''}`}
+                disableAutoFocal
+                src={getImageUrl(movie.backdropPath, 'original')}
+                alt=""
+                fill
+                priority
+                fetchPriority="high"
+                sizes="100vw"
+                style={{
+                  objectPosition: '100% 20%',
+                  transform: 'scale(1.08) translateX(12%)',
+                }}
+                className={styles.heroImgCover}
+                placeholder="blur"
+                blurDataURL={heroBlurDataURL}
+              />
+            </div>
+          )}
+          {!posterBlurSrc && !backdropUrl && <div className={styles.heroSolid} />}
+          <div className={styles.heroTint} />
+          <div className={styles.heroVignette} />
+        </div>
+
+        <div className={styles.heroForeground}>
+          <div className={styles.heroNav}>
+            <Link href={backHref} className={styles.backLink}>
+              <IconChevronLeft />
+              {backLabel}
+            </Link>
           </div>
 
-          <div className={styles.heroForeground}>
-            <div className={styles.heroNav}>
-              <Link href={backHref} className={styles.backLink}>
-                <IconChevronLeft />
-                {backLabel}
-              </Link>
-            </div>
-
-            <div className={styles.heroLayoutNoPoster}>
-              <div className={styles.heroCopy}>
-                {posterBlurSrc && !heroCarouselEnabled && (
-                  <ViewTransition name={`poster-${movie.id}`}>
-                    <Image
-                      src={posterBlurSrc}
-                      alt={`${movie.title} poster`}
-                      width={420}
-                      height={630}
-                      sizes="(max-width: 768px) 100vw, 500px"
-                      className={styles.heroOnlyPoster}
-                      priority
-                      fetchPriority="high"
-                      placeholder="blur"
-                      blurDataURL={heroBlurDataURL}
-                    />
-                  </ViewTransition>
-                )}
-                <div className={styles.heroInfoHidden}>
-                  {genreLinks != null && <div className={styles.heroGenresAbove}>{genreLinks}</div>}
-                  <h1 className={styles.heroTitle}>{movie.title.replace(/["""''«»]/g, '')}</h1>
-                  {heroQuotedLine && <p className={styles.heroTagline}>“{heroQuotedLine}”</p>}
-                  {mutedSecondTitle && <p className={styles.heroOriginal}>{mutedSecondTitle}</p>}
-                  <div className={styles.heroMeta}>
-                    <div
-                      className={styles.heroMetaPanel}
-                      role="group"
-                      aria-label="Release year, runtime, user score, age rating, and genres"
-                    >
-                      <div className={styles.heroMetaTrack}>
-                        {yearLabel && <span className={styles.heroYear}>{yearLabel}</span>}
-                        {runtimeLabel && (
-                          <>
-                            {yearLabel && (
-                              <span className={styles.metaDot} aria-hidden>
-                                ·
-                              </span>
-                            )}
-                            <span className={styles.metaIconRow}>
-                              <IconClock />
-                              {runtimeLabel}
+          <div className={styles.heroLayoutNoPoster}>
+            <div className={styles.heroCopy}>
+              {posterBlurSrc && !heroCarouselEnabled && (
+                <ViewTransition name={`poster-${movie.id}`}>
+                  <Image
+                    src={posterBlurSrc}
+                    alt={`${movie.title} poster`}
+                    width={420}
+                    height={630}
+                    sizes="(max-width: 768px) 100vw, 500px"
+                    className={styles.heroOnlyPoster}
+                    priority
+                    fetchPriority="high"
+                    placeholder="blur"
+                    blurDataURL={heroBlurDataURL}
+                  />
+                </ViewTransition>
+              )}
+              <div className={styles.heroInfoHidden}>
+                {genreLinks != null && <div className={styles.heroGenresAbove}>{genreLinks}</div>}
+                <h1 className={styles.heroTitle}>{movie.title.replace(/["""''«»]/g, '')}</h1>
+                {heroQuotedLine && <p className={styles.heroTagline}>“{heroQuotedLine}”</p>}
+                {mutedSecondTitle && <p className={styles.heroOriginal}>{mutedSecondTitle}</p>}
+                <div className={styles.heroMeta}>
+                  <div
+                    className={styles.heroMetaPanel}
+                    role="group"
+                    aria-label="Release year, runtime, user score, age rating, and genres"
+                  >
+                    <div className={styles.heroMetaTrack}>
+                      {yearLabel && <span className={styles.heroYear}>{yearLabel}</span>}
+                      {runtimeLabel && (
+                        <>
+                          {yearLabel && (
+                            <span className={styles.metaDot} aria-hidden>
+                              ·
                             </span>
-                          </>
-                        )}
-                        {movie.voteAverage > 0 && (
-                          <>
-                            {(yearLabel || runtimeLabel) && (
-                              <span className={styles.metaDot} aria-hidden>
-                                ·
-                              </span>
-                            )}
-                            <span className={styles.metaIconRow}>
-                              <IconStar className={styles.starGold ?? ''} />
-                              <strong>{movie.voteAverage.toFixed(1)}</strong>
-                              <span className={styles.rateTen}>/ 10</span>
+                          )}
+                          <span className={styles.metaIconRow}>
+                            <IconClock />
+                            {runtimeLabel}
+                          </span>
+                        </>
+                      )}
+                      {movie.voteAverage > 0 && (
+                        <>
+                          {(yearLabel || runtimeLabel) && (
+                            <span className={styles.metaDot} aria-hidden>
+                              ·
                             </span>
-                          </>
-                        )}
-                        {movie.ageRatingBadge && (
-                          <>
-                            {(yearLabel || runtimeLabel || movie.voteAverage > 0) && (
-                              <span className={styles.metaDot} aria-hidden>
-                                ·
-                              </span>
-                            )}
-                            <span className={styles.heroAgeText}>{movie.ageRatingBadge}</span>
-                          </>
-                        )}
-                        {genreLinks != null && (
-                          <>
-                            {(yearLabel ||
-                              runtimeLabel ||
-                              movie.voteAverage > 0 ||
-                              movie.ageRatingBadge) && (
-                              <span className={styles.metaDot} aria-hidden>
-                                ·
-                              </span>
-                            )}
-                            <div className={styles.heroGenresInline}>{genreLinks}</div>
-                          </>
-                        )}
-                        {movie.status && movie.status !== 'Released' && (
-                          <>
-                            <span className={styles.metaDot}>·</span>
-                            <span className={styles.statusPill}>{movie.status}</span>
-                          </>
-                        )}
-                      </div>
+                          )}
+                          <span className={styles.metaIconRow}>
+                            <IconStar className={styles.starGold ?? ''} />
+                            <strong>{movie.voteAverage.toFixed(1)}</strong>
+                            <span className={styles.rateTen}>/ 10</span>
+                          </span>
+                        </>
+                      )}
+                      {movie.ageRatingBadge && (
+                        <>
+                          {(yearLabel || runtimeLabel || movie.voteAverage > 0) && (
+                            <span className={styles.metaDot} aria-hidden>
+                              ·
+                            </span>
+                          )}
+                          <span className={styles.heroAgeText}>{movie.ageRatingBadge}</span>
+                        </>
+                      )}
+                      {genreLinks != null && (
+                        <>
+                          {(yearLabel ||
+                            runtimeLabel ||
+                            movie.voteAverage > 0 ||
+                            movie.ageRatingBadge) && (
+                            <span className={styles.metaDot} aria-hidden>
+                              ·
+                            </span>
+                          )}
+                          <div className={styles.heroGenresInline}>{genreLinks}</div>
+                        </>
+                      )}
+                      {movie.status && movie.status !== 'Released' && (
+                        <>
+                          <span className={styles.metaDot}>·</span>
+                          <span className={styles.statusPill}>{movie.status}</span>
+                        </>
+                      )}
                     </div>
-                    <MovieHeroTrailerActions
-                      movieId={movie.id}
-                      mediaType={similarMediaKind}
-                      movieTitle={movie.title}
-                      releaseDate={movie.releaseDate}
-                      hasTrailer={Boolean(trailerKey)}
-                      embedTitle={
-                        movie.trailer
-                          ? `${movie.title} — ${movie.trailer.name}`
-                          : `${movie.title} trailer`
-                      }
-                    />
                   </div>
+                  <MovieHeroTrailerActions
+                    movieId={movie.id}
+                    mediaType={similarMediaKind}
+                    movieTitle={movie.title}
+                    releaseDate={movie.releaseDate}
+                    hasTrailer={Boolean(trailerKey)}
+                    embedTitle={
+                      movie.trailer
+                        ? `${movie.title} — ${movie.trailer.name}`
+                        : `${movie.title} trailer`
+                    }
+                  />
                 </div>
               </div>
             </div>
           </div>
-        </header>
+        </div>
+      </header>
 
       <div id="movie-page-primary" className={styles.container}>
         <div className={styles.twoCol}>

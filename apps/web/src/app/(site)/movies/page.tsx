@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { MosaicHeroLcpPreload } from '@/components/MosaicHeroLcpPreload'
 import { MoviesDiscoverPage } from '@/components/MoviesDiscoverPage/MoviesDiscoverPage'
+import { buildCollectionPageStructuredData } from '@/lib/jsonLdSite'
+import { movieGenrePathById } from '@/lib/movieGenreRoute'
 import {
   getMoviesDiscoverCanonicalPath,
   getMoviesDiscoverDescription,
@@ -9,14 +11,13 @@ import {
   getMoviesDiscoverKeywords,
   getMoviesDiscoverTitle,
 } from '@/lib/moviesDiscoverCopy'
-import { buildCollectionPageStructuredData } from '@/lib/jsonLdSite'
 import { buildDiscoverHubSnippetTemplate } from '@/lib/seoSnippetTemplates'
 import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import {
-  discoverMoviesBrowse,
   discoverFetchKey,
-  discoverStateToFetchParams,
+  discoverMoviesBrowse,
   discoverStateToBrowseInput,
+  discoverStateToFetchParams,
   enrichMovieShelfRuntime,
   getMovieGenresList,
   getMovieStudiosList,
@@ -26,7 +27,6 @@ import {
   moviesDiscoverActiveFilterKeys,
   parseMoviesDiscoverSearchParams,
 } from '@/lib/tmdb'
-import { movieGenrePathById } from '@/lib/movieGenreRoute'
 import styles from './page.module.css'
 
 /** @sync `ROUTE_REVALIDATE_DISCOVER_HUB` in `@/lib/cachePolicy` */

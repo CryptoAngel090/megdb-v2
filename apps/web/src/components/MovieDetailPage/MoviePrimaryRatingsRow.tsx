@@ -1,6 +1,6 @@
-import { TmdbLogoMark } from './TmdbLogoMark'
-import { MovieUserRatingCard } from './MovieUserRatingCard'
 import styles from './MoviePrimarySummaryPanel.module.css'
+import { MovieUserRatingCard } from './MovieUserRatingCard'
+import { TmdbLogoMark } from './TmdbLogoMark'
 
 interface MoviePrimaryRatingsRowProps {
   tmdbDisplay: string

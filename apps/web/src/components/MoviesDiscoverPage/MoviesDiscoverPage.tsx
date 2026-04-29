@@ -1395,27 +1395,29 @@ export function MoviesDiscoverPage({
                 const item = items[idx]
                 if (item == null) return null
                 return (
-                <MediaCard
-                  id={item.id}
-                  type={item.type}
-                  title={item.title}
-                  posterPath={item.posterPath}
-                  synopsis={item.overview ?? null}
-                  voteAverage={item.voteAverage}
-                  releaseDate={item.releaseDate}
-                  genres={item.genres}
-                  posterContext="grid"
-                  {...(item.runtimeMinutes != null ? { runtimeMinutes: item.runtimeMinutes } : {})}
-                  listIndex={idx}
-                  priority={idx < 8}
-                  shelfReveal={false}
-                  enablePointerMotion={false}
-                  {...(enableDiscoverPolish
-                    ? {
-                        unifiedDiscoverMeta: true,
-                      }
-                    : {})}
-                />
+                  <MediaCard
+                    id={item.id}
+                    type={item.type}
+                    title={item.title}
+                    posterPath={item.posterPath}
+                    synopsis={item.overview ?? null}
+                    voteAverage={item.voteAverage}
+                    releaseDate={item.releaseDate}
+                    genres={item.genres}
+                    posterContext="grid"
+                    {...(item.runtimeMinutes != null
+                      ? { runtimeMinutes: item.runtimeMinutes }
+                      : {})}
+                    listIndex={idx}
+                    priority={idx < 8}
+                    shelfReveal={false}
+                    enablePointerMotion={false}
+                    {...(enableDiscoverPolish
+                      ? {
+                          unifiedDiscoverMeta: true,
+                        }
+                      : {})}
+                  />
                 )
               }}
             />

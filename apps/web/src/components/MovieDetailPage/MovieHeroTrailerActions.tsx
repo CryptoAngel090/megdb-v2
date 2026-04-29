@@ -1,11 +1,11 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
 import type { MediaType } from '@repo/types'
-import { isInLocalWatchlist, toggleLocalWatchlistItem } from '@/lib/localWatchlist'
+import { useCallback, useEffect, useState } from 'react'
 import { useToast } from '@/components/Toast/Toast'
-import { OPEN_MOVIE_TRAILER_EVENT } from './movieTrailerEvents'
+import { isInLocalWatchlist, toggleLocalWatchlistItem } from '@/lib/localWatchlist'
 import styles from './MovieDetailPage.module.css'
+import { OPEN_MOVIE_TRAILER_EVENT } from './movieTrailerEvents'
 
 type Props = {
   movieId: number
@@ -184,7 +184,10 @@ export function MovieHeroTrailerActions({
         )}
       </div>
 
-      <HeroNativeShareButton movieTitle={movieTitle} className={styles.heroMobileTrailerBtnSecondary} />
+      <HeroNativeShareButton
+        movieTitle={movieTitle}
+        className={styles.heroMobileTrailerBtnSecondary}
+      />
 
       <button
         type="button"

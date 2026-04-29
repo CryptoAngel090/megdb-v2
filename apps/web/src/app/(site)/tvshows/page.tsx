@@ -1,13 +1,6 @@
 import type { Metadata } from 'next'
 import { MosaicHeroLcpPreload } from '@/components/MosaicHeroLcpPreload'
 import { MoviesDiscoverPage } from '@/components/MoviesDiscoverPage/MoviesDiscoverPage'
-import {
-  getTvShowsDiscoverCanonicalPath,
-  getTvShowsDiscoverDescription,
-  getTvShowsDiscoverHeroLead,
-  getTvShowsDiscoverKeywords,
-  getTvShowsDiscoverTitle,
-} from '@/lib/tvShowsDiscoverCopy'
 import { buildCollectionPageStructuredData } from '@/lib/jsonLdSite'
 import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import {
@@ -16,14 +9,21 @@ import {
   discoverTvShowsStateToBrowseInput,
   discoverTvShowsStateToFetchParams,
   enrichTvShowsShelfRuntime,
+  getSeriesStudiosList,
   getTopTvShows2026MosaicPosterUrls,
   getTvGenresList,
   getWatchProvidersTvList,
-  getSeriesStudiosList,
   mapTmdbTvShowRowToShelfItem,
   moviesDiscoverActiveFilterKeys,
   parseTvShowsDiscoverSearchParams,
 } from '@/lib/tmdb'
+import {
+  getTvShowsDiscoverCanonicalPath,
+  getTvShowsDiscoverDescription,
+  getTvShowsDiscoverHeroLead,
+  getTvShowsDiscoverKeywords,
+  getTvShowsDiscoverTitle,
+} from '@/lib/tvShowsDiscoverCopy'
 import styles from './page.module.css'
 
 /** @sync `ROUTE_REVALIDATE_DISCOVER_HUB` in `@/lib/cachePolicy` */

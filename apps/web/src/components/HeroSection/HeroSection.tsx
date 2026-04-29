@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react'
-import { createPortal } from 'react-dom'
-import Link from 'next/link'
-import Image from 'next/image'
-import styles from './HeroSection.module.css'
 import type { MediaType } from '@repo/types'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
+import styles from './HeroSection.module.css'
 
 const TYPE_PATHS: Record<MediaType, string> = {
   movie: 'movie',
@@ -214,9 +214,7 @@ export function HeroSection({ slides }: HeroSectionProps) {
         </span>
 
         {imgSrc && (
-          <div
-            className={`${styles.backdrop} ${styles.backdropDissolve}`}
-          >
+          <div className={`${styles.backdrop} ${styles.backdropDissolve}`}>
             <div className={styles.backdropParallax}>
               <Image
                 src={imgSrc}
@@ -240,124 +238,110 @@ export function HeroSection({ slides }: HeroSectionProps) {
           <div className={styles.contentMain}>
             <h1 className={styles.title}>{currentSlide.title}</h1>
 
-              <div className={styles.meta}>
-                {rating && <span className={styles.rating}>★ {rating}</span>}
-                {rating && <span className={styles.separator} />}
-                {year && <span className={styles.year}>{year}</span>}
-                {currentSlide.runtime && (
-                  <>
-                    <span className={styles.separator} />
-                    <span className={styles.runtime}>
-                      {Math.floor(currentSlide.runtime / 60)}h {currentSlide.runtime % 60}m
-                    </span>
-                  </>
-                )}
-                {currentSlide.genres?.slice(0, 2).map((g) => (
-                  <span key={g} className={styles.genre}>
-                    {g}
+            <div className={styles.meta}>
+              {rating && <span className={styles.rating}>★ {rating}</span>}
+              {rating && <span className={styles.separator} />}
+              {year && <span className={styles.year}>{year}</span>}
+              {currentSlide.runtime && (
+                <>
+                  <span className={styles.separator} />
+                  <span className={styles.runtime}>
+                    {Math.floor(currentSlide.runtime / 60)}h {currentSlide.runtime % 60}m
                   </span>
-                ))}
+                </>
+              )}
+              {currentSlide.genres?.slice(0, 2).map((g) => (
+                <span key={g} className={styles.genre}>
+                  {g}
+                </span>
+              ))}
+            </div>
+
+            <p className={styles.overview}>{currentSlide.overview}</p>
+
+            <div className={styles.buttons}>
+              <div>
+                {currentSlide.trailerKey ? (
+                  <button
+                    type="button"
+                    className={styles.btnPrimary}
+                    onClick={() => openTrailer(currentSlide.trailerKey!)}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                    Watch Trailer
+                  </button>
+                ) : (
+                  <Link href={href} className={styles.btnPrimary}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                    Watch Now
+                  </Link>
+                )}
               </div>
 
-              <p className={styles.overview}>
-                {currentSlide.overview}
-              </p>
+              <div>
+                <Link href={href} className={styles.btnSecondary}>
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    aria-hidden
+                  >
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
+                  Movie Details
+                </Link>
+              </div>
 
-              <div className={styles.buttons}>
-                <div>
-                  {currentSlide.trailerKey ? (
-                    <button
-                      type="button"
-                      className={styles.btnPrimary}
-                      onClick={() => openTrailer(currentSlide.trailerKey!)}
-                    >
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        aria-hidden
-                      >
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                      Watch Trailer
-                    </button>
-                  ) : (
-                    <Link href={href} className={styles.btnPrimary}>
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        aria-hidden
-                      >
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                      Watch Now
-                    </Link>
-                  )}
-                </div>
-
-                <div>
-                  <Link href={href} className={styles.btnSecondary}>
+              {validSlides.length > 1 && (
+                <div className={styles.navArrows}>
+                  <button
+                    type="button"
+                    className={styles.navArrow}
+                    onClick={goToPrev}
+                    aria-label="Previous slide"
+                  >
                     <svg
                       width="18"
                       height="18"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
-                      strokeWidth="2"
+                      strokeWidth="2.5"
                       aria-hidden
                     >
-                      <path d="M12 5v14M5 12h14" />
+                      <path d="M15 18l-6-6 6-6" />
                     </svg>
-                    Movie Details
-                  </Link>
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.navArrow}
+                    onClick={goToNext}
+                    aria-label="Next slide"
+                  >
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      aria-hidden
+                    >
+                      <path d="M9 18l6-6-6-6" />
+                    </svg>
+                  </button>
                 </div>
-
-                {validSlides.length > 1 && (
-                  <div className={styles.navArrows}>
-                    <button
-                      type="button"
-                      className={styles.navArrow}
-                      onClick={goToPrev}
-                      aria-label="Previous slide"
-                    >
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                        aria-hidden
-                      >
-                        <path d="M15 18l-6-6 6-6" />
-                      </svg>
-                    </button>
-                    <button
-                      type="button"
-                      className={styles.navArrow}
-                      onClick={goToNext}
-                      aria-label="Next slide"
-                    >
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                        aria-hidden
-                      >
-                        <path d="M9 18l6-6-6-6" />
-                      </svg>
-                    </button>
-                  </div>
-                )}
-              </div>
+              )}
             </div>
           </div>
+        </div>
 
         {validSlides.length > 1 && (
           <>
@@ -406,11 +390,7 @@ export function HeroSection({ slides }: HeroSectionProps) {
         ? createPortal(
             <>
               {isModalOpen && modalTrailerKey ? (
-                <div
-                  className={styles.modal}
-                  role="presentation"
-                  onClick={closeModal}
-                >
+                <div className={styles.modal} role="presentation" onClick={closeModal}>
                   <div
                     className={styles.modalContent}
                     role="dialog"

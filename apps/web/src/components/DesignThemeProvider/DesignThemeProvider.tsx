@@ -1,8 +1,8 @@
 'use client'
 
+import { applyTheme, createTheme } from '@web-loom/design-core/utils'
 // client: uses useEffect to inject CSS variables via design-core theme API
 import { useEffect } from 'react'
-import { applyTheme, createTheme } from '@web-loom/design-core/utils'
 import {
   borderRadius,
   cardSize,

@@ -1,6 +1,6 @@
+import { spawnSync } from 'node:child_process'
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { spawnSync } from 'node:child_process'
 
 const checks = [
   { id: 'contracts', command: 'pnpm', args: ['run', 'verify:seo:contracts'] },

@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import type { NextConfig } from 'next'
 import bundleAnalyzer from '@next/bundle-analyzer'
+import type { NextConfig } from 'next'
 
 /**
  * Monorepo: Next only auto-loads `apps/web/.env*`. If `TMDB_API_KEY` lives in the

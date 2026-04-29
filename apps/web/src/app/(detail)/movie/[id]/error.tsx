@@ -27,7 +27,11 @@ export default function MovieDetailError({
         </p>
         {error.digest ? <p className={styles.digest}>Error ID: {error.digest}</p> : null}
         <div className={styles.actions}>
-          <button type="button" className={`${styles.btn} ${styles.btnPrimary}`} onClick={() => reset()}>
+          <button
+            type="button"
+            className={`${styles.btn} ${styles.btnPrimary}`}
+            onClick={() => reset()}
+          >
             Try again
           </button>
           <a href="/movies" className={`${styles.btn} ${styles.btnGhost}`}>

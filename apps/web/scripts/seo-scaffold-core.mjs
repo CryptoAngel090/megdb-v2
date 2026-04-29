@@ -1,9 +1,9 @@
 import ts from 'typescript'
 import {
-  walk,
-  isExportedVariable,
-  hasExportedFunction,
   hasCallExpression,
+  hasExportedFunction,
+  isExportedVariable,
+  walk,
 } from './ts-ast-utils.mjs'
 
 export function parseScaffoldSource(path, source) {

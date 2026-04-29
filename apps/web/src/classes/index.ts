@@ -1,4 +1,4 @@
 export {
-  gridGapClasses,
   gridColumnClasses,
+  gridGapClasses,
 } from '@/theme/tokens/classes'

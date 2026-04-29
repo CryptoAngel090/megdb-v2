@@ -1,8 +1,8 @@
 import { jsonLdMainEntityId, jsonLdSameAsPerson } from '@/lib/jsonLdEntity'
-import type { PersonPageDetail } from '@/lib/tmdb'
-import { getImageUrl } from '@/lib/tmdb'
 import { SITE_URL } from '@/lib/site'
 import { containsCyrillic } from '@/lib/textScript'
+import type { PersonPageDetail } from '@/lib/tmdb'
+import { getImageUrl } from '@/lib/tmdb'
 
 export function buildJsonLdPerson(person: PersonPageDetail, canonicalPath: string) {
   const image = person.profilePath ? getImageUrl(person.profilePath, 'h632') : undefined

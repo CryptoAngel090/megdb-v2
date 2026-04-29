@@ -1,9 +1,9 @@
 'use client'
 
-import type { ReactNode } from 'react'
 import dynamic from 'next/dynamic'
-import { ToastProvider } from '@/components/Toast/Toast'
+import type { ReactNode } from 'react'
 import { SessionProvider } from '@/components/Providers/SessionProvider'
+import { ToastProvider } from '@/components/Toast/Toast'
 
 const Header = dynamic(() => import('@/components/Header/Header').then((m) => m.Header), {
   ssr: false,

@@ -1,5 +1,5 @@
-import { readFileSync, statSync, mkdirSync, writeFileSync, readdirSync } from 'node:fs'
-import { resolve, join } from 'node:path'
+import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
+import { join, resolve } from 'node:path'
 import vm from 'node:vm'
 
 function parseArgs() {

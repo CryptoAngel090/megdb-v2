@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
 import type { MediaType } from '@repo/types'
+import { NextRequest, NextResponse } from 'next/server'
 import { detailPathForMedia } from '@/lib/slug'
 import { getMoviePageDataShell, getTvPageDataShell } from '@/lib/tmdb'
 

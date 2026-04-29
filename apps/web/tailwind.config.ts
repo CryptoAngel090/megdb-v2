@@ -1,5 +1,5 @@
 import type { Config } from 'tailwindcss'
-
+import { color } from '../../theme/tokens/colors'
 import {
   cardSize,
   gridColumn,
@@ -8,7 +8,6 @@ import {
   letterSpacing,
   lineHeight,
 } from '../../theme/tokens/size'
-import { color } from '../../theme/tokens/colors'
 
 /**
  * Maps `theme/tokens/size.ts` into Tailwind theme keys.

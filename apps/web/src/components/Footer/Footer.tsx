@@ -1,16 +1,16 @@
+import { ExternalLink, Play } from 'lucide-react'
 import Link from 'next/link'
-import {
-  FooterSpotlight,
-  CountUp,
-  MagneticLink,
-  ActiveNavLink,
-  NewsletterForm,
-  LastUpdated,
-} from './FooterClient'
 import { FadeInView } from '@/components/FadeInView/FadeInView'
-import { Play, ExternalLink } from 'lucide-react'
 import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './Footer.module.css'
+import {
+  ActiveNavLink,
+  CountUp,
+  FooterSpotlight,
+  LastUpdated,
+  MagneticLink,
+  NewsletterForm,
+} from './FooterClient'
 
 // ── Data ─────────────────────────────────────────────────
 

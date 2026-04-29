@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { MosaicHeroLcpPreload } from '@/components/MosaicHeroLcpPreload'
 import { MoviesDiscoverPage } from '@/components/MoviesDiscoverPage/MoviesDiscoverPage'
 import { buildCollectionPageStructuredData } from '@/lib/jsonLdSite'
+import { buildDiscoverHubSnippetTemplate } from '@/lib/seoSnippetTemplates'
+import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import {
   getSeriesDiscoverCanonicalPath,
   getSeriesDiscoverDescription,
@@ -9,8 +11,6 @@ import {
   getSeriesDiscoverKeywords,
   getSeriesDiscoverTitle,
 } from '@/lib/seriesDiscoverCopy'
-import { buildDiscoverHubSnippetTemplate } from '@/lib/seoSnippetTemplates'
-import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
 import {
   discoverSeriesBrowse,
   discoverSeriesFetchKey,

@@ -125,65 +125,44 @@ export function MovieShareButton({ title, className, unstyled, icon, iconOnly }:
 
   const urlForLinks = useShareUrl()
 
-  const modal = (
-    open ? (
-      <div className={styles.modalBackdrop} role="presentation" onClick={close}>
-        <div
-          className={styles.modalPanel}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={titleId}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className={styles.modalHeader}>
-            <div>
-              <h2 id={titleId} className={styles.modalTitle}>
-                Share
-              </h2>
-              <p className={styles.modalSubtitle}>{title}</p>
-            </div>
-            <button
-              type="button"
-              className={styles.modalClose}
-              onClick={close}
-              aria-label="Close share dialog"
-            >
-              <svg
-                className={`${iconSlot.block} ${iconSlot.inline18}`}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                aria-hidden
-              >
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
-            </button>
+  const modal = open ? (
+    <div className={styles.modalBackdrop} role="presentation" onClick={close}>
+      <div
+        className={styles.modalPanel}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className={styles.modalHeader}>
+          <div>
+            <h2 id={titleId} className={styles.modalTitle}>
+              Share
+            </h2>
+            <p className={styles.modalSubtitle}>{title}</p>
           </div>
+          <button
+            type="button"
+            className={styles.modalClose}
+            onClick={close}
+            aria-label="Close share dialog"
+          >
+            <svg
+              className={`${iconSlot.block} ${iconSlot.inline18}`}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              aria-hidden
+            >
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
 
-          <div className={styles.modalBody}>
-            {canNativeShare && (
-              <button type="button" className={styles.actionRow} onClick={() => void nativeShare()}>
-                <span className={styles.actionIcon} aria-hidden>
-                  <svg
-                    className={`${iconSlot.block} ${iconSlot.inline22}`}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <circle cx="18" cy="5" r="3" />
-                    <circle cx="6" cy="12" r="3" />
-                    <circle cx="18" cy="19" r="3" />
-                    <path d="m8.59 13.51 6.83 3.98M15.41 6.49l-6.82 3.98" strokeLinecap="round" />
-                  </svg>
-                </span>
-                <span className={styles.actionLabel}>Apps on this device</span>
-                <span className={styles.actionHint}>System share sheet</span>
-              </button>
-            )}
-
-            <button type="button" className={styles.actionRow} onClick={() => void copyLink()}>
+        <div className={styles.modalBody}>
+          {canNativeShare && (
+            <button type="button" className={styles.actionRow} onClick={() => void nativeShare()}>
               <span className={styles.actionIcon} aria-hidden>
                 <svg
                   className={`${iconSlot.block} ${iconSlot.inline22}`}
@@ -192,43 +171,62 @@ export function MovieShareButton({ title, className, unstyled, icon, iconOnly }:
                   stroke="currentColor"
                   strokeWidth="2"
                 >
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  <circle cx="18" cy="5" r="3" />
+                  <circle cx="6" cy="12" r="3" />
+                  <circle cx="18" cy="19" r="3" />
+                  <path d="m8.59 13.51 6.83 3.98M15.41 6.49l-6.82 3.98" strokeLinecap="round" />
                 </svg>
               </span>
-              <span className={styles.actionLabel}>{copied ? 'Link copied' : 'Copy link'}</span>
+              <span className={styles.actionLabel}>Apps on this device</span>
+              <span className={styles.actionHint}>System share sheet</span>
             </button>
+          )}
 
-            <p className={styles.gridLabel}>Social & messengers</p>
-            <ul className={styles.targetGrid} role="list">
-              {SHARE_TARGETS.map((t) => (
-                <li key={t.id}>
-                  <a
-                    href={t.href(urlForLinks, title)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.targetLink}
-                    onClick={close}
-                  >
-                    {t.label}
-                  </a>
-                </li>
-              ))}
-              <li>
+          <button type="button" className={styles.actionRow} onClick={() => void copyLink()}>
+            <span className={styles.actionIcon} aria-hidden>
+              <svg
+                className={`${iconSlot.block} ${iconSlot.inline22}`}
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+              </svg>
+            </span>
+            <span className={styles.actionLabel}>{copied ? 'Link copied' : 'Copy link'}</span>
+          </button>
+
+          <p className={styles.gridLabel}>Social & messengers</p>
+          <ul className={styles.targetGrid} role="list">
+            {SHARE_TARGETS.map((t) => (
+              <li key={t.id}>
                 <a
-                  href={`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`${title}\n${urlForLinks}`)}`}
+                  href={t.href(urlForLinks, title)}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className={styles.targetLink}
                   onClick={close}
                 >
-                  Email
+                  {t.label}
                 </a>
               </li>
-            </ul>
-          </div>
+            ))}
+            <li>
+              <a
+                href={`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`${title}\n${urlForLinks}`)}`}
+                className={styles.targetLink}
+                onClick={close}
+              >
+                Email
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
-    ) : null
-  )
+    </div>
+  ) : null
 
   return (
     <>

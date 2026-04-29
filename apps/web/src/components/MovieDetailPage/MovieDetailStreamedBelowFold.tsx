@@ -1,17 +1,17 @@
+import type { ReactNode } from 'react'
+import type { DetailMediaKind } from '@/lib/slug'
 import {
   getMoviePageDataTailMovie,
   getTvPageDataTailTv,
   type MoviePageCastMember,
   type MoviePageDetailTailInput,
 } from '@/lib/tmdb'
-import type { DetailMediaKind } from '@/lib/slug'
+import { MovieCommentsRoot } from './MovieCommentsRoot.client'
 import {
   MovieCastSectionLazy,
   MovieCollectionSectionLazy,
   MoviePhotosSectionLazy,
 } from './MovieDetailBelowFoldDynamics'
-import { MovieCommentsRoot } from './MovieCommentsRoot.client'
-import type { ReactNode } from 'react'
 
 interface MovieDetailStreamedBelowFoldProps {
   tailInput: MoviePageDetailTailInput

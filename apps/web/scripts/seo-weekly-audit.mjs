@@ -1,6 +1,6 @@
+import { spawnSync } from 'node:child_process'
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { spawnSync } from 'node:child_process'
 
 const reportsDir = join(process.cwd(), '.seo', 'reports')
 const monitorSnapshotPath = join(process.cwd(), '.seo', 'monitor-snapshot.json')

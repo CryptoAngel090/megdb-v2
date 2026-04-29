@@ -1,9 +1,9 @@
 'use client'
 
-import { forwardRef } from 'react'
-import type { ComponentPropsWithoutRef } from 'react'
-import { motion } from 'framer-motion'
 import type { HTMLMotionProps } from 'framer-motion'
+import { motion } from 'framer-motion'
+import type { ComponentPropsWithoutRef } from 'react'
+import { forwardRef } from 'react'
 import { buttonVariants } from './Button.animations'
 import styles from './Button.module.css'
 

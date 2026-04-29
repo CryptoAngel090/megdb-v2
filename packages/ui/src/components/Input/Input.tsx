@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { useState } from 'react'
 import { inputVariants } from './Input.animations'
 import styles from './Input.module.css'
 

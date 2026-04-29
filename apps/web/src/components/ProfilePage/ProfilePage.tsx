@@ -1,26 +1,27 @@
 'use client'
+
 // client: local profile UI, tabs, client-only auth stub (getUser/saveUser)
 
-import { useEffect, useState, useRef } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { Button } from '@repo/ui/button'
-import { getUser, saveUser, clearUser, type User } from '@/lib/auth-client'
 import {
   Bookmark,
-  CheckCircle,
-  Star,
-  Heart,
-  Pencil,
-  LogOut,
   Camera,
-  Film,
-  Tv,
-  Compass,
+  CheckCircle,
   Clock,
+  Compass,
+  Film,
   Globe,
+  Heart,
+  LogOut,
+  Pencil,
+  Star,
+  Tv,
 } from 'lucide-react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useEffect, useRef, useState } from 'react'
 import iconSlot from '@/components/IconSlot/iconSlot.module.css'
+import { clearUser, getUser, saveUser, type User } from '@/lib/auth-client'
 import styles from './ProfilePage.module.css'
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
@@ -497,11 +498,7 @@ export function ProfilePage() {
         <div className={styles.heroContent}>
           <div className={styles.heroLeft}>
             {/* Avatar */}
-            <div
-              className={styles.avatarWrap}
-              onClick={handleAvatarClick}
-              title="Change photo"
-            >
+            <div className={styles.avatarWrap} onClick={handleAvatarClick} title="Change photo">
               <div className={styles.avatar}>
                 {user.avatarUrl ? (
                   <img

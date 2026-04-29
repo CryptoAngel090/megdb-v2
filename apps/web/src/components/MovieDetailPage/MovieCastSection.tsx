@@ -1,11 +1,11 @@
+import { Users } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import type { MoviePageCastMember } from '@/lib/tmdb'
-import { getImageUrl } from '@/lib/tmdb'
+import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import { PERSON_PROFILE_IMAGE_SIZES, PERSON_PROFILE_IMAGE_TMDB_SIZE } from '@/lib/imageSizes'
 import { personPath } from '@/lib/slug'
-import { Users } from 'lucide-react'
-import iconSlot from '@/components/IconSlot/iconSlot.module.css'
+import type { MoviePageCastMember } from '@/lib/tmdb'
+import { getImageUrl } from '@/lib/tmdb'
 import styles from './MovieCastSection.module.css'
 
 const BLUR =

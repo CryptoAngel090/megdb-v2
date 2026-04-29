@@ -3,10 +3,10 @@ import { Suspense } from 'react'
 import { HeroSection } from '@/components/HeroSection/HeroSection'
 import { HomeDiscoverShelves } from '@/components/HomeDiscoverShelves/HomeDiscoverShelves'
 import { HomeShelvesFallback } from '@/components/HomeDiscoverShelves/HomeShelvesFallback'
-import { getHeroItems } from '@/lib/tmdb'
 import { HomeLcpPreloadLinks } from '@/components/HomeLcpPreloadLinks'
 import { buildHomeStructuredData } from '@/lib/jsonLdSite'
 import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
+import { getHeroItems } from '@/lib/tmdb'
 import styles from './page.module.css'
 
 /** @sync `ROUTE_REVALIDATE_HOME` in `@/lib/cachePolicy` */

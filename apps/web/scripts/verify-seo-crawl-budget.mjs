@@ -1,11 +1,11 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
+import { parseRouteQueryKeys, toRouteDepths } from './seo-crawl-budget-core.mjs'
 import {
   extractInternalLinkCandidates,
   normalizeRoutePath,
   siteUrlTokenToPath,
 } from './seo-internal-links-core.mjs'
-import { parseRouteQueryKeys, toRouteDepths } from './seo-crawl-budget-core.mjs'
 
 const ROOT = process.cwd()
 const APP_DIR = join(ROOT, 'src', 'app')

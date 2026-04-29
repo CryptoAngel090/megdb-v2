@@ -1,12 +1,13 @@
 'use client'
+
 // client: form state, router, fetch to API
 
-import { useState } from 'react'
+import { Button } from '@repo/ui/button'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Button } from '@repo/ui/button'
-import { parseStoredUser, saveUser } from '@/lib/auth-client'
+import { useState } from 'react'
 import iconSlot from '@/components/IconSlot/iconSlot.module.css'
+import { parseStoredUser, saveUser } from '@/lib/auth-client'
 import styles from './LoginForm.module.css'
 
 function isRecord(v: unknown): v is Record<string, unknown> {

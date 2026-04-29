@@ -1,8 +1,8 @@
-import type { MetadataRoute } from 'next'
 import { statSync } from 'node:fs'
 import { join } from 'node:path'
-import { fetchDiscoverUrlsForSitemap } from '@/lib/sitemapDiscoverUrls'
+import type { MetadataRoute } from 'next'
 import { SITE_URL } from '@/lib/site'
+import { fetchDiscoverUrlsForSitemap } from '@/lib/sitemapDiscoverUrls'
 import { chunkSitemapEntries, toSitemapIds } from '@/lib/sitemapUtils'
 
 /** @sync `ROUTE_REVALIDATE_SITEMAP` in `@/lib/cachePolicy` */

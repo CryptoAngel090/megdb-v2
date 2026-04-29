@@ -1,10 +1,10 @@
+import { buildCanonicalPath } from '@/lib/canonicalQuery'
 import {
   EPISODE_RUNTIME_BUCKET_LABELS,
   formatDiscoverLanguageCode,
   formatDiscoverRegionCode,
   formatDiscoverSortHuman,
 } from '@/lib/discoverCopyHelpers'
-import { buildCanonicalPath } from '@/lib/canonicalQuery'
 import type {
   TmdbGenreListItem,
   TmdbStudioListItem,

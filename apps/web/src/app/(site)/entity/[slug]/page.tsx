@@ -3,9 +3,9 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { SearchPageClient } from '@/components/SearchPage/SearchPageClient'
 import { WebPageJsonLd } from '@/components/WebPageJsonLd/WebPageJsonLd'
+import { entityCanonicalSlug, entityQueryFromSlug } from '@/lib/entitySearch'
 import { buildEntitySnippetTemplate } from '@/lib/seoSnippetTemplates'
 import { discoverPageAlternates, discoverSocialMeta } from '@/lib/seoSocial'
-import { entityCanonicalSlug, entityQueryFromSlug } from '@/lib/entitySearch'
 import styles from './page.module.css'
 
 /** @sync `ROUTE_REVALIDATE_SEARCH_DYNAMIC` in `@/lib/cachePolicy` */
