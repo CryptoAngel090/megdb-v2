@@ -2,14 +2,16 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Fixed trailer playback blockers in local production: trailer open now survives hydration timing races, and CSP now allows YouTube embeds (`frame-src`/`child-src` for youtube + youtube-nocookie) so iframe is no longer blocked.
+**Last focus:** Split `MoviesDiscoverPage` (~1471 lines) by responsibility: `*.types.ts`, `*.constants.ts`, `*.helpers.ts`, `*.hooks.ts`, `MoviesDiscoverPageChrome` / `DesktopFilters` / `MobileFiltersModal` / `Results` / `VirtuosoGrid`; main `MoviesDiscoverPage.tsx` is now ~245 lines (orchestration only). `pnpm exec tsc --noEmit` in `apps/web` green.
 
-**Next:** Recheck movie trailer playback on `http://localhost:3401` and tune only if any browser-specific issue remains.
+**Next:** Optional split for `MoviesDiscoverPageMobileFiltersModal.tsx` (~556 lines) or CSS slice of `MovieDetailPage.module.css`; optional `next build` smoke.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-30 — Discover page split: extracted types/constants/helpers/hooks + `Chrome`/`Results`/Virtuoso wrappers from `MoviesDiscoverPage.tsx` (main file now under 250 lines).
+- 2026-04-30 — TMDB entry: deleted monolith body of `tmdb.ts`; file is now re-exports from `tmdb.facade.ts` only (split `tmdb.*` modules are the source of truth).
 - 2026-04-30 — Git: committed **MegDB v1** on branch `chore/safety-checkpoint-start` (trailer open handshake, YouTube `frame-src`/`child-src` in middleware, PROGRESS). Unstaged: `tsbuildinfo`, `.seo/reports/*` dumps, other `??` facades/splits.
 - 2026-04-30 — Local production compare: `pnpm exec next build` in `apps/web` (after removing untracked `MoviesDiscoverPage.facade.tsx` that broke TS — invalid `linkPrefetch` on `MediaCard`); `next start` on `http://localhost:3401` (3100 was EADDRINUSE).
 - 2026-04-30 — Trailer hotfix: added pending-open handshake in `movieTrailerEvents.ts` (`triggerMovieTrailerOpen` + `consumePendingMovieTrailerOpen`) and switched hero/summary trailer CTAs + modal listener to use it, fixing no-op trailer clicks before trailer block hydration; `@repo/web` type-check and lints are green.
