@@ -564,42 +564,6 @@
     opacity 200ms ease;
 }
 
-/* New badge */
-.newBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  padding-block: 2px;
-  padding-inline: 5px;
-  background: var(--color-primary-muted);
-  border: 1px solid var(--color-primary-border);
-  border-radius: 4px;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--primary);
-  flex-shrink: 0;
-}
-
-.newBadgeDot {
-  display: inline-block;
-  inline-size: 5px;
-  block-size: 5px;
-  border-radius: 50%;
-  background: var(--primary);
-  animation: pulse-red 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse-red {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.35;
-  }
-}
-
 @media (max-width: 767px) {
   .navLink {
     min-block-size: 44px;
@@ -838,9 +802,6 @@
     animation: none;
   }
   .statusDot {
-    animation: none;
-  }
-  .newBadgeDot {
     animation: none;
   }
   .newsletterSpinner {

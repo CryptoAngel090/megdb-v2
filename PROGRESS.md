@@ -2,14 +2,15 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Executed Batch #2 `TRIM` micro-pass #3: removed dead `newsletterError` CSS block from `Footer.module.css` after the corresponding footer error-state render path was removed.
+**Last focus:** Executed obvious dead-code batch (single theme): removed unused footer CSS classes/keyframes for legacy “new badge” UI (`.newBadge`, `.newBadgeDot`, `pulse-red`) with zero references in current markup.
 
-**Next:** Continue `TRIM` micro-batches with explicit dead-reference proof (`rg` + component usage) before each commit.
+**Next:** Continue obvious dead-code batches one theme at a time (unused imports/constants/helpers/types/exports/legacy branches), each followed by verification gates and checkpoint commit.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-29 — Obvious dead-code batch: removed unreferenced footer badge styling (`.newBadge`, `.newBadgeDot`, `@keyframes pulse-red`) from `apps/web/src/components/Footer/Footer.module.css` after `rg` usage proof showed zero live references.
 - 2026-04-29 — Batch #2 trim micro-pass #3: deleted unused `.newsletterError` style in `apps/web/src/components/Footer/Footer.module.css` (no remaining component reference), then reran verification.
 - 2026-04-29 — Batch #2 trim micro-pass #2: removed unused `isNew` field from `apps/web/src/components/Footer/Footer.tsx` footer link interface and data (no consumer path), then revalidated checks.
 - 2026-04-29 — Batch #2 trim micro-pass: in `apps/web/src/components/Footer/FooterClient.tsx` removed unreachable newsletter `error` status branch and narrowed state union to `idle|loading|success`; lint/SEO checks remain green.
