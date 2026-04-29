@@ -1,0 +1,25 @@
+{
+  "source": ["tokens/style-dictionary.tokens.json"],
+  "platforms": {
+    "css": {
+      "transformGroup": "css",
+      "buildPath": "theme/generated/",
+      "files": [
+        {
+          "destination": "tokens.css",
+          "format": "css/variables"
+        }
+      ]
+    },
+    "tailwind": {
+      "transformGroup": "js",
+      "buildPath": "theme/generated/",
+      "files": [
+        {
+          "destination": "tailwind.tokens.json",
+          "format": "json/nested"
+        }
+      ]
+    }
+  }
+}

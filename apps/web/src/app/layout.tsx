@@ -1,19 +1,9 @@
 import type { Metadata } from 'next'
-import { Suspense } from 'react'
+import { headers } from 'next/headers'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
-import { Header } from '@/components/Header/Header'
-import { Footer } from '@/components/Footer/Footer'
-import {
-  DeferredBackToTop,
-  DeferredRippleScroll,
-} from '@/components/DeferredAppChrome/DeferredAppChrome'
-import { NavigationProgress } from '@/components/NavigationProgress/NavigationProgress'
-import { ToastProvider } from '@/components/Toast/Toast'
-import { PerformanceMonitor } from '@/components/PerformanceMonitor/PerformanceMonitor'
-import { DesignThemeProvider } from '@/components/DesignThemeProvider/DesignThemeProvider'
-import { SessionProvider } from '@/components/Providers/SessionProvider'
 import { SEO_CONTACT_EMAIL, SEO_LAST_REVIEWED_AT, SEO_PUBLISHER_NAME } from '@/lib/seoFreshness'
 import { SITE_URL } from '@/lib/site'
+import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration'
 import '@/styles/globals.css'
 import '@/styles/design-tokens.generated.css'
 import '@/styles/tailwind.css'
@@ -21,10 +11,26 @@ import '@/styles/base.css'
 import '@/styles/keyframes-motion.css'
 import '@/styles/app-layers.css'
 
+const speculationRules = {
+  prerender: [
+    {
+      where: { href_matches: '/movie/*' },
+      eagerness: 'moderate',
+    },
+  ],
+  prefetch: [
+    {
+      where: { href_matches: '/person/*' },
+      eagerness: 'conservative',
+    },
+  ],
+} as const
+
 const inter = Inter({
-  subsets: ['latin'],
+  subsets: ['latin', 'cyrillic'],
   variable: '--font-inter',
   display: 'swap',
+  preload: true,
 })
 
 const jakarta = Plus_Jakarta_Sans({
@@ -82,7 +88,9 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function SiteRootLayout({ children }: { children: React.ReactNode }) {
+  const nonce = (await headers()).get('x-nonce') ?? undefined
+
   return (
     <html lang="en" className={`${inter.variable} ${jakarta.variable}`}>
       <head>
@@ -90,26 +98,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://image.tmdb.org" />
         <link rel="dns-prefetch" href="https://image.tmdb.org" />
         <link rel="preconnect" href="https://api.themoviedb.org" />
+        <script
+          type="speculationrules"
+          nonce={nonce}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(speculationRules) }}
+        />
       </head>
       <body>
-        <DesignThemeProvider />
-        {/* PerformanceMonitor: FPS sampling — dev/staging only, not in production */}
-        {process.env.NODE_ENV !== 'production' && <PerformanceMonitor />}
-        <DeferredRippleScroll />
-        {/* rule 69: progress bar вверху при навигации */}
-        <Suspense fallback={null}>
-          <NavigationProgress />
-        </Suspense>
-        <SessionProvider>
-          <ToastProvider>
-            <Header />
-            <main id="main-content" className="layout-main">
-              {children}
-            </main>
-            <Footer />
-            <DeferredBackToTop />
-          </ToastProvider>
-        </SessionProvider>
+        {children}
+        <ServiceWorkerRegistration />
         {/* Last in <body> so portaled overlays (e.g. episode modal) stack above app chrome */}
         <div id="megdb-portal-root" />
       </body>

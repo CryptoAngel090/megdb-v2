@@ -7,6 +7,7 @@ import {
   CACHE_TAG_PEOPLE,
   CACHE_TAG_DISCOVER_MOVIES,
   CACHE_TAG_DISCOVER_TV,
+  CACHE_TAG_MOVIES,
   cacheTagMovie,
   cacheTagTv,
   cacheTagPerson,
@@ -25,6 +26,7 @@ import {
  *   tmdb-all-time          — top-rated all-time lists
  *   tmdb-people            — popular actors
  *   tmdb-discover-movies   — movies discover hub
+ *   movies                 — compatibility alias for movie dataset
  *   tmdb-discover-tv       — TV discover hub
  *   tmdb-movie-{id}        — single movie detail
  *   tmdb-tv-{id}           — single TV detail
@@ -41,6 +43,7 @@ const VALID_COARSE_TAGS = new Set([
   CACHE_TAG_PEOPLE,
   CACHE_TAG_DISCOVER_MOVIES,
   CACHE_TAG_DISCOVER_TV,
+  CACHE_TAG_MOVIES,
 ])
 
 function resolveTag(raw: string): string | null {

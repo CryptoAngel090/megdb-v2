@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { EmptyState } from '@/components/EmptyState/EmptyState'
+import styles from './error.module.css'
 
 export default function Error({
   error,
@@ -15,12 +15,14 @@ export default function Error({
   }, [error])
 
   return (
-    <EmptyState
-      icon="⚠️"
-      title="Something went wrong"
-      description="An unexpected error occurred. You can try again or return to the home page."
-      ctaLabel="Try again"
-      onCtaClick={reset}
-    />
+    <div className={styles.root} role="alert">
+      <h1 className={styles.title}>Something went wrong</h1>
+      <p className={styles.text}>
+        An unexpected error occurred. You can try again or return to the home page.
+      </p>
+      <button type="button" className={styles.btn} onClick={() => reset()}>
+        Try again
+      </button>
+    </div>
   )
 }

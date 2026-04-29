@@ -1,0 +1,109 @@
+{
+  "version": 1,
+  "suite": "verify:seo",
+  "ok": true,
+  "startedAt": "2026-04-24T14:41:01.905Z",
+  "finishedAt": "2026-04-24T14:41:10.654Z",
+  "elapsedMs": 8749,
+  "checks": [
+    {
+      "id": "contracts",
+      "command": "pnpm run verify:seo:contracts",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 1419,
+      "stdout": "> @repo/web@0.1.0 verify:seo:contracts C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-contracts.mjs\n\nSEO contracts OK: 30 route files checked.",
+      "stderr": ""
+    },
+    {
+      "id": "infra",
+      "command": "pnpm run verify:seo:infra",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 617,
+      "stdout": "> @repo/web@0.1.0 verify:seo:infra C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-infra.mjs\n\nSEO infra OK: 10 files + layout metadata invariants checked.",
+      "stderr": ""
+    },
+    {
+      "id": "noindex",
+      "command": "pnpm run verify:seo:noindex",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 1058,
+      "stdout": "> @repo/web@0.1.0 verify:seo:noindex C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-noindex-robots.mjs\n\nSEO noindex/robots OK: 7 disallow rules + noindex route invariants checked.",
+      "stderr": ""
+    },
+    {
+      "id": "sitemap",
+      "command": "pnpm run verify:seo:sitemap",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 1094,
+      "stdout": "> @repo/web@0.1.0 verify:seo:sitemap C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-sitemap-contract.mjs\n\nSEO sitemap contract OK: 16 required routes and 9 exclusions checked.",
+      "stderr": ""
+    },
+    {
+      "id": "schema",
+      "command": "pnpm run verify:seo:schema",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 664,
+      "stdout": "> @repo/web@0.1.0 verify:seo:schema C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-schema-contract.mjs\n\nSEO schema contract OK: 10 checks passed.",
+      "stderr": ""
+    },
+    {
+      "id": "freshness-eeat",
+      "command": "pnpm run verify:seo:freshness-eeat",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 638,
+      "stdout": "> @repo/web@0.1.0 verify:seo:freshness-eeat C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-freshness-eeat.mjs\n\nSEO freshness/E-E-A-T contract OK: 2 checks passed.",
+      "stderr": ""
+    },
+    {
+      "id": "canonical",
+      "command": "pnpm run verify:seo:canonical",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 635,
+      "stdout": "> @repo/web@0.1.0 verify:seo:canonical C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-canonical-contract.mjs\n\nSEO canonical contract OK: 4 discover canonical modules verified.",
+      "stderr": ""
+    },
+    {
+      "id": "consistency",
+      "command": "pnpm run verify:seo:consistency",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 623,
+      "stdout": "> @repo/web@0.1.0 verify:seo:consistency C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-consistency.mjs\n\nSEO consistency OK: required=16, forbidden=9, noindex=7.",
+      "stderr": ""
+    },
+    {
+      "id": "crawl-budget",
+      "command": "pnpm run verify:seo:crawl-budget",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 691,
+      "stdout": "> @repo/web@0.1.0 verify:seo:crawl-budget C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-crawl-budget.mjs\n\nSEO crawl budget OK: 15 required routes reachable within depth <= 3.",
+      "stderr": ""
+    },
+    {
+      "id": "links",
+      "command": "pnpm run verify:seo:links",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 654,
+      "stdout": "> @repo/web@0.1.0 verify:seo:links C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-internal-links.mjs\n\nSEO internal links OK: 15 static indexable routes have inbound links.",
+      "stderr": ""
+    },
+    {
+      "id": "scaffold",
+      "command": "pnpm run verify:seo:scaffold",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 650,
+      "stdout": "> @repo/web@0.1.0 verify:seo:scaffold C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-scaffold.mjs\n\nSEO scaffold OK: 29 page.tsx files scanned.",
+      "stderr": ""
+    }
+  ]
+}

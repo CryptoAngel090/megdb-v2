@@ -83,7 +83,7 @@
   position: relative;
   /* Stack above `.page::after` (z-index: 1) — otherwise fixed page gradient covers backdrop carousel */
   z-index: 5;
-  display: flex;
+  display: none;
   flex-direction: column;
   width: 100%;
   /* Pull hero under fixed header so backdrop/poster meets the viewport top (no strip of page bg). */
@@ -349,8 +349,8 @@
 
 .heroOnlyPoster {
   display: block;
-  inline-size: clamp(150px, 25vw, 300px);
-  min-inline-size: 150px;
+  inline-size: clamp(132px, 44vw, 196px);
+  min-inline-size: 132px;
   aspect-ratio: 2 / 3;
   block-size: auto;
   margin-inline: auto;
@@ -1027,6 +1027,22 @@
   z-index: 10;
 }
 
+.mobilePosterWrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: clamp(0.9rem, 3vw, 1.35rem);
+}
+
+.mobilePoster {
+  width: clamp(136px, 42vw, 186px);
+  height: auto;
+  display: block;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  object-fit: cover;
+}
+
 .trailerSection {
   margin: 0 0 clamp(1.25rem, 3vw, 2rem);
   padding: clamp(1rem, 2.5vw, 1.35rem) clamp(1rem, 3vw, 1.35rem);
@@ -1671,7 +1687,21 @@
   background: color-mix(in oklab, #0a0c0d 44%, var(--poster-solid-tone, #101820) 56%);
 }
 
+.faqDetails {
+  background: color-mix(in oklab, #0a0c0d 56%, var(--poster-solid-tone, #101820) 44%);
+  border-bottom: 1px solid color-mix(in oklab, var(--poster-solid-tone, #101820) 74%, white 9%);
+}
+
+.faqDetails:last-child {
+  border-bottom: 0;
+}
+
+.faqDetails[open] {
+  background: color-mix(in oklab, #0a0c0d 44%, var(--poster-solid-tone, #101820) 56%);
+}
+
 .faqSummaryBtn {
+  list-style: none;
   width: 100%;
   border: 0;
   background: transparent;
@@ -1682,6 +1712,10 @@
   justify-content: space-between;
   gap: 0.75rem;
   padding: clamp(0.95rem, 2.5vw, 1.15rem) clamp(1rem, 3vw, 1.25rem);
+}
+
+.faqSummaryBtn::-webkit-details-marker {
+  display: none;
 }
 
 .faqSummaryBtn:focus-visible {
@@ -1722,6 +1756,12 @@
   border-color: color-mix(in oklab, var(--color-primary) 65%, transparent);
 }
 
+.faqDetails[open] .faqToggle {
+  transform: rotate(45deg);
+  color: #fff;
+  border-color: color-mix(in oklab, var(--color-primary) 65%, transparent);
+}
+
 .faqContent {
   display: grid;
   grid-template-rows: 0fr;
@@ -1737,6 +1777,11 @@
 }
 
 .faqContentOpen {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.faqDetails[open] .faqContent {
   grid-template-rows: 1fr;
   opacity: 1;
 }
@@ -1908,6 +1953,10 @@
 }
 
 @media (min-width: 48rem) {
+  .mobilePosterWrap {
+    display: none;
+  }
+
   /* ── Hero: 56dvh ≈ native 16:9 ratio — backdrop shows without heavy crop ── */
   .page {
     --movie-hero-min: clamp(22rem, 68dvh, 48rem);

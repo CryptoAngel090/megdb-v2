@@ -1,0 +1,124 @@
+name: Quality
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    name: Lighthouse budget check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            https://megdb.com
+            https://megdb.com/movies/1
+          budgetPath: ./budget.json
+          uploadArtifacts: true
+
+  bundle:
+    name: Bundle analyzer guard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build with bundle analyzer
+        run: npm --prefix apps/web run analyze
+
+      - name: Measure detail route client chunks
+        run: npm --prefix apps/web run measure:route:chunks -- --route='/(detail)/movie/[id]/page' --out='.seo/route-chunks'
+
+      - name: Enforce route chunk budgets
+        run: npm --prefix apps/web run verify:route:chunks:budget -- --report='.seo/route-chunks/_detail_movie_[id]_page.json' --max-total-bytes=210000 --max-shared-bytes=90000 --max-first-party-bytes=140000
+
+      - name: Upload bundle analyzer artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-analyzer-report
+          path: apps/web/.next/analyze
+          if-no-files-found: warn
+
+      - name: Upload route chunk budget report
+        uses: actions/upload-artifact@v4
+        with:
+          name: route-chunk-report
+          path: apps/web/.seo/route-chunks
+          if-no-files-found: error
+
+  knip:
+    name: Dead code gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run knip
+        run: npx knip --ci
+
+  typecheck:
+    name: TypeScript typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run type-check
+        run: npx tsc --noEmit
+
+  biome:
+    name: Biome CI check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run biome
+        run: npx @biomejs/biome ci .

@@ -1,0 +1,1 @@
+Get-ChildItem -Recurse -Force -Include tokens.css,tailwind.tokens.json,tokens.json -ErrorAction SilentlyContinue | Select-Object FullName,Length | Sort-Object FullName | ForEach-Object { "{0:N0} bytes\t{1}" -f $_.Length,$_.FullName }

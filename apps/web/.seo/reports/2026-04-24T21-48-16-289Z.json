@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "suite": "verify:seo",
+  "ok": false,
+  "startedAt": "2026-04-24T21:47:57.229Z",
+  "finishedAt": "2026-04-24T21:48:16.288Z",
+  "elapsedMs": 19057,
+  "checks": [
+    {
+      "id": "contracts",
+      "command": "pnpm run verify:seo:contracts",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 2127,
+      "stdout": "> @repo/web@0.1.0 verify:seo:contracts C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-contracts.mjs\n\nSEO contracts OK: 30 route files checked.",
+      "stderr": ""
+    },
+    {
+      "id": "jsonld",
+      "command": "pnpm run verify:jsonld",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 1866,
+      "stdout": "> @repo/web@0.1.0 verify:jsonld C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-jsonld-coverage.mjs\n\nJSON-LD coverage OK: 29 page.tsx files checked.",
+      "stderr": ""
+    },
+    {
+      "id": "infra",
+      "command": "pnpm run verify:seo:infra",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 1660,
+      "stdout": "> @repo/web@0.1.0 verify:seo:infra C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-infra.mjs\n\nSEO infra OK: 10 files + layout metadata invariants checked.",
+      "stderr": ""
+    },
+    {
+      "id": "noindex",
+      "command": "pnpm run verify:seo:noindex",
+      "ok": false,
+      "exitCode": 1,
+      "elapsedMs": 1749,
+      "stdout": "> @repo/web@0.1.0 verify:seo:noindex C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-noindex-robots.mjs\n\n ELIFECYCLE  Command failed with exit code 1.",
+      "stderr": "SEO noindex/robots check failed: route invariants failed (6):\n- C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\login\\page.tsx (missing alternates canonical for hint: /login)\n- C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\register\\page.tsx (missing alternates canonical for hint: /register)\n- C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\profile\\page.tsx (missing alternates canonical for hint: /profile)\n- C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\settings\\page.tsx (missing alternates canonical for hint: /settings)\n- C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\search\\page.tsx (missing alternates canonical for hint: /search)\n- C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\ui-kit\\page.tsx (missing alternates canonical for hint: /ui-kit)"
+    },
+    {
+      "id": "sitemap",
+      "command": "pnpm run verify:seo:sitemap",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 1539,
+      "stdout": "> @repo/web@0.1.0 verify:seo:sitemap C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-sitemap-contract.mjs\n\nSEO sitemap contract OK: 16 required routes and 9 exclusions checked.",
+      "stderr": ""
+    },
+    {
+      "id": "schema",
+      "command": "pnpm run verify:seo:schema",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 1724,
+      "stdout": "> @repo/web@0.1.0 verify:seo:schema C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-schema-contract.mjs\n\nSEO schema contract OK: 30 checks passed.",
+      "stderr": ""
+    },
+    {
+      "id": "freshness-eeat",
+      "command": "pnpm run verify:seo:freshness-eeat",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 1555,
+      "stdout": "> @repo/web@0.1.0 verify:seo:freshness-eeat C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-freshness-eeat.mjs\n\nSEO freshness/E-E-A-T contract OK: 5 checks passed.",
+      "stderr": ""
+    },
+    {
+      "id": "canonical",
+      "command": "pnpm run verify:seo:canonical",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 1571,
+      "stdout": "> @repo/web@0.1.0 verify:seo:canonical C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-canonical-contract.mjs\n\nSEO canonical contract OK: 4 discover canonical modules verified.",
+      "stderr": ""
+    },
+    {
+      "id": "consistency",
+      "command": "pnpm run verify:seo:consistency",
+      "ok": false,
+      "exitCode": 1,
+      "elapsedMs": 1561,
+      "stdout": "> @repo/web@0.1.0 verify:seo:consistency C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-consistency.mjs\n\n ELIFECYCLE  Command failed with exit code 1.",
+      "stderr": "SEO consistency contract failed: 6 issue(s):\n- noindex route missing canonical alternates: /login\n- noindex route missing canonical alternates: /register\n- noindex route missing canonical alternates: /profile\n- noindex route missing canonical alternates: /settings\n- noindex route missing canonical alternates: /search\n- noindex route missing canonical alternates: /ui-kit"
+    },
+    {
+      "id": "crawl-budget",
+      "command": "pnpm run verify:seo:crawl-budget",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 988,
+      "stdout": "> @repo/web@0.1.0 verify:seo:crawl-budget C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-crawl-budget.mjs\n\nSEO crawl budget OK: 15 required routes reachable within depth <= 3.",
+      "stderr": ""
+    },
+    {
+      "id": "links",
+      "command": "pnpm run verify:seo:links",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 1008,
+      "stdout": "> @repo/web@0.1.0 verify:seo:links C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-internal-links.mjs\n\nSEO internal links OK: 15 static indexable routes have inbound links.",
+      "stderr": ""
+    },
+    {
+      "id": "scaffold",
+      "command": "pnpm run verify:seo:scaffold",
+      "ok": false,
+      "exitCode": 1,
+      "elapsedMs": 1701,
+      "stdout": "> @repo/web@0.1.0 verify:seo:scaffold C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-scaffold.mjs\n\n ELIFECYCLE  Command failed with exit code 1.",
+      "stderr": "SEO scaffold check failed in 22 static page(s):\n- /about (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\about\\page.tsx) -> missing: canonical\n- /accessibility (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\accessibility\\page.tsx) -> missing: canonical\n- /cartoons (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\cartoons\\page.tsx) -> missing: canonical\n- /categories (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\categories\\page.tsx) -> missing: canonical\n- /contact (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\contact\\page.tsx) -> missing: canonical\n- /cookies (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\cookies\\page.tsx) -> missing: canonical\n- /dmca (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\dmca\\page.tsx) -> missing: canonical\n- /gdpr (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\gdpr\\page.tsx) -> missing: canonical\n- /help (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\help\\page.tsx) -> missing: canonical\n- /login (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\login\\page.tsx) -> missing: canonical\n- /movies (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\movies\\page.tsx) -> missing: canonical\n- /movies/random (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\movies\\random\\page.tsx) -> missing: canonical\n- /page.tsx (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\page.tsx) -> missing: canonical\n- /privacy (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\privacy\\page.tsx) -> missing: canonical\n- /profile (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\profile\\page.tsx) -> missing: canonical\n- /register (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\register\\page.tsx) -> missing: canonical\n- /search (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\search\\page.tsx) -> missing: canonical\n- /series (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\series\\page.tsx) -> missing: canonical\n- /settings (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\settings\\page.tsx) -> missing: canonical\n- /terms (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\terms\\page.tsx) -> missing: canonical\n- /tvshows (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\tvshows\\page.tsx) -> missing: canonical\n- /ui-kit (C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\ui-kit\\page.tsx) -> missing: canonical"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+Get-ChildItem -Path . -Include 'lh-*.json' -Recurse -ErrorAction SilentlyContinue | Select-Object FullName,Length | Sort-Object Length -Descending | ForEach-Object { "{0:N0} bytes\t{1}" -f $_.Length,$_.FullName }

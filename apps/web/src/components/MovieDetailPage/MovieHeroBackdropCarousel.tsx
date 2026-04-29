@@ -13,9 +13,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
-import { buildSlideVariants } from '@/components/HeroSection/HeroSection.animations'
 import { MovieHeroBackdropImage } from './MovieHeroBackdropImage'
 import styles from './MovieHeroBackdropCarousel.module.css'
 
@@ -36,7 +34,6 @@ interface MovieHeroCarouselContextValue {
   slideProgressFillRef: React.RefObject<HTMLDivElement | null>
   shouldAutoRotate: boolean
   reduceMotion: boolean
-  slideVariants: ReturnType<typeof buildSlideVariants>
   touchStartX: React.MutableRefObject<number | null>
 }
 
@@ -66,7 +63,6 @@ export function MovieHeroCarouselProvider({
   children,
 }: MovieHeroCarouselProviderProps) {
   const reduceMotion = usePrefersReducedMotion()
-  const slideVariants = useMemo(() => buildSlideVariants(reduceMotion), [reduceMotion])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isCarouselPaused, setIsCarouselPaused] = useState(false)
   const touchStartX = useRef<number | null>(null)
@@ -149,7 +145,6 @@ export function MovieHeroCarouselProvider({
       slideProgressFillRef,
       shouldAutoRotate,
       reduceMotion,
-      slideVariants,
       touchStartX,
     }),
     [
@@ -164,7 +159,6 @@ export function MovieHeroCarouselProvider({
       reduceMotion,
       shouldAutoRotate,
       slideUrls,
-      slideVariants,
       toggleCarouselPause,
     ]
   )
@@ -188,7 +182,6 @@ export function MovieHeroCarouselBackdrop({ slideImageClassName }: MovieHeroCaro
     blurDataURL,
     goToPrev,
     goToNext,
-    slideVariants,
     touchStartX,
   } = useMovieHeroCarouselContext()
 
@@ -248,32 +241,23 @@ export function MovieHeroCarouselBackdrop({ slideImageClassName }: MovieHeroCaro
         Backdrop stills from this title. Use arrow keys when focused here, or the pause and slide
         controls below.
       </span>
-      <AnimatePresence mode="sync">
-        <motion.div
-          key={`${currentIndex}-${currentUrl}`}
-          className={styles.slideLayer}
-          variants={slideVariants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-        >
-          <div className={styles.slideInner}>
-            <MovieHeroBackdropImage
-              focalAssetKey={`${movieId}-hero-carousel-${currentIndex}-${currentUrl.slice(-40)}`}
-              disableAutoFocal
-              src={currentUrl}
-              alt=""
-              fill
-              priority={currentIndex === 0}
-              fetchPriority={currentIndex === 0 ? 'high' : 'low'}
-              sizes="100vw"
-              className={slideImageClassName}
-              placeholder="blur"
-              blurDataURL={blurDataURL}
-            />
-          </div>
-        </motion.div>
-      </AnimatePresence>
+      <div key={`${currentIndex}-${currentUrl}`} className={styles.slideLayer}>
+        <div className={styles.slideInner}>
+          <MovieHeroBackdropImage
+            focalAssetKey={`${movieId}-hero-carousel-${currentIndex}-${currentUrl.slice(-40)}`}
+            disableAutoFocal
+            src={currentUrl}
+            alt=""
+            fill
+            priority={currentIndex === 0}
+            fetchPriority={currentIndex === 0 ? 'high' : 'low'}
+            sizes="100vw"
+            className={slideImageClassName}
+            placeholder="blur"
+            blurDataURL={blurDataURL}
+          />
+        </div>
+      </div>
     </div>
   )
 }

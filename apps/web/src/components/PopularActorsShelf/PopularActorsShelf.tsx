@@ -3,14 +3,12 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
 import type { PopularActorItem } from '@/lib/tmdb'
 import { getImageUrl } from '@/lib/tmdb'
 import { PERSON_PROFILE_IMAGE_SIZES, PERSON_PROFILE_IMAGE_TMDB_SIZE } from '@/lib/imageSizes'
 // Spring animations removed per request — interactions now use instant or simple CSS transitions
 import { personPath } from '@/lib/slug'
 import { ShelfRevealShell } from '@/components/ShelfRevealShell/ShelfRevealShell'
-import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
 import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './PopularActorsShelf.module.css'
 
@@ -19,7 +17,6 @@ interface PopularActorsShelfProps {
 }
 
 export function PopularActorsShelf({ actors }: PopularActorsShelfProps) {
-  const reduceMotion = usePrefersReducedMotion()
   const titleId = useId()
   const rowRef = useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
@@ -70,32 +67,24 @@ export function PopularActorsShelf({ actors }: PopularActorsShelfProps) {
           </div>
         </div>
         <div className={styles.headerArrows}>
-          <motion.button
+          <button
             type="button"
             className={styles.scrollBtn}
             aria-label="Scroll popular actors left"
             disabled={!canScrollLeft}
             onClick={() => scrollRow(-1)}
-            {...(!reduceMotion
-              ? { whileTap: { scale: 0.9 }, transition: { type: 'tween', duration: 0.15 } }
-              : {})}
-            // transition: explicit tween — no spring physics
           >
             <Chevron dir="left" />
-          </motion.button>
-          <motion.button
+          </button>
+          <button
             type="button"
             className={styles.scrollBtn}
             aria-label="Scroll popular actors right"
             disabled={!canScrollRight}
             onClick={() => scrollRow(1)}
-            {...(!reduceMotion
-              ? { whileTap: { scale: 0.9 }, transition: { type: 'tween', duration: 0.15 } }
-              : {})}
-            // transition: explicit tween — no spring physics
           >
             <Chevron dir="right" />
-          </motion.button>
+          </button>
         </div>
         <div className={styles.headerRight} aria-hidden="true" />
       </div>
@@ -105,74 +94,32 @@ export function PopularActorsShelf({ actors }: PopularActorsShelfProps) {
         role="group"
         aria-label="Popular actors — scroll horizontally"
       >
-        {reduceMotion ? (
-          <div ref={rowRef} className={styles.row}>
-            {actors.map((actor, i) => (
-              <div key={actor.id} className={styles.cardMotionWrap}>
-                <Link
-                  href={personPath(actor.id, actor.name)}
-                  className={styles.card}
-                  title={actor.name}
-                >
-                  <div className={styles.avatarWrap}>
-                    {actor.profilePath ? (
-                      <Image
-                        fill
-                        className={styles.avatar}
-                        src={getImageUrl(actor.profilePath, PERSON_PROFILE_IMAGE_TMDB_SIZE)}
-                        alt={`${actor.name} portrait`}
-                        sizes={PERSON_PROFILE_IMAGE_SIZES}
-                        priority={i < 8}
-                      />
-                    ) : (
-                      <span className={styles.placeholder} aria-hidden="true">
-                        {actor.name.slice(0, 1).toUpperCase()}
-                      </span>
-                    )}
-                  </div>
-                  <p className={styles.name}>{actor.name}</p>
-                  {actor.department ? <p className={styles.dept}>{actor.department}</p> : null}
-                </Link>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div ref={rowRef} className={styles.row}>
-            {actors.map((actor, i) => (
-              <motion.div
-                key={actor.id}
-                className={styles.cardMotionWrap}
-                whileTap={{ scale: 0.97 }}
-                transition={{ type: 'tween', duration: 0.15 }}
-              >
-                <Link
-                  href={personPath(actor.id, actor.name)}
-                  className={styles.card}
-                  title={actor.name}
-                >
-                  <div className={styles.avatarWrap}>
-                    {actor.profilePath ? (
-                      <Image
-                        fill
-                        className={styles.avatar}
-                        src={getImageUrl(actor.profilePath, PERSON_PROFILE_IMAGE_TMDB_SIZE)}
-                        alt={`${actor.name} portrait`}
-                        sizes={PERSON_PROFILE_IMAGE_SIZES}
-                        priority={i < 8}
-                      />
-                    ) : (
-                      <span className={styles.placeholder} aria-hidden="true">
-                        {actor.name.slice(0, 1).toUpperCase()}
-                      </span>
-                    )}
-                  </div>
-                  <p className={styles.name}>{actor.name}</p>
-                  {actor.department ? <p className={styles.dept}>{actor.department}</p> : null}
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        )}
+        <div ref={rowRef} className={styles.row}>
+          {actors.map((actor, i) => (
+            <div key={actor.id} className={styles.cardMotionWrap}>
+              <Link href={personPath(actor.id, actor.name)} className={styles.card} title={actor.name}>
+                <div className={styles.avatarWrap}>
+                  {actor.profilePath ? (
+                    <Image
+                      fill
+                      className={styles.avatar}
+                      src={getImageUrl(actor.profilePath, PERSON_PROFILE_IMAGE_TMDB_SIZE)}
+                      alt={`${actor.name} portrait`}
+                      sizes={PERSON_PROFILE_IMAGE_SIZES}
+                      priority={i < 8}
+                    />
+                  ) : (
+                    <span className={styles.placeholder} aria-hidden="true">
+                      {actor.name.slice(0, 1).toUpperCase()}
+                    </span>
+                  )}
+                </div>
+                <p className={styles.name}>{actor.name}</p>
+                {actor.department ? <p className={styles.dept}>{actor.department}</p> : null}
+              </Link>
+            </div>
+          ))}
+        </div>
       </div>
     </>
   )

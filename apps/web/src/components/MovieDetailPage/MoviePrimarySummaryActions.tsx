@@ -4,7 +4,6 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import type { MediaType } from '@repo/types'
-import { Bookmark, Clapperboard, Share2, Users } from 'lucide-react'
 import { isInLocalWatchlist, toggleLocalWatchlistItem } from '@/lib/localWatchlist'
 import { useToast } from '@/components/Toast/Toast'
 import { MovieShareButton } from './MovieShareButton'
@@ -21,6 +20,51 @@ interface MoviePrimarySummaryActionsProps {
   watchNowUrl: string | null
   watchNowProviderName: string | null
   watchNowLogoUrl: string | null
+}
+
+function BookmarkIcon({
+  className,
+  filled,
+}: {
+  className?: string | undefined
+  filled?: boolean | undefined
+}) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2">
+      <path d="M6 4h12a1 1 0 0 1 1 1v16l-7-4-7 4V5a1 1 0 0 1 1-1z" />
+    </svg>
+  )
+}
+
+function ClapperboardIcon({ className }: { className?: string | undefined }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M4 7h16l-2 13H6L4 7z" />
+      <path d="M6 7 4.5 4.5M10 7 8 4M14 7l-2-3M18 7l-1.5-2.5" />
+    </svg>
+  )
+}
+
+function UsersIcon({ className }: { className?: string | undefined }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  )
+}
+
+function ShareIcon({ className }: { className?: string | undefined }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <circle cx="18" cy="5" r="3" />
+      <circle cx="6" cy="12" r="3" />
+      <circle cx="18" cy="19" r="3" />
+      <path d="m8.6 13.5 6.8 4M15.4 6.5 8.6 10.5" />
+    </svg>
+  )
 }
 
 export function MoviePrimarySummaryActions({
@@ -113,11 +157,7 @@ export function MoviePrimarySummaryActions({
             inList ? `Remove ${movieTitle} from watchlist` : `Add ${movieTitle} to watchlist`
           }
         >
-          <Bookmark
-            className={styles.iconGlyph}
-            fill={inList ? 'currentColor' : 'none'}
-            aria-hidden
-          />
+          <BookmarkIcon className={styles.iconGlyph} filled={inList} />
         </button>
 
         {hasTrailer && watchNowUrl ? (
@@ -127,7 +167,7 @@ export function MoviePrimarySummaryActions({
             onClick={openTrailer}
             aria-label={`Watch trailer: ${embedTitle}`}
           >
-            <Clapperboard className={styles.iconGlyph} aria-hidden />
+            <ClapperboardIcon className={styles.iconGlyph} />
           </button>
         ) : null}
 
@@ -137,7 +177,7 @@ export function MoviePrimarySummaryActions({
           onClick={scrollToCast}
           aria-label={`Cast and credits for ${movieTitle}`}
         >
-          <Users className={styles.iconGlyph} aria-hidden />
+          <UsersIcon className={styles.iconGlyph} />
         </button>
 
         <MovieShareButton
@@ -145,7 +185,7 @@ export function MoviePrimarySummaryActions({
           unstyled
           iconOnly
           className={styles.iconCircleBtn}
-          icon={<Share2 className={styles.iconGlyph} aria-hidden />}
+          icon={<ShareIcon className={styles.iconGlyph} />}
         />
       </div>
     </div>

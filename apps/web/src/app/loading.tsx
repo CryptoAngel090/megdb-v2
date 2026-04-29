@@ -1,4 +1,4 @@
-import { MediaShelfSkeleton } from '@/components/MediaShelf/MediaShelf'
+import { MediaShelfSkeletonLight } from '@/components/MediaShelf/MediaShelfSkeletonLight'
 import styles from './loading.module.css'
 
 /** Avoid `page.module.css` here — that sheet is homepage-specific; tying it to
@@ -11,8 +11,8 @@ export default function Loading() {
         <div className={styles.heroMeta} />
       </section>
       <div className={styles.shelves} aria-hidden="true">
-        <MediaShelfSkeleton count={7} />
-        <MediaShelfSkeleton count={7} />
+        <MediaShelfSkeletonLight count={7} />
+        <MediaShelfSkeletonLight count={7} />
       </div>
     </div>
   )

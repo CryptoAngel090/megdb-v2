@@ -9,9 +9,9 @@ import {
   MovieCastSectionLazy,
   MovieCollectionSectionLazy,
   MoviePhotosSectionLazy,
-  TvSeriesEpisodesLazy,
 } from './MovieDetailBelowFoldDynamics'
-import { MovieComments } from './MovieComments'
+import { MovieCommentsRoot } from './MovieCommentsRoot.client'
+import type { ReactNode } from 'react'
 
 interface MovieDetailStreamedBelowFoldProps {
   tailInput: MoviePageDetailTailInput
@@ -20,6 +20,8 @@ interface MovieDetailStreamedBelowFoldProps {
   cast: MoviePageCastMember[]
   /** Movie/cartoon use TMDB movie tail; TV uses TV tail (similar + images only). */
   variant?: 'movie' | 'tv'
+  /** TV-only episodes block injected from TV routes. */
+  tvEpisodesSection?: ReactNode
 }
 
 export async function MovieDetailStreamedBelowFold({
@@ -28,6 +30,7 @@ export async function MovieDetailStreamedBelowFold({
   movieTitle,
   cast,
   variant = 'movie',
+  tvEpisodesSection,
 }: MovieDetailStreamedBelowFoldProps) {
   const tail =
     variant === 'tv'
@@ -59,9 +62,7 @@ export async function MovieDetailStreamedBelowFold({
     <>
       <MoviePhotosSectionLazy images={tail.backdropGallery} title={movieTitle} />
       <MovieCastSectionLazy cast={cast} />
-      {variant === 'tv' && (
-        <TvSeriesEpisodesLazy seriesId={tailInput.mediaId} seriesTitle={movieTitle} />
-      )}
+      {variant === 'tv' && tvEpisodesSection}
       {collectionOthers && collectionOthers.parts.length > 0 && (
         <MovieCollectionSectionLazy
           title={collectionOthers.name}
@@ -76,7 +77,7 @@ export async function MovieDetailStreamedBelowFold({
           mediaKind={similarMediaKind}
         />
       )}
-      <MovieComments
+      <MovieCommentsRoot
         tmdbMovieId={tailInput.mediaId}
         movieTitle={movieTitle}
         mediaKind={similarMediaKind}

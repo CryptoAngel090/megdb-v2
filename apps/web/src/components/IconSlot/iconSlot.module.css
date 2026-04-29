@@ -1,0 +1,78 @@
+/**
+ * Standard SVG icon boxes — sizes from `globals.css` tokens.
+ * Use on `<svg>`: `className={\`${iconSlot.block} ${iconSlot.md}\`}` and omit width/height attributes.
+ */
+.block {
+  display: block;
+  flex-shrink: 0;
+}
+
+.inline10 {
+  width: var(--icon-inline-10);
+  height: var(--icon-inline-10);
+}
+
+.inline11 {
+  width: var(--icon-dot);
+  height: var(--icon-dot);
+}
+
+.inline12 {
+  width: var(--icon-inline-12);
+  height: var(--icon-inline-12);
+}
+
+.inline13 {
+  width: var(--icon-inline-13);
+  height: var(--icon-inline-13);
+}
+
+.inline14 {
+  width: var(--icon-inline-14);
+  height: var(--icon-inline-14);
+}
+
+.inline15 {
+  width: var(--icon-inline-15);
+  height: var(--icon-inline-15);
+}
+
+.inline18 {
+  width: var(--icon-inline-18);
+  height: var(--icon-inline-18);
+}
+
+.inline22 {
+  width: var(--icon-inline-22);
+  height: var(--icon-inline-22);
+}
+
+.chevronHero {
+  width: var(--icon-chevron-hero);
+  height: var(--icon-chevron-hero);
+}
+
+.sm {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+
+.md {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+}
+
+.lg {
+  width: var(--icon-size-lg);
+  height: var(--icon-size-lg);
+}
+
+.xl {
+  width: var(--icon-size-xl);
+  height: var(--icon-size-xl);
+}
+
+.avatar64 {
+  width: var(--space-7);
+  height: var(--space-7);
+}

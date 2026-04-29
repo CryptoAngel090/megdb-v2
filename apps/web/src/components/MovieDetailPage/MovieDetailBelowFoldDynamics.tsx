@@ -33,7 +33,3 @@ export const MovieCollectionSectionLazy = dynamic(
   () => import('./MovieCollectionSection').then((m) => m.MovieCollectionSection),
   { loading: DetailLazyFallback }
 )
-export const TvSeriesEpisodesLazy = dynamic(
-  () => import('@/components/TvSeriesEpisodes/TvSeriesEpisodes').then((m) => m.TvSeriesEpisodes),
-  { loading: DetailLazyFallback }
-)

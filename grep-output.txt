@@ -1,0 +1,72 @@
+# Phase 3 — grep audit (MegDB)
+# Generated: 2026-04-27
+#
+# --- Как проводить этап 3 на практике ---
+# 1) Сырые утилиты Tailwind с цифрами (w-8, p-4, …) и «голые» rounded-sm/md/lg
+#    в className не используем — только ключи из theme/tokens/size.ts → tailwind.config.ts.
+# 2) Grep из ТЗ (без границ слова) даёт ЛОЖНЫЕ срабатывания: подстрока `p-6` встречается
+#    внутри `gap-6` (например --space-gap-6). Для аудита используйте границы слова (\b) или rg -w.
+#
+# Рекомендуемая команда (PowerShell, репозиторий .):
+#   $pat = '\b(w-8|w-10|w-12|w-16|h-8|h-10|h-12|h-16|p-2|p-4|p-6|p-8|rounded-sm|rounded-md|rounded-lg)\b'
+#   Get-ChildItem -Recurse -File -Include *.tsx,*.jsx,*.css -Path apps,packages |
+#     Where-Object { $_.FullName -notmatch 'node_modules|\.next' } |
+#     ForEach-Object { Select-String -Path $_.FullName -Pattern $pat }
+#
+# Эквивалент ripgrep:
+#   rg -n -P '\b(w-8|...|rounded-lg)\b' apps packages --glob '!**/node_modules/**'
+#
+# --- Начальный снимок (word-boundary, до правок) ---
+# apps/web/src/components/Button/Button.tsx:39:
+#   'inline-flex items-center justify-center rounded-md font-medium',
+#   → заменено на rounded-button (см. ниже).
+#
+# --- Обработка по компонентам (порядок ТЗ) ---
+#
+# [Button] apps/web/src/components/Button/Button.tsx
+#   rounded-md → rounded-button
+#   Значение: componentBorderRadius.button (= borderRadius.md) в theme/tokens/size.ts;
+#   ключ Tailwind: borderRadius.button в apps/web/tailwind.config.ts.
+#
+# [Card] apps/web/src/components/MediaCard/* (+ при необходимости другие карточки)
+#   Утилиты из списка grep в TSX/CSS не найдены (модули на var(--*) / токенах).
+#
+# [Icon] apps/web/src/components/IconSlot/*
+#   Совпадений нет.
+#
+# [Arrow] отдельного пакета нет; стрелки в Hero/Header/MediaShelf и т.д.
+#   По целевым паттернам в apps/packages — совпадений нет.
+#
+# [Chip] как отдельный компонент отсутствует; ближайший аналог — packages/ui Badge.
+#   Badge/Input/Button/Skeleton — только CSS Modules, целевых className-утилит нет.
+#
+# [Modal] apps/web/src/components/KeyboardShortcutsModal/*
+#   Совпадений нет.
+#
+# [Input] packages/ui/src/components/Input/*
+#   Совпадений нет.
+#
+# [Avatar] отдельного компонента нет (аватары в Profile и др. через CSS modules).
+#   Целевых утилит в grep — нет.
+#
+# --- Контрольный grep (word-boundary, после Button + токенов) ---
+# (no matches) в apps/** и packages/** по *.tsx, *.jsx, *.css
+#
+# --- Итог этапа 3 ---
+# - Размеры/отступы: theme/tokens/size.ts → tailwind.config.ts → классы w-xs, px-md, rounded-button, …
+# - В className нет «голых» 8/12/16… как шкала Tailwind; CI: pnpm run verify:tokens
+# - Визуально Button тот же радиус (12px = borderRadius.md), архитектура — семантический ключ rounded-button.
+
+# =============================================================================
+# Полная унификация (single source of truth) — 2026-04-27
+# =============================================================================
+# Канон: theme/tokens/size.ts
+#   - spaceStep 1…12, spacing, borderRadius, radiusUi, size, fontSize, cardSize, …
+# Генерация: pnpm run generate:design-tokens
+#   → apps/web/src/styles/design-tokens.generated.css (--ds-* в @layer tokens)
+# Потребители:
+#   - layout.tsx импортирует design-tokens.generated.css ПЕРЕД globals.css
+#   - globals.css: --space-1…12 и --radius-* только как var(--ds-…)
+#   - tailwind.config.ts: spacing / borderRadius / fontSize / width / height / min / max → var(--ds-…)
+# Синхронизация с коммитом: pnpm run verify:design-tokens-sync (build, test, pre-push)
+# Не вынесено в size.ts (намеренно другой слой): цвета, fluid clamp-типографика, тени, z-index.

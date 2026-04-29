@@ -1,60 +1,18 @@
-'use client'
-
 import Image, { type ImageProps } from 'next/image'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import type { PosterFocalPercent } from '@/lib/posterFaceFocalPoint'
-import { detectPosterFocalPoint } from '@/lib/posterFaceFocalPoint'
 
 type MovieHeroBackdropImageProps = ImageProps & {
-  /** When this string changes, focal point is recomputed (e.g. `${id}-backdrop-${path}`). */
+  /** Kept for API compatibility with existing call sites. */
   focalAssetKey: string
-  /** Disable auto face focal detection and keep provided CSS/style object-position. */
+  /** Kept for API compatibility with existing call sites. */
   disableAutoFocal?: boolean
 }
 
-/**
- * Hero full-bleed image: after decode, runs browser Face Detection when available
- * and sets `object-position` so off-center subjects stay in frame on narrow viewports.
- */
 export function MovieHeroBackdropImage({
-  focalAssetKey,
-  disableAutoFocal = false,
+  focalAssetKey: _focalAssetKey,
+  disableAutoFocal: _disableAutoFocal = false,
   className,
   style,
-  onLoadingComplete,
   ...rest
 }: MovieHeroBackdropImageProps) {
-  const [focal, setFocal] = useState<PosterFocalPercent | null>(null)
-  const focalKeyRef = useRef(focalAssetKey)
-  focalKeyRef.current = focalAssetKey
-
-  useEffect(() => {
-    setFocal(null)
-  }, [focalAssetKey])
-
-  const handleLoad = useCallback(
-    (img: HTMLImageElement) => {
-      onLoadingComplete?.(img)
-      if (disableAutoFocal) return
-      const k = focalAssetKey
-      const run = () => {
-        void detectPosterFocalPoint(img).then((p) => {
-          if (p != null && k === focalKeyRef.current) setFocal(p)
-        })
-      }
-      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-        window.requestIdleCallback(run, { timeout: 2500 })
-      } else {
-        globalThis.setTimeout(run, 0)
-      }
-    },
-    [disableAutoFocal, focalAssetKey, onLoadingComplete]
-  )
-
-  const mergedStyle =
-    focal != null ? { ...style, objectPosition: `${focal.x}% ${focal.y}%` } : style
-
-  return (
-    <Image {...rest} className={className} style={mergedStyle} onLoadingComplete={handleLoad} />
-  )
+  return <Image {...rest} className={className} style={style} />
 }

@@ -1,0 +1,13 @@
+node_modules/
+.next/
+.git/
+.output/
+.vercel/
+dist/
+build/
+public/assets/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+*.log
+.DS_Store

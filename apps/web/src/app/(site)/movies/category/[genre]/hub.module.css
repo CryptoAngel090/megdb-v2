@@ -1,0 +1,175 @@
+.genrePageShell {
+  min-height: 100vh;
+  background: var(--bg);
+  margin-top: calc(-1 * var(--layout-header-clearance, 0px));
+  padding-top: var(--layout-header-clearance, 0px);
+}
+
+.hub {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-block-start: var(--space-4);
+  padding-inline: var(--container-padding);
+  display: grid;
+  gap: var(--space-4);
+}
+
+.introCard {
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: color-mix(in oklab, var(--surface) 88%, transparent);
+  padding-block: var(--space-3);
+  padding-inline: var(--space-4);
+}
+
+.introTitle {
+  margin: 0;
+  font-size: var(--text-base);
+  color: var(--text-primary);
+}
+
+.introText {
+  margin-block-start: var(--space-1);
+  margin-block-end: 0;
+  color: var(--text-secondary);
+  line-height: var(--leading-mid);
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  padding-block: var(--space-2);
+  padding-inline: var(--space-3);
+  min-block-size: 100%;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
+
+.list {
+  margin-block-start: var(--space-1);
+  margin-block-end: 0;
+  padding-inline-start: var(--space-3);
+  color: var(--text-secondary);
+  display: grid;
+  gap: var(--space-1);
+  line-height: var(--leading-mid);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-block-start: var(--space-1);
+}
+
+.chipLink {
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  padding-block: 2px;
+  padding-inline: var(--space-2);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
+}
+
+.chipLink:hover {
+  color: var(--text-primary);
+  border-color: var(--primary-border);
+  background: var(--color-primary-muted);
+}
+
+.faqList {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.faqItem {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding-block: var(--space-1);
+  padding-inline: var(--space-3);
+}
+
+.faqQuestion {
+  cursor: pointer;
+  color: var(--text-primary);
+  font-weight: var(--weight-semibold);
+}
+
+.faqAnswer {
+  margin-block-start: var(--space-1);
+  margin-block-end: 0;
+  color: var(--text-secondary);
+  line-height: var(--leading-mid);
+}
+
+.teaserCard {
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: color-mix(in oklab, var(--surface) 90%, transparent);
+  padding-block: var(--space-3);
+  padding-inline: var(--space-4);
+  display: grid;
+  gap: var(--space-2);
+}
+
+.teaserTitle {
+  margin: 0;
+  font-size: var(--text-base);
+  color: var(--text-primary);
+}
+
+.teaserText {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: var(--leading-mid);
+}
+
+.teaserAction {
+  justify-self: start;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  padding-block: 4px;
+  padding-inline: var(--space-3);
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+.teaserAction:hover {
+  border-color: var(--primary-border);
+  background: var(--color-primary-muted);
+}
+
+@media (max-width: 1279px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1023px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

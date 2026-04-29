@@ -2,9 +2,8 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import type { PointerEvent as ReactPointerEvent } from 'react'
+import { ViewTransition, type PointerEvent as ReactPointerEvent } from 'react'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { motion, useMotionValue } from 'framer-motion'
 import type { MediaType } from '@repo/types'
 import { detailPathForShelfItem } from '@/lib/slug'
 import type { PosterFocalPercent } from '@/lib/posterFaceFocalPoint'
@@ -254,30 +253,14 @@ export function MediaCard({
 
   const cardMotionRafRef = useRef<number | null>(null)
   const cardMotionLatestRef = useRef<{ cx: number; cy: number; rect: DOMRectReadOnly } | null>(null)
-
-  const rawTx = useMotionValue(0)
-  const rawTy = useMotionValue(0)
-  const rawRx = useMotionValue(0)
-  const rawRy = useMotionValue(0)
-  const rawSc = useMotionValue(1)
-
-  // No spring — use direct motion values (no physics, immediate/tween-controlled by parent)
-  const targetTx = rawTx
-  const targetTy = rawTy
-  const targetRx = rawRx
-  const targetRy = rawRy
-  const targetSc = rawSc
+  const [cardMotion, setCardMotion] = useState<CardMotionState>(CARD_MOTION_IDLE)
 
   const flushCardMotion = useCallback(() => {
     const L = cardMotionLatestRef.current
     if (!L) return
     const m = computeCardMotion(L.cx, L.cy, L.rect, prefersReducedMotion, allowMagnetic, allowTilt)
-    rawTx.set(m.tx)
-    rawTy.set(m.ty)
-    rawRx.set(m.rx)
-    rawRy.set(m.ry)
-    rawSc.set(m.sc)
-  }, [prefersReducedMotion, allowMagnetic, allowTilt, rawTx, rawTy, rawRx, rawRy, rawSc])
+    setCardMotion(m)
+  }, [prefersReducedMotion, allowMagnetic, allowTilt])
 
   const handleCardPointerMove = useCallback(
     (e: ReactPointerEvent<HTMLDivElement>) => {
@@ -312,12 +295,8 @@ export function MediaCard({
       cardMotionRafRef.current = null
     }
     cardMotionLatestRef.current = null
-    rawTx.set(CARD_MOTION_IDLE.tx)
-    rawTy.set(CARD_MOTION_IDLE.ty)
-    rawRx.set(CARD_MOTION_IDLE.rx)
-    rawRy.set(CARD_MOTION_IDLE.ry)
-    rawSc.set(CARD_MOTION_IDLE.sc)
-  }, [rawTx, rawTy, rawRx, rawRy, rawSc])
+    setCardMotion(CARD_MOTION_IDLE)
+  }, [])
 
   useEffect(() => {
     setPosterFocal(null)
@@ -361,31 +340,33 @@ export function MediaCard({
         <div className={styles.inner}>
           <div className={styles.poster}>
             {imgSrc ? (
-              <Image
-                src={imgSrc}
-                alt=""
-                fill
-                sizes={posterImageSizes}
-                className={styles.image}
-                priority={priority}
-                onLoadingComplete={onPosterLoadingComplete}
-                {...(posterFocal
-                  ? {
-                      // transformOrigin only — composite-only property, no layout shift (CLS fix).
-                      // objectPosition intentionally omitted: changing it after load causes CLS.
-                      style: {
-                        transformOrigin: `${posterFocal.x}% ${posterFocal.y}%`,
-                      },
-                    }
-                  : {})}
-                {...(!shelfReveal
-                  ? {
-                      placeholder: 'blur' as const,
-                      blurDataURL: TMDB_POSTER_BLUR_DATA_URL,
-                    }
-                  : {})}
-                {...(priority ? { fetchPriority: 'high' as const } : {})}
-              />
+              <ViewTransition name={`poster-${id}`}>
+                <Image
+                  src={imgSrc}
+                  alt=""
+                  fill
+                  sizes={posterImageSizes}
+                  className={styles.image}
+                  priority={priority}
+                  onLoadingComplete={onPosterLoadingComplete}
+                  {...(posterFocal
+                    ? {
+                        // transformOrigin only — composite-only property, no layout shift (CLS fix).
+                        // objectPosition intentionally omitted: changing it after load causes CLS.
+                        style: {
+                          transformOrigin: `${posterFocal.x}% ${posterFocal.y}%`,
+                        },
+                      }
+                    : {})}
+                  {...(!shelfReveal
+                    ? {
+                        placeholder: 'blur' as const,
+                        blurDataURL: TMDB_POSTER_BLUR_DATA_URL,
+                      }
+                    : {})}
+                  {...(priority ? { fetchPriority: 'high' as const } : {})}
+                />
+              </ViewTransition>
             ) : (
               <div className={styles.noPoster} aria-hidden="true">
                 🎬
@@ -514,14 +495,10 @@ export function MediaCard({
     >
       <div className={styles.tiltPerspective}>
         {motionEnabled ? (
-          <motion.div
+          <div
             className={`${styles.magneticRoot} ${styles.cardMotionLayer}`}
             style={{
-              x: targetTx,
-              y: targetTy,
-              rotateX: targetRx,
-              rotateY: targetRy,
-              scale: targetSc,
+              transform: `translate3d(${cardMotion.tx}px, ${cardMotion.ty}px, 0) rotateX(${cardMotion.rx}deg) rotateY(${cardMotion.ry}deg) scale(${cardMotion.sc})`,
               transformStyle: 'preserve-3d',
             }}
             onPointerDown={handleCardPointerDown}
@@ -530,7 +507,7 @@ export function MediaCard({
             onPointerCancel={resetCardMotion}
           >
             {cardBody}
-          </motion.div>
+          </div>
         ) : (
           <div className={`${styles.magneticRoot} ${styles.cardMotionLayer}`}>{cardBody}</div>
         )}

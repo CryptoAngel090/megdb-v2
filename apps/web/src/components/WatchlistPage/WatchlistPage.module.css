@@ -1,0 +1,245 @@
+.page {
+  min-block-size: 100vh;
+  padding-block-start: var(--layout-header-clearance);
+  background: var(--bg);
+}
+
+.wrap {
+  padding-block: var(--space-6) var(--space-10);
+}
+
+.head {
+  display: grid;
+  gap: var(--space-2);
+  margin-block-end: var(--space-5);
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.4rem, 1.1rem + 1.2vw, 2rem);
+  color: var(--text-primary);
+}
+
+.sub {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.state {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: var(--space-2);
+  margin-block-end: var(--space-4);
+}
+
+.statCard {
+  display: grid;
+  gap: 0.2rem;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.statCard span {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.statCard strong {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.toolbar {
+  display: grid;
+  gap: var(--space-3);
+  margin-block-end: var(--space-3);
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.filterBtn {
+  min-block-size: 2rem;
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.filterBtnActive {
+  color: var(--text-primary);
+  border-color: var(--primary-border);
+  background: color-mix(in oklab, var(--primary) 16%, transparent);
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-2);
+}
+
+.search,
+.select {
+  min-block-size: 2.4rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-primary);
+  padding-inline: var(--space-3);
+}
+
+.bulkActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-block-end: var(--space-4);
+}
+
+.bulkBtn,
+.bulkDanger {
+  min-block-size: 2.1rem;
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.bulkDanger {
+  border-color: color-mix(in oklab, var(--color-error) 45%, var(--border));
+  color: color-mix(in oklab, var(--color-error) 70%, var(--text-primary));
+}
+
+.bulkBtn:disabled,
+.bulkDanger:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.empty {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.browseLink {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.grid {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+}
+
+.card {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.posterLink {
+  display: block;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.poster {
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.posterFallback {
+  aspect-ratio: 2 / 3;
+  display: grid;
+  place-items: center;
+}
+
+.meta {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.movieTitle {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.movieInfo {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.typeBadge {
+  margin: 0;
+  font-size: 0.72rem;
+  color: var(--primary);
+}
+
+.genres {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.selectRow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}
+
+.removeBtn {
+  justify-self: start;
+  min-block-size: 2rem;
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.secondaryBtn {
+  min-block-size: 1.9rem;
+  padding-inline: var(--space-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--surface) 84%, transparent);
+  color: var(--text-secondary);
+  cursor: pointer;
+}

@@ -820,6 +820,15 @@
   justify-content: center;
 }
 
+.gridVirtuoso {
+  width: 100%;
+}
+
+.gridItem {
+  display: flex;
+  justify-content: center;
+}
+
 @media (min-width: 640px) {
   .grid {
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 140px), 11.5rem));

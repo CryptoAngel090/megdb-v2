@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "suite": "verify:seo-quick",
+  "ok": false,
+  "startedAt": "2026-04-28T22:14:43.238Z",
+  "finishedAt": "2026-04-28T22:14:48.848Z",
+  "elapsedMs": 5610,
+  "checks": [
+    {
+      "id": "contracts",
+      "command": "pnpm run verify:seo:contracts",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 1062,
+      "stdout": "> @repo/web@0.1.0 verify:seo:contracts C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-contracts.mjs\n\nSEO contracts OK: 35 route files checked.",
+      "stderr": ""
+    },
+    {
+      "id": "jsonld",
+      "command": "pnpm run verify:jsonld",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 908,
+      "stdout": "> @repo/web@0.1.0 verify:jsonld C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-jsonld-coverage.mjs\n\nJSON-LD coverage OK: 34 page.tsx files checked.",
+      "stderr": ""
+    },
+    {
+      "id": "infra",
+      "command": "pnpm run verify:seo:infra",
+      "ok": false,
+      "exitCode": 1,
+      "elapsedMs": 838,
+      "stdout": "> @repo/web@0.1.0 verify:seo:infra C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-infra.mjs\n\n ELIFECYCLE  Command failed with exit code 1.",
+      "stderr": "SEO infra check failed: missing 10 required file(s):\n- C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\layout.tsx\n- C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\robots.ts\n- C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\sitemap.ts\n- C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\manifest.ts\n- C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\opengraph-image.tsx\n- C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\opengraph-image.alt.txt\n- C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\twitter-image.tsx\n- C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\twitter-image.alt.txt\n- C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\indexnow-key\\route.ts\n- C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\api\\seo\\indexnow\\route.ts"
+    },
+    {
+      "id": "noindex",
+      "command": "pnpm run verify:seo:noindex",
+      "ok": false,
+      "exitCode": 1,
+      "elapsedMs": 898,
+      "stdout": "> @repo/web@0.1.0 verify:seo:noindex C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-noindex-robots.mjs\n\n ELIFECYCLE  Command failed with exit code 1.",
+      "stderr": "node:fs:440\r\n    return binding.readFileUtf8(path, stringToFlags(options.flag));\r\n                   ^\r\n\r\nError: ENOENT: no such file or directory, open 'C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\robots.ts'\r\n    at readFileSync (node:fs:440:20)\r\n    at file:///C:/Users/CryptoAngel/Desktop/MEGDB/apps/web/scripts/verify-seo-noindex-robots.mjs:11:19\r\n    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)\r\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)\r\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {\r\n  errno: -4058,\r\n  code: 'ENOENT',\r\n  syscall: 'open',\r\n  path: 'C:\\\\Users\\\\CryptoAngel\\\\Desktop\\\\MEGDB\\\\apps\\\\web\\\\src\\\\app\\\\robots.ts'\r\n}\r\n\r\nNode.js v22.22.0"
+    },
+    {
+      "id": "sitemap",
+      "command": "pnpm run verify:seo:sitemap",
+      "ok": false,
+      "exitCode": 1,
+      "elapsedMs": 925,
+      "stdout": "> @repo/web@0.1.0 verify:seo:sitemap C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-sitemap-contract.mjs\n\n ELIFECYCLE  Command failed with exit code 1.",
+      "stderr": "node:fs:440\r\n    return binding.readFileUtf8(path, stringToFlags(options.flag));\r\n                   ^\r\n\r\nError: ENOENT: no such file or directory, open 'C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\\src\\app\\sitemap.ts'\r\n    at readFileSync (node:fs:440:20)\r\n    at file:///C:/Users/CryptoAngel/Desktop/MEGDB/apps/web/scripts/verify-seo-sitemap-contract.mjs:10:13\r\n    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)\r\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)\r\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {\r\n  errno: -4058,\r\n  code: 'ENOENT',\r\n  syscall: 'open',\r\n  path: 'C:\\\\Users\\\\CryptoAngel\\\\Desktop\\\\MEGDB\\\\apps\\\\web\\\\src\\\\app\\\\sitemap.ts'\r\n}\r\n\r\nNode.js v22.22.0"
+    },
+    {
+      "id": "canonical",
+      "command": "pnpm run verify:seo:canonical",
+      "ok": true,
+      "exitCode": 0,
+      "elapsedMs": 973,
+      "stdout": "> @repo/web@0.1.0 verify:seo:canonical C:\\Users\\CryptoAngel\\Desktop\\MEGDB\\apps\\web\n> node ./scripts/verify-seo-canonical-contract.mjs\n\nSEO canonical contract OK: 4 discover canonical modules verified.",
+      "stderr": ""
+    }
+  ]
+}

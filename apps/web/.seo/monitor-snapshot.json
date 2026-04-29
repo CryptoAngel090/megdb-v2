@@ -1,0 +1,13 @@
+{
+  "at": "2026-04-24T16:20:46.193Z",
+  "baseUrl": "https://megdb.com",
+  "mode": "degraded",
+  "coverage": {
+    "static": 0,
+    "detail": 0,
+    "facet": 0,
+    "noindex": 0
+  },
+  "pages": [],
+  "degradedNoFetch": true
+}

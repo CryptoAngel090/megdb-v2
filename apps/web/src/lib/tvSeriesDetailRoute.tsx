@@ -3,6 +3,7 @@ import { Suspense } from 'react'
 import { notFound, permanentRedirect } from 'next/navigation'
 import { HeroLcpPreloadLinks } from '@/components/MovieDetailPage/HeroLcpPreloadLinks'
 import { MovieDetailBelowFoldSuspenseFallback } from '@/components/MovieDetailPage/MovieDetailBelowFoldDynamics'
+import { TvSeriesEpisodesLazy } from '@/components/MovieDetailPage/MovieDetailTvDynamics'
 import {
   MovieDetailPage,
   type MovieDetailPageNav,
@@ -285,6 +286,7 @@ export async function TvSeriesDetailPageApp({ params }: Props, segment: TvSeries
         key={data.id}
         movie={data}
         nav={navForSeriesDetail()}
+        tvEpisodesSection={<TvSeriesEpisodesLazy seriesId={data.id} seriesTitle={data.title} />}
         streamedBelowFold={
           <Suspense fallback={<MovieDetailBelowFoldSuspenseFallback />}>
             <MovieDetailStreamedBelowFold
@@ -293,6 +295,7 @@ export async function TvSeriesDetailPageApp({ params }: Props, segment: TvSeries
               movieTitle={data.title}
               cast={data.cast}
               variant="tv"
+              tvEpisodesSection={<TvSeriesEpisodesLazy seriesId={data.id} seriesTitle={data.title} />}
             />
           </Suspense>
         }

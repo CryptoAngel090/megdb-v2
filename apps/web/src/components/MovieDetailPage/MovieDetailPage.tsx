@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { ViewTransition, type ReactNode } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { MoviePageDetail } from '@/lib/tmdb'
@@ -10,18 +10,16 @@ import { blurHashToDataUrl } from '@/lib/blurhashToDataUrl'
 import { MovieShareButton } from './MovieShareButton'
 import { MovieWatchProvidersPanel } from './MovieWatchProvidersPanel'
 import { MovieHeroBackdropImage } from './MovieHeroBackdropImage'
-import { MovieHeroCarouselBackdrop, MovieHeroCarouselProvider } from './MovieHeroBackdropCarousel'
 import { MovieHeroTrailerActions } from './MovieHeroTrailerActions'
 import { MoviePrimarySummaryPanel } from './MoviePrimarySummaryPanel'
-import { MovieComments } from './MovieComments'
 import {
   MovieCastSectionLazy,
   MovieCollectionSectionLazy,
   MovieFaqAccordionLazy,
   MoviePhotosSectionLazy,
   MovieTrailerBlockLazy,
-  TvSeriesEpisodesLazy,
 } from './MovieDetailBelowFoldDynamics'
+import { MovieCommentsRoot } from './MovieCommentsRoot.client'
 import { FadeInView } from '@/components/FadeInView/FadeInView'
 import { ChevronLeft, Star, Clock } from 'lucide-react'
 import iconSlot from '@/components/IconSlot/iconSlot.module.css'
@@ -29,59 +27,7 @@ import styles from './MovieDetailPage.module.css'
 
 const POSTER_BLUR =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
-
-const MOVIE_HERO_CAROUSEL_SLIDE_CAP = 10
-
-function buildMovieHeroCarouselPaths(
-  stills: MoviePageDetail['heroBackdropStills'],
-  primaryBackdropPath: string | null,
-  maxSlides: number
-): string[] {
-  const seen = new Set<string>()
-  const paths: string[] = []
-  const add = (p: string | null | undefined) => {
-    const t = p?.trim()
-    if (!t || seen.has(t)) return
-    seen.add(t)
-    paths.push(t)
-  }
-  add(primaryBackdropPath)
-  for (const row of stills) {
-    if (paths.length >= maxSlides) break
-    add(row.filePath)
-  }
-  return paths
-}
-
-interface MovieDetailHeroCarouselShellProps {
-  enabled: boolean
-  movieId: number
-  movieTitle: string
-  slideUrls: string[]
-  blurDataURL: string
-  children: ReactNode
-}
-
-function MovieDetailHeroCarouselShell({
-  enabled,
-  movieId,
-  movieTitle,
-  slideUrls,
-  blurDataURL,
-  children,
-}: MovieDetailHeroCarouselShellProps) {
-  if (!enabled) return <>{children}</>
-  return (
-    <MovieHeroCarouselProvider
-      movieId={movieId}
-      movieTitle={movieTitle}
-      slideUrls={slideUrls}
-      blurDataURL={blurDataURL}
-    >
-      {children}
-    </MovieHeroCarouselProvider>
-  )
-}
+const MAX_BLUR_DATA_URL_LENGTH = 1200
 
 function formatRuntimeMinutes(total: number): string {
   if (total < 60) return `${total}m`
@@ -178,11 +124,14 @@ export function MovieDetailPage({
   movie,
   nav,
   streamedBelowFold,
+  tvEpisodesSection,
 }: {
   movie: MoviePageDetail
   nav?: MovieDetailPageNav
   /** When set, photos + collection/similar rails render inside this slot (e.g. Suspense + RSC tail). */
   streamedBelowFold?: ReactNode
+  /** TV-only episodes block passed from TV detail routes. */
+  tvEpisodesSection?: ReactNode
 }) {
   const backHref = nav?.backHref ?? '/movies'
   const backLabel = nav?.backLabel ?? 'All Movies'
@@ -229,16 +178,11 @@ export function MovieDetailPage({
   const backdropUrl = movie.backdropPath ? getImageUrl(movie.backdropPath, 'original') : ''
   /** Full-bleed hero art (poster path for ambient color + Next image placeholder) */
   const posterBlurSrc = movie.posterPath ? getImageUrl(movie.posterPath, 'w500') : null
-  const visualMovie = movie as MoviePageDetail & { blurHash?: string | null }
-  const heroBlurDataURL = blurHashToDataUrl(visualMovie.blurHash) ?? POSTER_BLUR
+  const blurFromHash = blurHashToDataUrl(movie.blurHash, 16, 9)
+  const heroBlurDataURL =
+    blurFromHash && blurFromHash.length <= MAX_BLUR_DATA_URL_LENGTH ? blurFromHash : POSTER_BLUR
 
-  const heroCarouselFilePaths = buildMovieHeroCarouselPaths(
-    movie.heroBackdropStills,
-    movie.backdropPath,
-    MOVIE_HERO_CAROUSEL_SLIDE_CAP
-  )
-  const heroCarouselUrls = heroCarouselFilePaths.map((p) => getImageUrl(p, 'w1280'))
-  const heroCarouselEnabled = heroCarouselUrls.length >= 2
+  const heroCarouselEnabled = false
 
   const releaseDateFull = movie.releaseDate
     ? new Date(movie.releaseDate).toLocaleDateString('en-US', {
@@ -393,14 +337,7 @@ export function MovieDetailPage({
       : null
   return (
     <div id="movie-detail-page" className={styles.page}>
-      <MovieDetailHeroCarouselShell
-        enabled={heroCarouselEnabled}
-        movieId={movie.id}
-        movieTitle={movie.title}
-        slideUrls={heroCarouselUrls}
-        blurDataURL={heroBlurDataURL}
-      >
-        <header className={styles.hero}>
+      <header className={styles.hero}>
           <div
             className={
               heroCarouselEnabled
@@ -408,76 +345,29 @@ export function MovieDetailPage({
                 : styles.heroBackdropReveal
             }
           >
-            {heroCarouselEnabled ? (
-              <>
-                {/* Mobile: force single static poster instead of carousel */}
-                {posterBlurSrc && (
-                  <div className={`${styles.heroMediaFill} ${styles.heroMobileBg}`}>
-                    <MovieHeroBackdropImage
-                      focalAssetKey={`${movie.id}-hero-poster-${movie.posterPath ?? ''}`}
-                      src={posterBlurSrc}
-                      alt=""
-                      fill
-                      priority
-                      fetchPriority="high"
-                      sizes="100vw"
-                      className={styles.heroImgPoster}
-                      placeholder="blur"
-                      blurDataURL={heroBlurDataURL}
-                    />
-                  </div>
-                )}
-                {/* Desktop/tablet: keep backdrop carousel */}
-                <div className={`${styles.heroMediaFill} ${styles.heroDesktopBg}`}>
-                  <MovieHeroCarouselBackdrop
-                    slideImageClassName={styles.heroImgCarouselSlide ?? ''}
-                  />
-                </div>
-              </>
-            ) : (
-              <>
-                {/* Mobile: portrait poster fits portrait screens perfectly */}
-                {posterBlurSrc && (
-                  <div className={`${styles.heroMediaFill} ${styles.heroMobileBg}`}>
-                    <MovieHeroBackdropImage
-                      focalAssetKey={`${movie.id}-hero-poster-${movie.posterPath ?? ''}`}
-                      src={posterBlurSrc}
-                      alt=""
-                      fill
-                      priority
-                      fetchPriority="high"
-                      sizes="100vw"
-                      className={styles.heroImgPoster}
-                      placeholder="blur"
-                      blurDataURL={heroBlurDataURL}
-                    />
-                  </div>
-                )}
-                {/* Desktop: landscape backdrop fits wide screens, no cropping */}
-                {backdropUrl && (
-                  <div className={`${styles.heroMediaFill} ${styles.heroDesktopBg}`}>
-                    <MovieHeroBackdropImage
-                      focalAssetKey={`${movie.id}-hero-bd-${movie.backdropPath ?? ''}`}
-                      disableAutoFocal
-                      src={getImageUrl(movie.backdropPath, 'original')}
-                      alt=""
-                      fill
-                      priority
-                      fetchPriority="high"
-                      sizes="100vw"
-                      style={{
-                        objectPosition: '100% 20%',
-                        transform: 'scale(1.08) translateX(12%)',
-                      }}
-                      className={styles.heroImgCover}
-                      placeholder="blur"
-                      blurDataURL={heroBlurDataURL}
-                    />
-                  </div>
-                )}
-                {!posterBlurSrc && !backdropUrl && <div className={styles.heroSolid} />}
-              </>
+            {/* Desktop: landscape backdrop fits wide screens, no carousel */}
+            {backdropUrl && (
+              <div className={`${styles.heroMediaFill} ${styles.heroDesktopBg}`}>
+                <MovieHeroBackdropImage
+                  focalAssetKey={`${movie.id}-hero-bd-${movie.backdropPath ?? ''}`}
+                  disableAutoFocal
+                  src={getImageUrl(movie.backdropPath, 'original')}
+                  alt=""
+                  fill
+                  priority
+                  fetchPriority="high"
+                  sizes="100vw"
+                  style={{
+                    objectPosition: '100% 20%',
+                    transform: 'scale(1.08) translateX(12%)',
+                  }}
+                  className={styles.heroImgCover}
+                  placeholder="blur"
+                  blurDataURL={heroBlurDataURL}
+                />
+              </div>
             )}
+            {!posterBlurSrc && !backdropUrl && <div className={styles.heroSolid} />}
             <div className={styles.heroTint} />
             <div className={styles.heroVignette} />
           </div>
@@ -493,16 +383,20 @@ export function MovieDetailPage({
             <div className={styles.heroLayoutNoPoster}>
               <div className={styles.heroCopy}>
                 {posterBlurSrc && !heroCarouselEnabled && (
-                  <Image
-                    src={posterBlurSrc}
-                    alt={`${movie.title} poster`}
-                    width={420}
-                    height={630}
-                    sizes="(max-width: 768px) 72vw, 420px"
-                    className={styles.heroOnlyPoster}
-                    placeholder="blur"
-                    blurDataURL={POSTER_BLUR}
-                  />
+                  <ViewTransition name={`poster-${movie.id}`}>
+                    <Image
+                      src={posterBlurSrc}
+                      alt={`${movie.title} poster`}
+                      width={420}
+                      height={630}
+                      sizes="(max-width: 768px) 100vw, 500px"
+                      className={styles.heroOnlyPoster}
+                      priority
+                      fetchPriority="high"
+                      placeholder="blur"
+                      blurDataURL={heroBlurDataURL}
+                    />
+                  </ViewTransition>
                 )}
                 <div className={styles.heroInfoHidden}>
                   {genreLinks != null && <div className={styles.heroGenresAbove}>{genreLinks}</div>}
@@ -593,7 +487,6 @@ export function MovieDetailPage({
             </div>
           </div>
         </header>
-      </MovieDetailHeroCarouselShell>
 
       <div id="movie-page-primary" className={styles.container}>
         <div className={styles.twoCol}>
@@ -608,12 +501,26 @@ export function MovieDetailPage({
                 sizes="240px"
                 className={styles.sidebarPoster}
                 placeholder="blur"
-                blurDataURL={POSTER_BLUR}
+                blurDataURL={heroBlurDataURL}
               />
             )}
           </aside>
 
           <div className={styles.main}>
+            {posterBlurSrc && (
+              <div className={styles.mobilePosterWrap}>
+                <Image
+                  src={posterBlurSrc}
+                  alt={`${movie.title} poster`}
+                  width={220}
+                  height={330}
+                  sizes="(max-width: 768px) 46vw, 220px"
+                  className={styles.mobilePoster}
+                  placeholder="blur"
+                  blurDataURL={heroBlurDataURL}
+                />
+              </div>
+            )}
             {!displayOverview && <MoviePageBreadcrumb movie={movie} />}
             {displayOverview && (
               <FadeInView>
@@ -765,9 +672,7 @@ export function MovieDetailPage({
           <MovieFaqAccordionLazy items={visibleFaq} movieTitle={movie.title} />
         )}
 
-        {!streamedBelowFold && isTvLike && (
-          <TvSeriesEpisodesLazy seriesId={movie.id} seriesTitle={movie.title} />
-        )}
+        {!streamedBelowFold && isTvLike && tvEpisodesSection}
 
         {!streamedBelowFold && collectionOthers && collectionOthers.parts.length > 0 && (
           <MovieCollectionSectionLazy
@@ -785,7 +690,7 @@ export function MovieDetailPage({
           />
         )}
         {!streamedBelowFold && (
-          <MovieComments
+          <MovieCommentsRoot
             tmdbMovieId={movie.id}
             movieTitle={movie.title}
             mediaKind={similarMediaKind}

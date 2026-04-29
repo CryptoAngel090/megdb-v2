@@ -10,6 +10,10 @@ import {
   CACHE_TAG_HOME_MODERATE,
   CACHE_TAG_ALL_TIME,
   CACHE_TAG_PEOPLE,
+  CACHE_TAG_MOVIES,
+  cacheTagMovie,
+  cacheTagTv,
+  cacheTagPerson,
 } from './cachePolicy'
 import { containsCyrillic } from './textScript'
 
@@ -126,6 +130,7 @@ async function tmdbFetch<T>(
   const revalidate = init?.revalidate ?? TMDB_REVALIDATE_DEFAULT
   const tags = init?.tags
   const res = await fetch(url.toString(), {
+    cache: 'force-cache',
     next: { revalidate, ...(tags?.length ? { tags } : {}) },
   })
   if (!res.ok) throw new Error(`TMDB ${res.status} ${endpoint}`)
@@ -1152,6 +1157,10 @@ export interface MoviePageDetail {
   releaseDate: string | null
   runtime: number | null
   posterPath: string | null
+  /** Optional persisted BlurHash for poster/backdrop placeholders. */
+  blurHash?: string | null
+  /** Optional persisted dominant color hex (`#RRGGBB`) for detail theming. */
+  primaryColor?: string | null
   backdropPath: string | null
   voteAverage: number
   voteCount: number
@@ -1921,6 +1930,7 @@ function pickAlternateDisplayTitle(
 export async function getMoviePageDataShell(id: number): Promise<MoviePageDetail | null> {
   if (!Number.isFinite(id) || id <= 0) return null
   try {
+    const movieTag = cacheTagMovie(id)
     const d = await tmdbFetch<{
       id: number
       title?: string
@@ -1958,6 +1968,7 @@ export async function getMoviePageDataShell(id: number): Promise<MoviePageDetail
       { append_to_response: 'credits', language: 'en-US' },
       {
         revalidate: TMDB_REVALIDATE_MODERATE,
+        tags: [movieTag, CACHE_TAG_MOVIES],
       }
     )
 
@@ -1976,31 +1987,35 @@ export async function getMoviePageDataShell(id: number): Promise<MoviePageDetail
     ] = await Promise.all([
       tmdbFetch<TmdbWatchProvidersPayload>(`/movie/${id}/watch/providers`, undefined, {
         revalidate: TMDB_REVALIDATE_MODERATE,
+        tags: [movieTag, CACHE_TAG_MOVIES],
       }).catch(() => null),
       tmdbFetch<TmdbReleaseDatesPayload>(`/movie/${id}/release_dates`, undefined, {
         revalidate: TMDB_REVALIDATE_MODERATE,
+        tags: [movieTag, CACHE_TAG_MOVIES],
       }).catch(() => null),
       tmdbFetch<{ titles?: Array<{ iso_3166_1: string; title: string }> }>(
         `/movie/${id}/alternative_titles`,
         undefined,
-        { revalidate: TMDB_REVALIDATE_MODERATE }
+        { revalidate: TMDB_REVALIDATE_MODERATE, tags: [movieTag, CACHE_TAG_MOVIES] }
       ).catch(() => null),
       tmdbFetch<TmdbVideosResponse>(
         `/movie/${id}/videos`,
         { language: 'en-US' },
         {
           revalidate: TMDB_REVALIDATE_MODERATE,
+          tags: [movieTag, CACHE_TAG_MOVIES],
         }
       ).catch(() => ({ results: [] as TmdbVideosResponse['results'] })),
       fetchOrigVideos
         ? tmdbFetch<TmdbVideosResponse>(
             `/movie/${id}/videos`,
             { language: d.original_language!.trim() },
-            { revalidate: TMDB_REVALIDATE_MODERATE }
+            { revalidate: TMDB_REVALIDATE_MODERATE, tags: [movieTag, CACHE_TAG_MOVIES] }
           ).catch(() => ({ results: [] as TmdbVideosResponse['results'] }))
         : Promise.resolve({ results: [] as TmdbVideosResponse['results'] }),
       tmdbFetch<{ backdrops?: TmdbBackdropImageRow[] }>(`/movie/${id}/images`, undefined, {
         revalidate: TMDB_REVALIDATE_MODERATE,
+        tags: [movieTag, CACHE_TAG_MOVIES],
       }).catch(() => null),
     ])
 
@@ -2143,6 +2158,7 @@ export async function getMoviePageDataShell(id: number): Promise<MoviePageDetail
 export async function getTvPageDataShell(id: number): Promise<MoviePageDetail | null> {
   if (!Number.isFinite(id) || id <= 0) return null
   try {
+    const tvTag = cacheTagTv(id)
     const d = await tmdbFetch<{
       id: number
       name?: string
@@ -2189,6 +2205,7 @@ export async function getTvPageDataShell(id: number): Promise<MoviePageDetail | 
       { append_to_response: 'credits,external_ids', language: 'en-US' },
       {
         revalidate: TMDB_REVALIDATE_MODERATE,
+        tags: [tvTag],
       }
     )
 
@@ -2210,31 +2227,35 @@ export async function getTvPageDataShell(id: number): Promise<MoviePageDetail | 
     ] = await Promise.all([
       tmdbFetch<TmdbWatchProvidersPayload>(`/tv/${id}/watch/providers`, undefined, {
         revalidate: TMDB_REVALIDATE_MODERATE,
+        tags: [tvTag],
       }).catch(() => null),
       tmdbFetch<TmdbTvContentRatingsPayload>(`/tv/${id}/content_ratings`, undefined, {
         revalidate: TMDB_REVALIDATE_MODERATE,
+        tags: [tvTag],
       }).catch(() => null),
       tmdbFetch<{ titles?: Array<{ iso_3166_1: string; title: string }> }>(
         `/tv/${id}/alternative_titles`,
         undefined,
-        { revalidate: TMDB_REVALIDATE_MODERATE }
+        { revalidate: TMDB_REVALIDATE_MODERATE, tags: [tvTag] }
       ).catch(() => null),
       tmdbFetch<TmdbVideosResponse>(
         `/tv/${id}/videos`,
         { language: 'en-US' },
         {
           revalidate: TMDB_REVALIDATE_MODERATE,
+          tags: [tvTag],
         }
       ).catch(() => ({ results: [] as TmdbVideosResponse['results'] })),
       fetchOrigVideos
         ? tmdbFetch<TmdbVideosResponse>(
             `/tv/${id}/videos`,
             { language: d.original_language!.trim() },
-            { revalidate: TMDB_REVALIDATE_MODERATE }
+            { revalidate: TMDB_REVALIDATE_MODERATE, tags: [tvTag] }
           ).catch(() => ({ results: [] as TmdbVideosResponse['results'] }))
         : Promise.resolve({ results: [] as TmdbVideosResponse['results'] }),
       tmdbFetch<{ backdrops?: TmdbBackdropImageRow[] }>(`/tv/${id}/images`, undefined, {
         revalidate: TMDB_REVALIDATE_MODERATE,
+        tags: [tvTag],
       }).catch(() => null),
     ])
 
@@ -3005,6 +3026,7 @@ export interface PersonPageDetail {
 export async function getPersonPageData(id: number): Promise<PersonPageDetail | null> {
   if (!Number.isFinite(id) || id <= 0) return null
   try {
+    const personTag = cacheTagPerson(id)
     const d = await tmdbFetch<{
       id: number
       name?: string
@@ -3029,7 +3051,7 @@ export async function getPersonPageData(id: number): Promise<PersonPageDetail | 
     }>(
       `/person/${id}`,
       { append_to_response: 'external_ids', language: 'en-US' },
-      { revalidate: TMDB_REVALIDATE_PEOPLE }
+      { revalidate: TMDB_REVALIDATE_PEOPLE, tags: [personTag] }
     )
     const name = d.name?.trim() ? d.name.trim() : `Person ${d.id}`
     const imdbRaw = d.external_ids?.imdb_id?.trim() ? d.external_ids.imdb_id.trim() : null
@@ -3090,6 +3112,7 @@ export interface PersonImageRow {
 export async function getPersonImages(personId: number): Promise<PersonImageRow[]> {
   if (!Number.isFinite(personId) || personId <= 0) return []
   try {
+    const personTag = cacheTagPerson(personId)
     const d = await tmdbFetch<{
       profiles?: Array<{
         file_path?: string | null
@@ -3098,7 +3121,10 @@ export async function getPersonImages(personId: number): Promise<PersonImageRow[
         vote_average?: number
         vote_count?: number
       }>
-    }>(`/person/${personId}/images`, undefined, { revalidate: TMDB_REVALIDATE_PEOPLE })
+    }>(`/person/${personId}/images`, undefined, {
+      revalidate: TMDB_REVALIDATE_PEOPLE,
+      tags: [personTag],
+    })
 
     const rows: PersonImageRow[] = []
     for (const row of d.profiles ?? []) {
@@ -3134,6 +3160,7 @@ export async function getPersonImages(personId: number): Promise<PersonImageRow[
 export async function getPersonCombinedCredits(personId: number): Promise<PersonCreditRowRaw[]> {
   if (!Number.isFinite(personId) || personId <= 0) return []
   try {
+    const personTag = cacheTagPerson(personId)
     const d = await tmdbFetch<{
       cast?: Array<{
         id: number
@@ -3150,7 +3177,7 @@ export async function getPersonCombinedCredits(personId: number): Promise<Person
     }>(
       `/person/${personId}/combined_credits`,
       { language: 'en-US' },
-      { revalidate: TMDB_REVALIDATE_PEOPLE }
+      { revalidate: TMDB_REVALIDATE_PEOPLE, tags: [personTag] }
     )
 
     const rows: PersonCreditRowRaw[] = []

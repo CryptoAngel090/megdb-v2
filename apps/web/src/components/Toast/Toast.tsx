@@ -9,7 +9,6 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
 import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './Toast.module.css'
 
@@ -37,7 +36,15 @@ const ToastContext = createContext<ToastContextValue | null>(null)
 
 export function useToast(): ToastContextValue {
   const ctx = useContext(ToastContext)
-  if (!ctx) throw new Error('useToast must be used inside <ToastProvider>')
+  if (!ctx) {
+    const noop = () => {}
+    return {
+      show: noop,
+      success: noop,
+      error: noop,
+      info: noop,
+    }
+  }
   return ctx
 }
 
@@ -79,11 +86,9 @@ function ToastList({ toasts, onDismiss }: { toasts: Toast[]; onDismiss: (id: str
       aria-live="polite"
       aria-atomic="false"
     >
-      <AnimatePresence initial={false}>
-        {toasts.map((t) => (
-          <ToastItem key={t.id} toast={t} onDismiss={onDismiss} />
-        ))}
-      </AnimatePresence>
+      {toasts.map((t) => (
+        <ToastItem key={t.id} toast={t} onDismiss={onDismiss} />
+      ))}
     </div>
   )
 }
@@ -116,14 +121,10 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: string)
   }
 
   return (
-    <motion.div
+    <div
       className={`${styles.toast} ${styles[toast.type]}`}
       role="alert"
       aria-live="assertive"
-      initial={{ opacity: 0, y: 24, scale: 0.94 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -8, scale: 0.94 }}
-      transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
       onMouseEnter={pause}
       onMouseLeave={resume}
     >
@@ -148,6 +149,6 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: string)
           <path d="M18 6L6 18M6 6l12 12" />
         </svg>
       </button>
-    </motion.div>
+    </div>
   )
 }

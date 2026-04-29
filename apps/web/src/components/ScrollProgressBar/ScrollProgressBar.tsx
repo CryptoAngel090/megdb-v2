@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
 import styles from './ScrollProgressBar.module.css'
 
@@ -13,15 +13,29 @@ import styles from './ScrollProgressBar.module.css'
  */
 export function ScrollProgressBar() {
   const reduceMotion = usePrefersReducedMotion()
-  const { scrollYProgress } = useScroll()
-  // Direct 1:1 mapping — no spring, no damping
-  const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1])
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    const onScroll = () => {
+      const doc = document.documentElement
+      const maxScroll = Math.max(1, doc.scrollHeight - window.innerHeight)
+      const value = Math.min(1, Math.max(0, window.scrollY / maxScroll))
+      setProgress(value)
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [])
 
   if (reduceMotion) return null
 
   return (
     <div className={styles.track} aria-hidden>
-      <motion.div className={styles.fill} style={{ scaleX }} />
+      <div className={styles.fill} style={{ transform: `scaleX(${progress})` }} />
     </div>
   )
 }

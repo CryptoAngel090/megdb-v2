@@ -1,0 +1,94 @@
+.root {
+  margin-top: clamp(1.75rem, 4.5vw, 2.75rem);
+}
+
+.title {
+  margin: 0 0 var(--space-3);
+  font-size: clamp(1.18rem, 1.06rem + 0.45vw, 1.45rem);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+}
+
+.form {
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.input,
+.textarea {
+  width: 100%;
+  background: color-mix(in oklab, var(--surface) 75%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  padding: var(--space-2) var(--space-3);
+  font-size: clamp(0.98rem, 0.94rem + 0.18vw, 1.05rem);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-normal);
+}
+
+.textarea {
+  min-height: 112px;
+  resize: vertical;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: color-mix(in oklab, var(--text-secondary) 88%, white 12%);
+  font-weight: var(--weight-medium);
+  opacity: 1;
+}
+
+.submit {
+  width: fit-content;
+  min-height: var(--touch-target);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-button);
+  border: 0;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: clamp(0.98rem, 0.95rem + 0.15vw, 1.06rem);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+}
+
+.notice,
+.meta {
+  margin: var(--space-2) 0;
+  color: var(--text-secondary);
+  font-size: clamp(0.92rem, 0.9rem + 0.12vw, 0.98rem);
+  font-weight: var(--weight-regular);
+}
+
+.list {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.item {
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: color-mix(in oklab, var(--surface) 68%, transparent);
+}
+
+.itemHead {
+  margin-bottom: var(--space-1);
+  color: var(--text-primary);
+  font-size: clamp(0.98rem, 0.94rem + 0.16vw, 1.06rem);
+  font-weight: var(--weight-semibold);
+}
+
+.body {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: clamp(0.95rem, 0.92rem + 0.14vw, 1.02rem);
+  line-height: var(--leading-normal);
+  font-weight: var(--weight-regular);
+  white-space: pre-wrap;
+}
+
+.lazyPlaceholder {
+  min-block-size: var(--space-1);
+}

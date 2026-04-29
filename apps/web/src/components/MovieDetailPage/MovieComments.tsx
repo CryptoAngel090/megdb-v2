@@ -22,11 +22,8 @@ interface CommentsResponse {
   data?: MovieCommentRow[]
 }
 
-export function MovieComments({ tmdbMovieId, movieTitle, mediaKind }: MovieCommentsProps) {
-  const apiBase = useMemo(
-    () => (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000').replace(/\/+$/, ''),
-    []
-  )
+function MovieComments({ tmdbMovieId, movieTitle, mediaKind }: MovieCommentsProps) {
+  const apiBase = useMemo(() => process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, '') ?? '', [])
   const [items, setItems] = useState<MovieCommentRow[]>([])
   const [loading, setLoading] = useState(true)
   const [posting, setPosting] = useState(false)
@@ -34,6 +31,11 @@ export function MovieComments({ tmdbMovieId, movieTitle, mediaKind }: MovieComme
   const [form, setForm] = useState({ authorName: '', authorEmail: '', body: '' })
 
   useEffect(() => {
+    if (!apiBase) {
+      setItems([])
+      setLoading(false)
+      return
+    }
     let cancelled = false
     async function loadApproved() {
       setLoading(true)
@@ -60,6 +62,10 @@ export function MovieComments({ tmdbMovieId, movieTitle, mediaKind }: MovieComme
 
   async function submitComment() {
     if (posting) return
+    if (!apiBase) {
+      setNotice('Comments API is not configured for this environment.')
+      return
+    }
     setPosting(true)
     setNotice(null)
     try {
@@ -150,3 +156,6 @@ export function MovieComments({ tmdbMovieId, movieTitle, mediaKind }: MovieComme
     </section>
   )
 }
+
+export { MovieComments }
+export default MovieComments

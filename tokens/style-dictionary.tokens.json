@@ -1,0 +1,52 @@
+{
+  "color": {
+    "primary": { "value": "#c084fc" },
+    "secondary": { "value": "#182638" },
+    "accent": { "value": "#c084fc" },
+    "background": { "value": "#0b1622" },
+    "text": { "value": "#eef3ff" },
+    "danger": { "value": "#ef4444" },
+    "warning": { "value": "#f59e0b" },
+    "success": { "value": "#22c55e" },
+    "info": { "value": "#38bdf8" },
+    "muted": { "value": "#8fa8c8" },
+    "bg": { "value": "#0b1622" },
+    "card": { "value": "#182638" },
+    "br": { "value": "rgba(255,255,255,0.07)" },
+    "ac": { "value": "#c084fc" },
+    "acg": { "value": "rgba(192,132,252,0.38)" },
+    "acs": { "value": "rgba(192,132,252,0.10)" },
+    "acb": { "value": "rgba(192,132,252,0.28)" },
+    "t1": { "value": "#eef3ff" },
+    "t2": { "value": "#8fa8c8" },
+    "t3": { "value": "#4a6480" }
+  },
+  "size": {
+    "xs": { "value": "24px" },
+    "sm": { "value": "32px" },
+    "md": { "value": "40px" },
+    "lg": { "value": "48px" },
+    "xl": { "value": "56px" }
+  },
+  "spacing": {
+    "xs": { "value": "4px" },
+    "sm": { "value": "8px" },
+    "md": { "value": "12px" },
+    "lg": { "value": "16px" },
+    "xl": { "value": "24px" }
+  },
+  "borderRadius": {
+    "xs": { "value": "4px" },
+    "sm": { "value": "8px" },
+    "md": { "value": "12px" },
+    "lg": { "value": "16px" },
+    "xl": { "value": "24px" }
+  },
+  "fontSize": {
+    "xs": { "value": "12px" },
+    "sm": { "value": "14px" },
+    "base": { "value": "16px" },
+    "lg": { "value": "18px" },
+    "xl": { "value": "20px" }
+  }
+}

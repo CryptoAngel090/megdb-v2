@@ -1,0 +1,141 @@
+{
+  "spaceStep": {
+    "1": { "$type": "dimension", "$value": "4px" },
+    "2": { "$type": "dimension", "$value": "8px" },
+    "3": { "$type": "dimension", "$value": "16px" },
+    "4": { "$type": "dimension", "$value": "24px" },
+    "5": { "$type": "dimension", "$value": "32px" },
+    "6": { "$type": "dimension", "$value": "48px" },
+    "7": { "$type": "dimension", "$value": "64px" },
+    "8": { "$type": "dimension", "$value": "96px" },
+    "9": { "$type": "dimension", "$value": "128px" },
+    "10": { "$type": "dimension", "$value": "160px" },
+    "12": { "$type": "dimension", "$value": "192px" }
+  },
+  "spacing": {
+    "xs": { "$type": "dimension", "$value": "{spaceStep.1}" },
+    "sm": { "$type": "dimension", "$value": "{spaceStep.2}" },
+    "md": { "$type": "dimension", "$value": "12px" },
+    "lg": { "$type": "dimension", "$value": "{spaceStep.3}" },
+    "xl": { "$type": "dimension", "$value": "{spaceStep.4}" }
+  },
+  "borderRadius": {
+    "xs": { "$type": "dimension", "$value": "4px" },
+    "sm": { "$type": "dimension", "$value": "8px" },
+    "md": { "$type": "dimension", "$value": "12px" },
+    "lg": { "$type": "dimension", "$value": "16px" },
+    "xl": { "$type": "dimension", "$value": "24px" }
+  },
+  "componentBorderRadius": {
+    "button": { "$type": "dimension", "$value": "{borderRadius.md}" }
+  },
+  "radiusUi": {
+    "xs": { "$type": "dimension", "$value": "2px" },
+    "sm": { "$type": "dimension", "$value": "4px" },
+    "md": { "$type": "dimension", "$value": "6px" },
+    "lg": { "$type": "dimension", "$value": "8px" },
+    "xl": { "$type": "dimension", "$value": "12px" },
+    "twoXl": { "$type": "dimension", "$value": "16px" },
+    "threeXl": { "$type": "dimension", "$value": "24px" },
+    "full": { "$type": "dimension", "$value": "9999px" },
+    "card": { "$type": "dimension", "$value": "10px" },
+    "badge": { "$type": "dimension", "$value": "6px" },
+    "input": { "$type": "dimension", "$value": "6px" },
+    "glass": { "$type": "dimension", "$value": "8px" }
+  },
+  "fontSize": {
+    "xs": { "$type": "dimension", "$value": "12px" },
+    "sm": { "$type": "dimension", "$value": "14px" },
+    "base": { "$type": "dimension", "$value": "16px" },
+    "lg": { "$type": "dimension", "$value": "18px" },
+    "xl": { "$type": "dimension", "$value": "20px" }
+  },
+  "size": {
+    "xs": { "$type": "dimension", "$value": "24px" },
+    "sm": { "$type": "dimension", "$value": "32px" },
+    "md": { "$type": "dimension", "$value": "40px" },
+    "lg": { "$type": "dimension", "$value": "48px" },
+    "xl": { "$type": "dimension", "$value": "56px" }
+  },
+  "layoutWidth": {
+    "sm": { "$type": "dimension", "$value": "480px" },
+    "md": { "$type": "dimension", "$value": "768px" },
+    "lg": { "$type": "dimension", "$value": "1024px" },
+    "xl": { "$type": "dimension", "$value": "1280px" }
+  },
+  "layoutHeight": {
+    "sm": { "$type": "dimension", "$value": "480px" },
+    "md": { "$type": "dimension", "$value": "720px" },
+    "lg": { "$type": "dimension", "$value": "1080px" },
+    "xl": { "$type": "dimension", "$value": "1440px" }
+  },
+  "fontWeight": {
+    "thin": { "$type": "number", "$value": 200 },
+    "normal": { "$type": "number", "$value": 400 },
+    "medium": { "$type": "number", "$value": 500 },
+    "semibold": { "$type": "number", "$value": 600 },
+    "bold": { "$type": "number", "$value": 700 }
+  },
+  "lineHeight": {
+    "sm": { "$type": "number", "$value": 1.2 },
+    "normal": { "$type": "number", "$value": 1.4 },
+    "loose": { "$type": "number", "$value": 1.6 }
+  },
+  "letterSpacing": {
+    "normal": { "$type": "string", "$value": "0" },
+    "tight": { "$type": "string", "$value": "-0.05em" },
+    "loose": { "$type": "string", "$value": "0.025em" }
+  },
+  "buttonSize": {
+    "xs": { "$type": "dimension", "$value": "{size.xs}" },
+    "sm": { "$type": "dimension", "$value": "{size.sm}" },
+    "md": { "$type": "dimension", "$value": "{size.md}" },
+    "lg": { "$type": "dimension", "$value": "{size.lg}" }
+  },
+  "iconSize": {
+    "xs": { "$type": "dimension", "$value": "{size.xs}" },
+    "sm": { "$type": "dimension", "$value": "{size.sm}" },
+    "md": { "$type": "dimension", "$value": "{size.md}" },
+    "lg": { "$type": "dimension", "$value": "{size.lg}" }
+  },
+  "buttonPadding": {
+    "sm": { "$type": "dimension", "$value": "{spacing.sm}" },
+    "md": { "$type": "dimension", "$value": "{spacing.md}" },
+    "lg": { "$type": "dimension", "$value": "{spacing.lg}" }
+  },
+  "cardSize": {
+    "sm": {
+      "width": { "$type": "number", "$value": 240 },
+      "height": { "$type": "number", "$value": 320 }
+    },
+    "md": {
+      "width": { "$type": "number", "$value": 320 },
+      "height": { "$type": "number", "$value": 480 }
+    },
+    "lg": {
+      "width": { "$type": "number", "$value": 400 },
+      "height": { "$type": "number", "$value": 560 }
+    }
+  },
+  "gridGap": {
+    "xs": { "$type": "dimension", "$value": "{spacing.xs}" },
+    "sm": { "$type": "dimension", "$value": "{spacing.sm}" },
+    "md": { "$type": "dimension", "$value": "{spacing.md}" },
+    "lg": { "$type": "dimension", "$value": "{spacing.lg}" },
+    "xl": { "$type": "dimension", "$value": "{spacing.xl}" }
+  },
+  "flexGap": {
+    "xs": { "$type": "dimension", "$value": "{spacing.xs}" },
+    "sm": { "$type": "dimension", "$value": "{spacing.sm}" },
+    "md": { "$type": "dimension", "$value": "{spacing.md}" },
+    "lg": { "$type": "dimension", "$value": "{spacing.lg}" },
+    "xl": { "$type": "dimension", "$value": "{spacing.xl}" }
+  },
+  "gridColumn": {
+    "xs": { "$type": "number", "$value": 1 },
+    "sm": { "$type": "number", "$value": 2 },
+    "md": { "$type": "number", "$value": 3 },
+    "lg": { "$type": "number", "$value": 4 },
+    "xl": { "$type": "number", "$value": 6 }
+  }
+}

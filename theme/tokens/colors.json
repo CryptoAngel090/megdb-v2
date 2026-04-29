@@ -1,0 +1,33 @@
+{
+  "color": {
+    "primary": { "$type": "color", "$value": "oklch(71.4% 0.203 305.504)" },
+    "secondary": { "$type": "color", "$value": "oklch(27.4% 0.043 254.673)" },
+    "accent": { "$type": "color", "$value": "{color.primary}" },
+    "background": { "$type": "color", "$value": "oklch(21% 0.03 258)" },
+    "text": { "$type": "color", "$value": "oklch(95.8% 0.01 255)" },
+    "danger": { "$type": "color", "$value": "oklch(63.7% 0.237 25.331)" },
+    "warning": { "$type": "color", "$value": "oklch(76.9% 0.188 70.08)" },
+    "success": { "$type": "color", "$value": "oklch(72.3% 0.219 149.579)" },
+    "info": { "$type": "color", "$value": "oklch(76.5% 0.177 190.405)" },
+    "muted": { "$type": "color", "$value": "oklch(73% 0.04 250)" },
+    "bg": { "$type": "color", "$value": "{color.background}" },
+    "card": { "$type": "color", "$value": "{color.secondary}" },
+    "br": { "$type": "color", "$value": "oklch(100% 0 0 / 0.07)" },
+    "ac": { "$type": "color", "$value": "{color.accent}" },
+    "acg": { "$type": "color", "$value": "oklch(71.4% 0.203 305.504 / 0.38)" },
+    "acs": { "$type": "color", "$value": "oklch(71.4% 0.203 305.504 / 0.1)" },
+    "acb": { "$type": "color", "$value": "oklch(71.4% 0.203 305.504 / 0.28)" },
+    "t1": { "$type": "color", "$value": "{color.text}" },
+    "t2": { "$type": "color", "$value": "{color.muted}" },
+    "t3": { "$type": "color", "$value": "oklch(55% 0.05 252)" }
+  },
+  "semantic": {
+    "button": { "$type": "color", "$value": "{color.primary}" },
+    "buttonHover": { "$type": "color", "$value": "{color.acg}" },
+    "buttonActive": { "$type": "color", "$value": "{color.acs}" },
+    "buttonDisabled": { "$type": "color", "$value": "{color.br}" },
+    "background": { "$type": "color", "$value": "{color.background}" },
+    "text": { "$type": "color", "$value": "{color.text}" },
+    "textLink": { "$type": "color", "$value": "{color.primary}" }
+  }
+}

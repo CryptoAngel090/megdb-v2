@@ -1,0 +1,4 @@
+pnpm run verify:tokens
+pnpm run verify:design-tokens-sync
+pnpm run verify:seo
+pnpm run type-check

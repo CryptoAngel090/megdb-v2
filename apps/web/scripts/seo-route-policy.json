@@ -1,0 +1,62 @@
+{
+  "robotsDisallow": [
+    "/login",
+    "/register",
+    "/profile",
+    "/settings",
+    "/search",
+    "/ui-kit",
+    "/categories",
+    "/movies/random"
+  ],
+  "noindexRoutes": [
+    "/login",
+    "/register",
+    "/profile",
+    "/settings",
+    "/search",
+    "/ui-kit",
+    "/categories",
+    "/movies/random"
+  ],
+  "requiredSitemapStaticRoutes": [
+    "${SITE_URL}/",
+    "${SITE_URL}/movies",
+    "${SITE_URL}/series",
+    "${SITE_URL}/cartoons",
+    "${SITE_URL}/tvshows",
+    "${SITE_URL}/about",
+    "${SITE_URL}/contact",
+    "${SITE_URL}/help",
+    "${SITE_URL}/accessibility",
+    "${SITE_URL}/privacy",
+    "${SITE_URL}/terms",
+    "${SITE_URL}/cookies",
+    "${SITE_URL}/gdpr",
+    "${SITE_URL}/dmca"
+  ],
+  "requiredSitemapEntityRoutes": [
+    "${SITE_URL}/entity/mission-impossible",
+    "${SITE_URL}/entity/john-wick",
+    "${SITE_URL}/entity/the-fast-saga",
+    "${SITE_URL}/entity/mad-max",
+    "${SITE_URL}/entity/the-matrix",
+    "${SITE_URL}/entity/harry-potter",
+    "${SITE_URL}/entity/star-wars",
+    "${SITE_URL}/entity/dune"
+  ],
+  "forbiddenSitemapStaticRoutes": [
+    "${SITE_URL}/login",
+    "${SITE_URL}/register",
+    "${SITE_URL}/profile",
+    "${SITE_URL}/settings",
+    "${SITE_URL}/search",
+    "${SITE_URL}/ui-kit",
+    "${SITE_URL}/person",
+    "${SITE_URL}/trailer/",
+    "${SITE_URL}/api/",
+    "${SITE_URL}/movies/random",
+    "${SITE_URL}/categories",
+    "${SITE_URL}/llms.txt"
+  ]
+}

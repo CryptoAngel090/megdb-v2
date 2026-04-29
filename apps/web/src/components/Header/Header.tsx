@@ -5,13 +5,6 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
-import {
-  drawerVariants,
-  backdropVariants,
-  navItemVariants,
-  dropdownVariants,
-} from './Header.animations'
 import { Button } from '@repo/ui/button'
 import { SearchBar } from '@/components/SearchBar/SearchBar'
 import { getNextSelectionIndex } from './drawerSearch.utils'
@@ -435,15 +428,11 @@ export function Header() {
                       </Link>
 
                       {isCat && (
-                        <AnimatePresence>
+                        <>
                           {megaMenuOpen && (
-                            <motion.div
+                            <div
                               ref={megaMenuRef}
                               className={styles.megaMenu}
-                              variants={dropdownVariants}
-                              initial="hidden"
-                              animate="visible"
-                              exit="hidden"
                               role="menu"
                               aria-label="Browse by genre"
                               onMouseEnter={() => {
@@ -609,9 +598,9 @@ export function Header() {
                                   </div>
                                 </div>
                               </div>
-                            </motion.div>
+                            </div>
                           )}
-                        </AnimatePresence>
+                        </>
                       )}
                     </li>
                   )
@@ -664,15 +653,11 @@ export function Header() {
                       className={styles.avatarImg}
                     />
                   </button>
-                  <AnimatePresence>
+                  <>
                     {userMenuOpen && (
-                      <motion.div
+                      <div
                         ref={userMenuRef}
                         className={styles.userDropdown}
-                        variants={dropdownVariants}
-                        initial="hidden"
-                        animate="visible"
-                        exit="hidden"
                       >
                         <Link href="/profile" className={styles.dropdownItem}>
                           Profile
@@ -699,9 +684,9 @@ export function Header() {
                         >
                           Logout
                         </Button>
-                      </motion.div>
+                      </div>
                     )}
-                  </AnimatePresence>
+                  </>
                 </div>
               ) : (
                 <>
@@ -742,25 +727,17 @@ export function Header() {
       <HeaderContextTint onTintChange={setContextTinted} />
 
       {/* Mobile drawer */}
-      <AnimatePresence>
+      <>
         {menuOpen && (
           <>
-            <motion.div
+            <div
               className={styles.backdrop}
-              variants={backdropVariants}
-              initial="closed"
-              animate="open"
-              exit="closed"
               onClick={() => setMenuOpen(false)}
             />
 
-            <motion.div
+            <div
               ref={drawerRef}
               className={styles.drawer}
-              variants={drawerVariants}
-              initial="closed"
-              animate="open"
-              exit="closed"
             >
               {/* Header */}
               <div className={styles.drawerHeader}>
@@ -938,7 +915,7 @@ export function Header() {
 
               {/* Main nav */}
               <nav className={styles.drawerNav} aria-label="Mobile navigation">
-                <motion.div custom={0} variants={navItemVariants} initial="closed" animate="open">
+                <div>
                   <Link
                     href="/"
                     className={`${styles.drawerLink} ${isActive('/') ? styles.drawerLinkActive : ''}`}
@@ -968,14 +945,10 @@ export function Header() {
                       <path d="m9 18 6-6-6-6" />
                     </svg>
                   </Link>
-                </motion.div>
+                </div>
                 {NAV_LINKS.map((link, i) => (
-                  <motion.div
+                  <div
                     key={link.href}
-                    custom={i + 1}
-                    variants={navItemVariants}
-                    initial="closed"
-                    animate="open"
                   >
                     {link.href === '/categories' ? (
                       <div className={styles.drawerNested}>
@@ -1160,16 +1133,11 @@ export function Header() {
                         </svg>
                       </Link>
                     )}
-                  </motion.div>
+                  </div>
                 ))}
 
                 {/* Watchlist */}
-                <motion.div
-                  custom={NAV_LINKS.length + 1}
-                  variants={navItemVariants}
-                  initial="closed"
-                  animate="open"
-                >
+                <div>
                   <Link
                     href="/watchlist"
                     className={`${styles.drawerLink} ${isActive('/watchlist') ? styles.drawerLinkActive : ''}`}
@@ -1198,15 +1166,10 @@ export function Header() {
                       <path d="m9 18 6-6-6-6" />
                     </svg>
                   </Link>
-                </motion.div>
+                </div>
 
                 {/* Notifications */}
-                <motion.div
-                  custom={NAV_LINKS.length + 2}
-                  variants={navItemVariants}
-                  initial="closed"
-                  animate="open"
-                >
+                <div>
                   <Link
                     href="/notifications"
                     className={styles.drawerLink}
@@ -1237,15 +1200,10 @@ export function Header() {
                       <path d="m9 18 6-6-6-6" />
                     </svg>
                   </Link>
-                </motion.div>
+                </div>
 
                 {/* Random */}
-                <motion.div
-                  custom={NAV_LINKS.length + 3}
-                  variants={navItemVariants}
-                  initial="closed"
-                  animate="open"
-                >
+                <div>
                   <button
                     className={`${styles.drawerLink} ${styles.drawerLinkBtn}`}
                     onClick={() => {
@@ -1267,14 +1225,9 @@ export function Header() {
                     <span className={styles.drawerLinkLabel}>Random Movie</span>
                     <span className={styles.drawerRandom}>🎲</span>
                   </button>
-                </motion.div>
+                </div>
 
-                <motion.div
-                  custom={NAV_LINKS.length + 4}
-                  variants={navItemVariants}
-                  initial="closed"
-                  animate="open"
-                >
+                <div>
                   <Link
                     href="/profile"
                     className={`${styles.drawerLink} ${isActive('/profile') ? styles.drawerLinkActive : ''}`}
@@ -1304,7 +1257,7 @@ export function Header() {
                       <path d="m9 18 6-6-6-6" />
                     </svg>
                   </Link>
-                </motion.div>
+                </div>
               </nav>
 
               <div className={styles.drawerDivider} />
@@ -1355,10 +1308,10 @@ export function Header() {
                 <span className={styles.drawerFooterDot}>·</span>
                 <span>© 2026</span>
               </div>
-            </motion.div>
+            </div>
           </>
         )}
-      </AnimatePresence>
+      </>
     </>
   )
 }

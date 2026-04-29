@@ -3,13 +3,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { motion, AnimatePresence } from 'framer-motion'
-import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
-import {
-  searchBarVariants,
-  dropdownVariants,
-  dropdownVariantsReduced,
-} from './SearchBar.animations'
 import { Button } from '@repo/ui/button'
 import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './SearchBar.module.css'
@@ -56,7 +49,6 @@ function searchResultTypeLabel(type: SearchResult['type']): string {
 }
 
 export function SearchBar({ onFocus, onBlur, autoFocus }: SearchBarProps) {
-  const prefersReducedMotion = usePrefersReducedMotion()
   const router = useRouter()
   const [query, setQuery] = useState('')
   const [isFocused, setIsFocused] = useState(false)
@@ -178,11 +170,7 @@ export function SearchBar({ onFocus, onBlur, autoFocus }: SearchBarProps) {
 
   return (
     <div className={styles.searchBar}>
-      <motion.div
-        className={styles.inputWrapper}
-        variants={searchBarVariants}
-        animate={isFocused ? 'focused' : 'idle'}
-      >
+      <div className={styles.inputWrapper}>
         <svg
           className={`${styles.searchIcon} ${iconSlot.block} ${iconSlot.md}`}
           fill="none"
@@ -242,19 +230,15 @@ export function SearchBar({ onFocus, onBlur, autoFocus }: SearchBarProps) {
             </svg>
           </Button>
         )}
-      </motion.div>
+      </div>
 
       {/* Newest releases first (API order); flat list so sort matches /search */}
-      <AnimatePresence>
+      <>
         {showDropdown && (
-          <motion.div
+          <div
             ref={dropdownRef}
             id="search-results"
             className={styles.dropdown}
-            variants={prefersReducedMotion ? dropdownVariantsReduced : dropdownVariants}
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
             role="listbox"
           >
             {isLoading ? (
@@ -306,9 +290,9 @@ export function SearchBar({ onFocus, onBlur, autoFocus }: SearchBarProps) {
                 )}
               </>
             )}
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
+      </>
     </div>
   )
 }

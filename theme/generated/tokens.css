@@ -1,0 +1,46 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --color-primary: #c084fc;
+  --color-secondary: #182638;
+  --color-accent: #c084fc;
+  --color-background: #0b1622;
+  --color-text: #eef3ff;
+  --color-danger: #ef4444;
+  --color-warning: #f59e0b;
+  --color-success: #22c55e;
+  --color-info: #38bdf8;
+  --color-muted: #8fa8c8;
+  --color-bg: #0b1622;
+  --color-card: #182638;
+  --color-br: rgba(255,255,255,0.07);
+  --color-ac: #c084fc;
+  --color-acg: rgba(192,132,252,0.38);
+  --color-acs: rgba(192,132,252,0.10);
+  --color-acb: rgba(192,132,252,0.28);
+  --color-t1: #eef3ff;
+  --color-t2: #8fa8c8;
+  --color-t3: #4a6480;
+  --size-xs: 24px;
+  --size-sm: 32px;
+  --size-md: 40px;
+  --size-lg: 48px;
+  --size-xl: 56px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+  --border-radius-xs: 4px;
+  --border-radius-sm: 8px;
+  --border-radius-md: 12px;
+  --border-radius-lg: 16px;
+  --border-radius-xl: 24px;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+}

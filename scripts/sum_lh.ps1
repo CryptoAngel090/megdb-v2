@@ -1,0 +1,1 @@
+$files = Get-ChildItem -Path . -Include 'lh-*.json' -Recurse -ErrorAction SilentlyContinue; $sum = ($files | Measure-Object -Property Length -Sum).Sum; $count = $files.Count; Write-Output "LH files: $count, total bytes: $sum"; $files | ForEach-Object { "$($_.Name) => $($_.Length) bytes" }

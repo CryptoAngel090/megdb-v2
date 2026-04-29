@@ -1,12 +1,10 @@
-'use client'
-
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useId } from 'react'
 import Image from 'next/image'
 import type { MovieBackdropStill } from '@/lib/tmdb'
 import { getImageUrl } from '@/lib/tmdb'
-import { Image as ImageIcon, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './MoviePhotosSection.module.css'
+import { MoviePhotosSectionClient } from './MoviePhotosSection.client'
 
 const BLUR =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
@@ -16,44 +14,53 @@ type Props = {
   title: string
 }
 
+function GalleryIcon({ className }: { className?: string | undefined }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <circle cx="9" cy="10" r="1.5" />
+      <path d="m6 17 4.2-4.2a1 1 0 0 1 1.4 0L15 16l2.1-2.1a1 1 0 0 1 1.4 0L20 15.4" />
+    </svg>
+  )
+}
+
+function CloseIcon({ className }: { className?: string | undefined }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M18 6 6 18M6 6l12 12" />
+    </svg>
+  )
+}
+
+function ChevronLeftIcon({ className }: { className?: string | undefined }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="m15 18-6-6 6-6" />
+    </svg>
+  )
+}
+
+function ChevronRightIcon({ className }: { className?: string | undefined }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="m9 18 6-6-6-6" />
+    </svg>
+  )
+}
+
 export function MoviePhotosSection({ images, title }: Props) {
-  const [selected, setSelected] = useState<number | null>(null)
-  const trackRef = useRef<HTMLDivElement>(null)
+  const sectionId = useId().replace(/:/g, '')
   const validImages = images.filter((img) => Boolean(img.filePath?.trim()))
-
-  const close = useCallback(() => setSelected(null), [])
-  const prev = useCallback(() => {
-    setSelected((i) => (i !== null && i > 0 ? i - 1 : i))
-  }, [])
-  const next = useCallback(() => {
-    setSelected((i) => (i !== null && i < validImages.length - 1 ? i + 1 : i))
-  }, [validImages.length])
-
-  useEffect(() => {
-    if (selected === null) return
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') close()
-      if (e.key === 'ArrowLeft') prev()
-      if (e.key === 'ArrowRight') next()
-    }
-    window.addEventListener('keydown', handler)
-    return () => window.removeEventListener('keydown', handler)
-  }, [selected, close, prev, next])
-
-  const scroll = (dir: 'left' | 'right') => {
-    trackRef.current?.scrollBy({ left: dir === 'left' ? -400 : 400, behavior: 'smooth' })
-  }
 
   if (!validImages.length) return null
 
   return (
-    <section className={styles.section}>
+    <section id={`${sectionId}-shell`} className={styles.section}>
       <div className={styles.head}>
         <h2 className={styles.title}>
           <span className={styles.bar} aria-hidden />
-          <ImageIcon
+          <GalleryIcon
             className={[iconSlot.block, iconSlot.sm, styles.galleryIcon].filter(Boolean).join(' ')}
-            aria-hidden
           />
           Photos
           <span className={styles.count}>{validImages.length}</span>
@@ -63,28 +70,28 @@ export function MoviePhotosSection({ images, title }: Props) {
             type="button"
             className={styles.navBtn}
             aria-label="Scroll left"
-            onClick={() => scroll('left')}
+            data-scroll="left"
           >
-            <ChevronLeft className={`${iconSlot.block} ${iconSlot.md}`} aria-hidden />
+            <ChevronLeftIcon className={`${iconSlot.block} ${iconSlot.md}`} />
           </button>
           <button
             type="button"
             className={styles.navBtn}
             aria-label="Scroll right"
-            onClick={() => scroll('right')}
+            data-scroll="right"
           >
-            <ChevronRight className={`${iconSlot.block} ${iconSlot.md}`} aria-hidden />
+            <ChevronRightIcon className={`${iconSlot.block} ${iconSlot.md}`} />
           </button>
         </div>
       </div>
 
-      <div ref={trackRef} className={styles.track}>
+      <div id={`${sectionId}-track`} className={styles.track}>
         {validImages.map((img, i) => (
           <button
             key={img.filePath}
             type="button"
             className={styles.thumb}
-            onClick={() => setSelected(i)}
+            data-photo-index={i}
           >
             <Image
               src={getImageUrl(img.filePath, 'w500')}
@@ -99,56 +106,7 @@ export function MoviePhotosSection({ images, title }: Props) {
           </button>
         ))}
       </div>
-
-      {selected !== null && validImages[selected] != null && (
-        <div className={styles.lightbox} onClick={close} role="presentation">
-          <button type="button" className={styles.close} aria-label="Close" onClick={close}>
-            <X className={`${iconSlot.block} ${iconSlot.sm}`} aria-hidden />
-          </button>
-          {selected > 0 && (
-            <button
-              type="button"
-              className={`${styles.arrow} ${styles.arrowLeft}`}
-              aria-label="Previous"
-              onClick={(e) => {
-                e.stopPropagation()
-                prev()
-              }}
-            >
-              <ChevronLeft className={`${iconSlot.block} ${iconSlot.md}`} aria-hidden />
-            </button>
-          )}
-          {selected < validImages.length - 1 && (
-            <button
-              type="button"
-              className={`${styles.arrow} ${styles.arrowRight}`}
-              aria-label="Next"
-              onClick={(e) => {
-                e.stopPropagation()
-                next()
-              }}
-            >
-              <ChevronRight className={`${iconSlot.block} ${iconSlot.md}`} aria-hidden />
-            </button>
-          )}
-          <div onClick={(e) => e.stopPropagation()} role="presentation">
-            {(() => {
-              const active = validImages[selected]
-              if (!active) return null
-              return (
-                <Image
-                  src={getImageUrl(active.filePath, 'w1280')}
-                  alt={`${title} — still ${selected + 1} of ${validImages.length}`}
-                  width={active.width}
-                  height={active.height}
-                  className={styles.lightboxImg}
-                  priority
-                />
-              )
-            })()}
-          </div>
-        </div>
-      )}
+      <MoviePhotosSectionClient sectionId={sectionId} title={title} images={validImages} />
     </section>
   )
 }

@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "suite": "seo-weekly-audit",
+  "dryRun": true,
+  "ok": true,
+  "warnBudget": 2,
+  "monitorMode": "degraded",
+  "startedAt": "2026-04-27T13:51:15.020Z",
+  "finishedAt": "2026-04-27T13:51:15.032Z",
+  "elapsedMs": 5,
+  "checks": [
+    {
+      "id": "verify:seo:full",
+      "severity": "fail",
+      "ok": true,
+      "skipped": true,
+      "exitCode": 0,
+      "elapsedMs": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "id": "verify:seo:monitor",
+      "severity": "fail",
+      "ok": true,
+      "skipped": true,
+      "exitCode": 0,
+      "elapsedMs": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "id": "verify:seo:smoke",
+      "severity": "warn",
+      "ok": true,
+      "skipped": true,
+      "exitCode": 0,
+      "elapsedMs": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "id": "seo:webmaster:status",
+      "severity": "warn",
+      "ok": true,
+      "skipped": true,
+      "exitCode": 0,
+      "elapsedMs": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "signals": [
+    {
+      "id": "monitor.duplicate_titles",
+      "severity": "warn",
+      "value": 0,
+      "threshold": "<= 0",
+      "ok": true,
+      "message": "monitor snapshot missing in dry-run, skipping strict duplicate-title gate"
+    },
+    {
+      "id": "monitor.missing_canonical",
+      "severity": "warn",
+      "value": 0,
+      "threshold": "<= 0",
+      "ok": true,
+      "message": "monitor snapshot missing in dry-run, skipping strict canonical gate"
+    },
+    {
+      "id": "monitor.missing_jsonld",
+      "severity": "warn",
+      "value": 0,
+      "threshold": "<= 0",
+      "ok": true,
+      "message": "monitor snapshot missing in dry-run, skipping strict JSON-LD gate"
+    },
+    {
+      "id": "monitor.coverage_static",
+      "severity": "warn",
+      "value": 0,
+      "threshold": ">= 5",
+      "ok": true,
+      "message": "monitor snapshot missing in dry-run, skipping strict static coverage gate"
+    },
+    {
+      "id": "monitor.coverage_detail",
+      "severity": "warn",
+      "value": 0,
+      "threshold": ">= 5",
+      "ok": true,
+      "message": "monitor snapshot missing in dry-run, skipping strict detail coverage gate"
+    },
+    {
+      "id": "monitor.coverage_noindex",
+      "severity": "warn",
+      "value": 0,
+      "threshold": ">= 3",
+      "ok": true,
+      "message": "monitor snapshot missing in dry-run, skipping strict noindex coverage gate"
+    },
+    {
+      "id": "webmaster.age_days",
+      "severity": "warn",
+      "value": 3.2,
+      "threshold": "<= 7",
+      "ok": true,
+      "message": "webmaster evidence is 3.2 days old"
+    }
+  ],
+  "failedCount": 0,
+  "warnedCount": 0
+}

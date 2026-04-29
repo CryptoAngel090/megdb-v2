@@ -1,0 +1,178 @@
+{
+  "route": "/movie/[id]/page",
+  "generatedAt": "2026-04-28T23:02:43.305Z",
+  "chunkCount": 10,
+  "totalBytes": 250839,
+  "chunks": [
+    {
+      "chunk": "/_next/static/chunks/0p-m60soz~8ql.js",
+      "bytes": 54648,
+      "firstPartyModules": []
+    },
+    {
+      "chunk": "/_next/static/chunks/066td--m11poc.js",
+      "bytes": 51939,
+      "firstPartyModules": [
+        "[project]/apps/web/src/components/AppChrome/AppChrome.tsx <module evaluation>",
+        "[project]/apps/web/src/components/AppChrome/AppChrome.tsx",
+        "[project]/apps/web/src/components/PerformanceMonitor/PerformanceMonitorClient.tsx <module evaluation>",
+        "[project]/apps/web/src/components/PerformanceMonitor/PerformanceMonitorClient.tsx",
+        "[project]/apps/web/src/components/DesignThemeProvider/DesignThemeProvider.tsx <module evaluation>",
+        "[project]/apps/web/src/components/DesignThemeProvider/DesignThemeProvider.tsx",
+        "[project]/apps/web/src/app/error.tsx <module evaluation>",
+        "[project]/apps/web/src/app/error.tsx",
+        "[project]/apps/web/src/components/MediaShelf/MediaShelf.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MediaShelf/MediaShelf.tsx",
+        "[project]/apps/web/src/app/movie/[id]/error.tsx <module evaluation>",
+        "[project]/apps/web/src/app/movie/[id]/error.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieTrailerBlock.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieTrailerBlock.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.tsx",
+        "[project]/apps/web/src/components/MediaCard/MediaCard.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MediaCard/MediaCard.tsx",
+        "[project]/apps/web/src/components/TvSeriesEpisodes/TvSeriesEpisodes.tsx <module evaluation>",
+        "[project]/apps/web/src/components/TvSeriesEpisodes/TvSeriesEpisodes.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieHeroTrailerActions.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieHeroTrailerActions.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieUserRatingCard.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieUserRatingCard.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MoviePrimarySummaryActions.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MoviePrimarySummaryActions.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieComments.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieComments.tsx"
+      ]
+    },
+    {
+      "chunk": "/_next/static/chunks/04zrq-qry39o8.js",
+      "bytes": 35245,
+      "firstPartyModules": [
+        "[project]/apps/web/src/components/MovieDetailPage/MovieTrailerBlock.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieTrailerBlock.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.tsx",
+        "[project]/apps/web/src/components/MediaCard/MediaCard.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MediaCard/MediaCard.tsx",
+        "[project]/apps/web/src/components/TvSeriesEpisodes/TvSeriesEpisodes.tsx <module evaluation>",
+        "[project]/apps/web/src/components/TvSeriesEpisodes/TvSeriesEpisodes.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieHeroTrailerActions.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieHeroTrailerActions.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieUserRatingCard.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieUserRatingCard.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MoviePrimarySummaryActions.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MoviePrimarySummaryActions.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieComments.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieComments.tsx"
+      ]
+    },
+    {
+      "chunk": "/_next/static/chunks/0ntq2szb4lks8.js",
+      "bytes": 33865,
+      "firstPartyModules": [
+        "[project]/apps/web/src/components/MovieDetailPage/MovieTrailerBlock.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieTrailerBlock.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.tsx",
+        "[project]/apps/web/src/components/MediaCard/MediaCard.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MediaCard/MediaCard.tsx",
+        "[project]/apps/web/src/components/TvSeriesEpisodes/TvSeriesEpisodes.tsx <module evaluation>",
+        "[project]/apps/web/src/components/TvSeriesEpisodes/TvSeriesEpisodes.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieHeroTrailerActions.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieHeroTrailerActions.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieUserRatingCard.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieUserRatingCard.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MoviePrimarySummaryActions.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MoviePrimarySummaryActions.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieComments.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieComments.tsx"
+      ]
+    },
+    {
+      "chunk": "/_next/static/chunks/0u8tk8h42hggz.js",
+      "bytes": 25148,
+      "firstPartyModules": [
+        "[project]/apps/web/src/components/MediaShelf/MediaShelf.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MediaShelf/MediaShelf.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieTrailerBlock.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieTrailerBlock.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.tsx",
+        "[project]/apps/web/src/components/MediaCard/MediaCard.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MediaCard/MediaCard.tsx",
+        "[project]/apps/web/src/components/TvSeriesEpisodes/TvSeriesEpisodes.tsx <module evaluation>",
+        "[project]/apps/web/src/components/TvSeriesEpisodes/TvSeriesEpisodes.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieHeroTrailerActions.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieHeroTrailerActions.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieUserRatingCard.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieUserRatingCard.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MoviePrimarySummaryActions.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MoviePrimarySummaryActions.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieComments.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieComments.tsx"
+      ]
+    },
+    {
+      "chunk": "/_next/static/chunks/03snhwst3.ody.js",
+      "bytes": 23100,
+      "firstPartyModules": [
+        "[project]/apps/web/src/components/MediaShelf/MediaShelf.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MediaShelf/MediaShelf.tsx"
+      ]
+    },
+    {
+      "chunk": "/_next/static/chunks/0~j69sc26pese.js",
+      "bytes": 11666,
+      "firstPartyModules": [
+        "[project]/apps/web/src/app/movie/[id]/error.tsx <module evaluation>",
+        "[project]/apps/web/src/app/movie/[id]/error.tsx"
+      ]
+    },
+    {
+      "chunk": "/_next/static/chunks/14wvzwv0qq1kw.js",
+      "bytes": 10892,
+      "firstPartyModules": [
+        "[project]/apps/web/src/app/error.tsx <module evaluation>",
+        "[project]/apps/web/src/app/error.tsx"
+      ]
+    },
+    {
+      "chunk": "/_next/static/chunks/16twkghqer.r3.js",
+      "bytes": 3377,
+      "firstPartyModules": []
+    },
+    {
+      "chunk": "/_next/static/chunks/0um5dqfnubm-2.js",
+      "bytes": 959,
+      "firstPartyModules": [
+        "[project]/apps/web/src/components/MediaShelf/MediaShelf.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MediaShelf/MediaShelf.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieTrailerBlock.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieTrailerBlock.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MoviePhotosSection.tsx",
+        "[project]/apps/web/src/components/MediaCard/MediaCard.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MediaCard/MediaCard.tsx",
+        "[project]/apps/web/src/components/TvSeriesEpisodes/TvSeriesEpisodes.tsx <module evaluation>",
+        "[project]/apps/web/src/components/TvSeriesEpisodes/TvSeriesEpisodes.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieShareButton.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieHeroTrailerActions.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieHeroTrailerActions.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieUserRatingCard.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieUserRatingCard.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MoviePrimarySummaryActions.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MoviePrimarySummaryActions.tsx",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieComments.tsx <module evaluation>",
+        "[project]/apps/web/src/components/MovieDetailPage/MovieComments.tsx"
+      ]
+    }
+  ]
+}

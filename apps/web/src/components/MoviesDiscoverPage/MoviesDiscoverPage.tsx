@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { VirtuosoGrid } from 'react-virtuoso'
 import { MediaCard } from '@/components/MediaCard/MediaCard'
 import type {
   ShelfItem,
@@ -147,6 +148,23 @@ type SuggestedPreset = { name: string; draft: MoviesFilterDraft; pinned?: boolea
 type DiscoverPagePayload = { results: ShelfItem[]; page: number; total_pages: number }
 type ActiveChip = { key: string; label: string; patch: Partial<MoviesFilterDraft> }
 const PREFETCH_LOOKAHEAD_PAGES = 2
+const VIRTUOSO_OVERSCAN_PX = 900
+
+function getShelfItemKey(item: ShelfItem): string {
+  return `${item.type}-${item.id}`
+}
+
+function appendUniqueShelfItems(prev: ShelfItem[], next: ShelfItem[]): ShelfItem[] {
+  const seen = new Set(prev.map(getShelfItemKey))
+  const merged = [...prev]
+  for (const item of next) {
+    const key = getShelfItemKey(item)
+    if (seen.has(key)) continue
+    seen.add(key)
+    merged.push(item)
+  }
+  return merged
+}
 
 function discoverScrollStorageKey(basePath: string): string {
   return `megdb-discover-scroll-${basePath}`
@@ -251,7 +269,6 @@ export function MoviesDiscoverPage({
   const [savedPresets, setSavedPresets] = useState<SavedPreset[]>([])
   const [editingPresetId, setEditingPresetId] = useState<string | null>(null)
   const [editingPresetName, setEditingPresetName] = useState('')
-  const sentinelRef = useRef<HTMLDivElement | null>(null)
   const mobileModalRef = useRef<HTMLDivElement | null>(null)
   const mobileFilterTriggerRef = useRef<HTMLButtonElement | null>(null)
   const prefetchedPagesRef = useRef<Map<number, DiscoverPagePayload>>(new Map())
@@ -327,7 +344,7 @@ export function MoviesDiscoverPage({
       } else {
         body = await fetchDiscoverPage(nextPage)
       }
-      setItems((prev) => [...prev, ...body.results])
+      setItems((prev) => appendUniqueShelfItems(prev, body.results))
       const done = body.page >= body.total_pages
       setHasMore(!done)
       setNextPage(body.page + 1)
@@ -366,19 +383,6 @@ export function MoviesDiscoverPage({
         })
     }
   }, [busy, fetchDiscoverPage, hasMore, nextPage])
-
-  useEffect(() => {
-    const el = sentinelRef.current
-    if (!el || !hasMore) return
-    const obs = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) void loadMore()
-      },
-      { rootMargin: '1200px' }
-    )
-    obs.observe(el)
-    return () => obs.disconnect()
-  }, [hasMore, loadMore])
 
   const draft = browseDraftFromState(discoverState)
   const [mobileDraft, setMobileDraft] = useState(draft)
@@ -1378,10 +1382,20 @@ export function MoviesDiscoverPage({
           </div>
         ) : (
           <>
-            <div className={styles.grid}>
-              {items.map((item, idx) => (
+            <VirtuosoGrid<ShelfItem>
+              className={styles.gridVirtuoso ?? ''}
+              listClassName={styles.grid ?? ''}
+              itemClassName={styles.gridItem ?? ''}
+              totalCount={items.length}
+              useWindowScroll
+              overscan={VIRTUOSO_OVERSCAN_PX}
+              computeItemKey={(idx, item) => (item ? getShelfItemKey(item) : `idx-${idx}`)}
+              endReached={() => void loadMore()}
+              itemContent={(idx) => {
+                const item = items[idx]
+                if (item == null) return null
+                return (
                 <MediaCard
-                  key={`${item.id}-${idx}`}
                   id={item.id}
                   type={item.type}
                   title={item.title}
@@ -1402,8 +1416,9 @@ export function MoviesDiscoverPage({
                       }
                     : {})}
                 />
-              ))}
-            </div>
+                )
+              }}
+            />
             {err != null && (
               <div className={styles.errorWrap}>
                 <p className={styles.error}>{err}</p>
@@ -1412,7 +1427,6 @@ export function MoviesDiscoverPage({
                 </button>
               </div>
             )}
-            <div ref={sentinelRef} className={styles.sentinel} aria-hidden />
             {hasMore && busy && (
               <p className={styles.loadHint}>{`Loading next ${contentLabelPlural}…`}</p>
             )}

@@ -1,0 +1,61 @@
+/* Lightweight shelf skeleton — no MediaCard / MediaShelf client graph.
+   Card width follows `.rowInner > *` in `MediaShelf.module.css` (cqi rail). */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.poster {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    90deg,
+    var(--surface) 0%,
+    var(--surface-hover) 45%,
+    var(--surface-raised) 55%,
+    var(--surface) 100%
+  );
+  background-size: 200% 100%;
+  animation: shelfLightShimmer 1.5s ease-in-out infinite;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.line,
+.lineShort {
+  block-size: 0.65rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+}
+
+.line {
+  width: 88%;
+}
+
+.lineShort {
+  width: 55%;
+}
+
+@keyframes shelfLightShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .poster {
+    animation: none;
+    background: var(--surface-raised);
+  }
+}

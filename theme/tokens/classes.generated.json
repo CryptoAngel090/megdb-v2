@@ -1,0 +1,66 @@
+{
+  "sizeClasses": {
+    "xs": "w-xs h-xs",
+    "sm": "w-sm h-sm",
+    "md": "w-md h-md",
+    "lg": "w-lg h-lg",
+    "xl": "w-xl h-xl"
+  },
+  "spacingClasses": {
+    "xs": "p-xs",
+    "sm": "p-sm",
+    "md": "p-md",
+    "lg": "p-lg",
+    "xl": "p-xl"
+  },
+  "borderRadiusClasses": {
+    "xs": "rounded-xs",
+    "sm": "rounded-sm",
+    "md": "rounded-md",
+    "lg": "rounded-lg",
+    "xl": "rounded-xl"
+  },
+  "gridGapClasses": {
+    "xs": "gap-xs",
+    "sm": "gap-sm",
+    "md": "gap-md",
+    "lg": "gap-lg",
+    "xl": "gap-xl"
+  },
+  "gridGapLayoutClasses": {
+    "xs": "gap-grid-xs",
+    "sm": "gap-grid-sm",
+    "md": "gap-grid-md",
+    "lg": "gap-grid-lg",
+    "xl": "gap-grid-xl"
+  },
+  "gridColumnLayoutClasses": {
+    "xs": "grid-cols-layout-xs",
+    "sm": "grid-cols-layout-sm",
+    "md": "grid-cols-layout-md",
+    "lg": "grid-cols-layout-lg",
+    "xl": "grid-cols-layout-xl"
+  },
+  "gridColumnClasses": {
+    "xs": "grid-cols-xs",
+    "sm": "grid-cols-sm",
+    "md": "grid-cols-md",
+    "lg": "grid-cols-lg",
+    "xl": "grid-cols-xl"
+  },
+  "cardWidthClasses": {
+    "sm": "w-card-sm",
+    "md": "w-card-md",
+    "lg": "w-card-lg"
+  },
+  "cardHeightClasses": {
+    "sm": "h-card-sm",
+    "md": "h-card-md",
+    "lg": "h-card-lg"
+  },
+  "cardFrameClasses": {
+    "sm": "w-card-sm h-card-sm",
+    "md": "w-card-md h-card-md",
+    "lg": "w-card-lg h-card-lg"
+  }
+}

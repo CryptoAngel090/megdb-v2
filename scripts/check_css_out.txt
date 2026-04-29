@@ -1,0 +1,21 @@
+Found module.css files to analyze: 10
+Processing: C:\Users\CryptoAngel\Desktop\MEGDB\apps\web\src\components\MovieDetailPage\MovieDetailPage.module.css
+  extracted classes: 0
+Processing: C:\Users\CryptoAngel\Desktop\MEGDB\apps\web\src\components\Header\Header.module.css
+  extracted classes: 0
+Processing: C:\Users\CryptoAngel\Desktop\MEGDB\apps\web\src\components\MoviesDiscoverPage\MoviesDiscoverPage.module.css
+  extracted classes: 0
+Processing: C:\Users\CryptoAngel\Desktop\MEGDB\apps\web\src\components\MediaCard\MediaCard.module.css
+  extracted classes: 0
+Processing: C:\Users\CryptoAngel\Desktop\MEGDB\apps\web\src\components\RandomMoviePage\RandomMoviePage.module.css
+  extracted classes: 0
+Processing: C:\Users\CryptoAngel\Desktop\MEGDB\apps\web\src\components\RegisterForm\RegisterForm.module.css
+  extracted classes: 0
+Processing: C:\Users\CryptoAngel\Desktop\MEGDB\apps\web\src\components\HeroSection\HeroSection.module.css
+  extracted classes: 0
+Processing: C:\Users\CryptoAngel\Desktop\MEGDB\apps\web\src\components\ProfilePage\ProfilePage.module.css
+  extracted classes: 0
+Processing: C:\Users\CryptoAngel\Desktop\MEGDB\apps\web\src\components\Footer\Footer.module.css
+  extracted classes: 0
+Processing: C:\Users\CryptoAngel\Desktop\MEGDB\apps\web\src\components\LoginForm\LoginForm.module.css
+  extracted classes: 0

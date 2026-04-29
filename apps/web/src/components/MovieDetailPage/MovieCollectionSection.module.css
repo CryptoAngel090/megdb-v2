@@ -1,0 +1,112 @@
+.section {
+  margin-top: clamp(2rem, 5vw, 3rem);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: var(--space-2);
+  padding-inline: 0;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-bold);
+  color: var(--color-primary);
+  letter-spacing: var(--tracking-tight);
+}
+
+.titleBar {
+  display: block;
+  width: 4px;
+  align-self: stretch;
+  border-radius: 2px;
+  background: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.nav {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.navBtn {
+  width: var(--hit-area-round-md);
+  height: var(--hit-area-round-md);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-raised);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.navBtn:hover {
+  border-color: var(--color-primary-border);
+  background: var(--color-primary-muted);
+  color: var(--color-primary);
+}
+
+.navBtn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+/* Container — matches MovieCastSection structure exactly */
+.trackWrap {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  container-type: inline-size;
+}
+
+/* Scrollable row */
+.track {
+  display: flex;
+  gap: var(--rail-tile-gap);
+  overflow-x: auto;
+  padding-inline: 0;
+  padding-block: var(--space-4);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Inner flex row */
+.inner {
+  display: flex;
+  gap: var(--rail-tile-gap);
+  width: max-content;
+}
+
+/* Each slot — desktop default 4 columns */
+.inner > * {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  width: calc((100cqi - 3 * var(--rail-tile-gap)) / 4);
+  --media-card-poster-aspect: 2 / 3;
+}
+
+/* Mobile: show 3 cards in the first viewport */
+@media (max-width: 47.999rem) {
+  .inner > * {
+    width: calc((100cqi - 2 * var(--rail-tile-gap)) / 3);
+  }
+}

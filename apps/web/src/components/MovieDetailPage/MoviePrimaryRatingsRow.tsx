@@ -1,6 +1,3 @@
-// client: TMDB + MegDB rating strip wraps client star control
-'use client'
-
 import { TmdbLogoMark } from './TmdbLogoMark'
 import { MovieUserRatingCard } from './MovieUserRatingCard'
 import styles from './MoviePrimarySummaryPanel.module.css'

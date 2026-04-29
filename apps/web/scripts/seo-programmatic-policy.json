@@ -1,0 +1,85 @@
+{
+  "stage": "3-programmatic-seo",
+  "templates": [
+    {
+      "id": "genre-year",
+      "label": "Genre + Year",
+      "urlPattern": "/movies/category/{genre}/{year}",
+      "intent": "Find movies in a genre released in a specific year",
+      "requiresSearchDemand": true
+    },
+    {
+      "id": "genre-country",
+      "label": "Genre + Country",
+      "urlPattern": "/movies/category/{genre}/country/{country}",
+      "intent": "Find genre-specific movies from a country",
+      "requiresSearchDemand": true
+    },
+    {
+      "id": "genre-rating",
+      "label": "Genre + Rating",
+      "urlPattern": "/movies/category/{genre}/rating/{bucket}",
+      "intent": "Find top-rated movies inside one genre",
+      "requiresSearchDemand": true
+    },
+    {
+      "id": "genre-mood",
+      "label": "Genre + Mood",
+      "urlPattern": "/movies/category/{genre}/mood/{mood}",
+      "intent": "Find genre picks by mood",
+      "requiresSearchDemand": true
+    },
+    {
+      "id": "genre-franchise",
+      "label": "Genre + Franchise",
+      "urlPattern": "/movies/category/{genre}/franchise/{franchise}",
+      "intent": "Find franchise titles constrained by genre",
+      "requiresSearchDemand": true
+    },
+    {
+      "id": "actor-genre",
+      "label": "Actor + Genre",
+      "urlPattern": "/person/{personSlug}/genre/{genre}",
+      "intent": "Find actor filmography subset by genre",
+      "requiresSearchDemand": true
+    },
+    {
+      "id": "director-genre",
+      "label": "Director + Genre",
+      "urlPattern": "/director/{personSlug}/genre/{genre}",
+      "intent": "Find director catalog subset by genre",
+      "requiresSearchDemand": true
+    }
+  ],
+  "generationDenyRules": {
+    "skipWhenInsufficientData": true,
+    "skipNearDuplicateTemplates": true,
+    "skipWithoutSearchDemand": true,
+    "skipWithoutUniqueUserValue": true
+  },
+  "qualityGate": {
+    "minCards": 18,
+    "minUniqueCopyChars": 260,
+    "minIntentScore": 0.65,
+    "maxNeighborContentSimilarity": 0.82,
+    "requireDuplicateCheck": true
+  },
+  "calibration": {
+    "required": true,
+    "reviewCadenceDays": 28,
+    "minEvaluatedPages": 40,
+    "dataSources": [
+      "google_search_console",
+      "bing_webmaster_tools",
+      "indexation_logs",
+      "content_similarity_reports"
+    ],
+    "successMetrics": ["indexation_rate", "impressions_growth", "ctr", "thin_or_duplicate_share"],
+    "lastCalibratedAt": "2026-04-27"
+  },
+  "indexingPolicy": {
+    "weakPageActions": ["skip_generation", "noindex", "internal_only"],
+    "defaultWeakPageAction": "skip_generation",
+    "allowSitemapOnlyForStrongPages": true
+  }
+}

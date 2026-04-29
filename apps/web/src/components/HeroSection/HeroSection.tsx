@@ -4,18 +4,6 @@ import { useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react
 import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion, AnimatePresence } from 'framer-motion'
-import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
-import {
-  buildHeroContentVariants,
-  buildHeroTitleVariants,
-  buildHeroMetaVariants,
-  buildHeroButtonsVariants,
-  buildHeroOverviewVariants,
-  buildSlideVariants,
-  btnPrimaryVariants,
-  btnSecondaryVariants,
-} from './HeroSection.animations'
 import styles from './HeroSection.module.css'
 import type { MediaType } from '@repo/types'
 
@@ -50,14 +38,6 @@ export function HeroSection({ slides }: HeroSectionProps) {
   // Backdrop is required; TMDB often returns vote_average 0 for new titles — do not drop those.
   const validSlides = slides.filter((slide) => Boolean(slide.backdropPath?.trim()))
 
-  const reduceMotion = usePrefersReducedMotion()
-  const heroContentVariants = buildHeroContentVariants(reduceMotion)
-  const heroTitleVariants = buildHeroTitleVariants(reduceMotion)
-  const heroMetaVariants = buildHeroMetaVariants(reduceMotion)
-  const heroButtonsVariants = buildHeroButtonsVariants(reduceMotion)
-  const heroOverviewVariants = buildHeroOverviewVariants(reduceMotion)
-  const slideVariants = buildSlideVariants(reduceMotion)
-
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalTrailerKey, setModalTrailerKey] = useState<string | null>(null)
@@ -72,6 +52,11 @@ export function HeroSection({ slides }: HeroSectionProps) {
   const slideProgressFillRef = useRef<HTMLDivElement>(null)
 
   const currentSlide = validSlides[currentIndex]
+  const getSlideKey = useCallback(
+    (slide: HeroSlide, index: number) =>
+      `${slide.type}-${slide.id}-${slide.backdropPath ?? 'no-backdrop'}-${index}`,
+    []
+  )
 
   // Do not pause auto-rotate on whole-hero hover: the block is huge, so the cursor is almost always "inside"
   // and the timer would never run. User can pause via the control next to indicators.
@@ -212,9 +197,6 @@ export function HeroSection({ slides }: HeroSectionProps) {
     ? `${TMDB_IMAGE}/w1280${currentSlide.backdropPath}`
     : null
 
-  /* Hover/active только через CSS (.btnPrimary / .btnSecondary) — без Framer scale на обёртке. */
-  const motionBtnProps = { initial: 'idle' as const }
-
   return (
     <>
       <section
@@ -231,51 +213,34 @@ export function HeroSection({ slides }: HeroSectionProps) {
           keys when focus is inside this section.
         </span>
 
-        <AnimatePresence mode="wait">
-          {imgSrc && (
-            <motion.div
-              key={currentSlide.id}
-              className={`${styles.backdrop} ${styles.backdropDissolve}`}
-              variants={slideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-            >
-              <div className={styles.backdropParallax}>
-                <Image
-                  src={imgSrc}
-                  alt=""
-                  fill
-                  priority={currentIndex === 0}
-                  fetchPriority={currentIndex === 0 ? 'high' : 'low'}
-                  sizes="100vw"
-                  className={styles.backdropImg}
-                />
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {imgSrc && (
+          <div
+            className={`${styles.backdrop} ${styles.backdropDissolve}`}
+          >
+            <div className={styles.backdropParallax}>
+              <Image
+                src={imgSrc}
+                alt=""
+                fill
+                priority={currentIndex === 0}
+                fetchPriority={currentIndex === 0 ? 'high' : 'low'}
+                sizes="100vw"
+                className={styles.backdropImg}
+              />
+            </div>
+          </div>
+        )}
 
         <div className={styles.gradientBottom} aria-hidden />
         <div className={styles.gradientLeft} aria-hidden />
         <div className={styles.vignette} aria-hidden />
         <div className={styles.ambientGlow} aria-hidden />
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentSlide.id}
-            className={styles.content}
-            variants={heroContentVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            <div className={styles.contentMain}>
-              <motion.h1 className={styles.title} variants={heroTitleVariants}>
-                {currentSlide.title}
-              </motion.h1>
+        <div className={styles.content}>
+          <div className={styles.contentMain}>
+            <h1 className={styles.title}>{currentSlide.title}</h1>
 
-              <motion.div className={styles.meta} variants={heroMetaVariants}>
+              <div className={styles.meta}>
                 {rating && <span className={styles.rating}>★ {rating}</span>}
                 {rating && <span className={styles.separator} />}
                 {year && <span className={styles.year}>{year}</span>}
@@ -292,14 +257,14 @@ export function HeroSection({ slides }: HeroSectionProps) {
                     {g}
                   </span>
                 ))}
-              </motion.div>
+              </div>
 
-              <motion.p className={styles.overview} variants={heroOverviewVariants}>
+              <p className={styles.overview}>
                 {currentSlide.overview}
-              </motion.p>
+              </p>
 
-              <motion.div className={styles.buttons} variants={heroButtonsVariants}>
-                <motion.div variants={btnPrimaryVariants} {...motionBtnProps}>
+              <div className={styles.buttons}>
+                <div>
                   {currentSlide.trailerKey ? (
                     <button
                       type="button"
@@ -331,9 +296,9 @@ export function HeroSection({ slides }: HeroSectionProps) {
                       Watch Now
                     </Link>
                   )}
-                </motion.div>
+                </div>
 
-                <motion.div variants={btnSecondaryVariants} {...motionBtnProps}>
+                <div>
                   <Link href={href} className={styles.btnSecondary}>
                     <svg
                       width="18"
@@ -348,17 +313,15 @@ export function HeroSection({ slides }: HeroSectionProps) {
                     </svg>
                     Movie Details
                   </Link>
-                </motion.div>
+                </div>
 
                 {validSlides.length > 1 && (
                   <div className={styles.navArrows}>
-                    <motion.button
+                    <button
                       type="button"
                       className={styles.navArrow}
                       onClick={goToPrev}
                       aria-label="Previous slide"
-                      {...(!reduceMotion ? { whileTap: { scale: 0.9 } } : {})}
-                      transition={{ type: 'spring', stiffness: 520, damping: 22 }}
                     >
                       <svg
                         width="18"
@@ -371,14 +334,12 @@ export function HeroSection({ slides }: HeroSectionProps) {
                       >
                         <path d="M15 18l-6-6 6-6" />
                       </svg>
-                    </motion.button>
-                    <motion.button
+                    </button>
+                    <button
                       type="button"
                       className={styles.navArrow}
                       onClick={goToNext}
                       aria-label="Next slide"
-                      {...(!reduceMotion ? { whileTap: { scale: 0.9 } } : {})}
-                      transition={{ type: 'spring', stiffness: 520, damping: 22 }}
                     >
                       <svg
                         width="18"
@@ -391,13 +352,12 @@ export function HeroSection({ slides }: HeroSectionProps) {
                       >
                         <path d="M9 18l6-6-6-6" />
                       </svg>
-                    </motion.button>
+                    </button>
                   </div>
                 )}
-              </motion.div>
+              </div>
             </div>
-          </motion.div>
-        </AnimatePresence>
+          </div>
 
         {validSlides.length > 1 && (
           <>
@@ -425,7 +385,7 @@ export function HeroSection({ slides }: HeroSectionProps) {
               <div className={styles.indicators} role="group" aria-label="Slide selection">
                 {validSlides.map((slide, index) => (
                   <button
-                    key={slide.id}
+                    key={getSlideKey(slide, index)}
                     type="button"
                     className={`${styles.indicator} ${index === currentIndex ? styles.indicatorActive : ''}`}
                     onClick={() => goToSlide(index)}
@@ -444,25 +404,18 @@ export function HeroSection({ slides }: HeroSectionProps) {
 
       {portalReady
         ? createPortal(
-            <AnimatePresence>
-              {isModalOpen && modalTrailerKey && (
-                <motion.div
+            <>
+              {isModalOpen && modalTrailerKey ? (
+                <div
                   className={styles.modal}
                   role="presentation"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
                   onClick={closeModal}
                 >
-                  <motion.div
+                  <div
                     className={styles.modalContent}
                     role="dialog"
                     aria-modal="true"
                     aria-labelledby="hero-trailer-dialog-title"
-                    initial={{ scale: reduceMotion ? 1 : 0.9, opacity: reduceMotion ? 1 : 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: reduceMotion ? 1 : 0.9, opacity: reduceMotion ? 1 : 0 }}
-                    transition={reduceMotion ? { duration: 0 } : { type: 'tween', duration: 0.25 }}
                     onClick={(e) => e.stopPropagation()}
                   >
                     <h2 id="hero-trailer-dialog-title" className={styles.srOnly}>
@@ -494,10 +447,10 @@ export function HeroSection({ slides }: HeroSectionProps) {
                         allowFullScreen
                       />
                     </div>
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>,
+                  </div>
+                </div>
+              ) : null}
+            </>,
             document.body
           )
         : null}

@@ -1,0 +1,82 @@
+.shell {
+  width: min(var(--container-max), 100%);
+  margin-inline: auto;
+  padding-block: calc(var(--space-8) + var(--space-4)) var(--space-8);
+  padding-inline: var(--space-4);
+  display: grid;
+  gap: var(--space-6);
+}
+
+.hero {
+  min-height: clamp(220px, 34vh, 420px);
+  border-radius: var(--radius-xl);
+  border: 1px solid color-mix(in oklab, var(--color-border) 80%, transparent);
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--color-surface) 90%, transparent) 20%,
+    color-mix(in oklab, var(--color-surface-raised) 96%, transparent) 50%,
+    color-mix(in oklab, var(--color-surface) 90%, transparent) 80%
+  );
+  background-size: 220% 100%;
+  animation: shimmer 1.25s linear infinite;
+}
+
+.filters {
+  min-height: 52px;
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in oklab, var(--color-border) 80%, transparent);
+  background: color-mix(in oklab, var(--color-surface-raised) 92%, transparent);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.card {
+  aspect-ratio: 2 / 3;
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--color-surface) 92%, transparent) 20%,
+    color-mix(in oklab, var(--color-surface-raised) 98%, transparent) 50%,
+    color-mix(in oklab, var(--color-surface) 92%, transparent) 80%
+  );
+  background-size: 220% 100%;
+  animation: shimmer 1.25s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@media (max-width: 1023px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .shell {
+    padding-inline: var(--space-3);
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero,
+  .card {
+    animation: none;
+  }
+}
