@@ -2,14 +2,15 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Stage C contour #1 completed safely: removed dead detail-shell experiment plumbing (`detailShellOptimizationEnabled` prop chain in site shell/chrome and unused `x-pathname` middleware header) with unchanged route architecture and stable verification/baseline.
+**Last focus:** Stage D boundary cleanup pass completed: minimized `@repo/types` public surface to `MediaType` only after usage audit (active imports are web-only `MediaType`), with green web gates and unchanged detail-route baseline.
 
-**Next:** Continue Stage C one contour at a time (e.g., legacy fallback experiment modules) only with prior usage proof and strict no-mix policy between experiment cleanup and verifier logic.
+**Next:** Choose whether to continue Stage C abandoned-experiment contours or pause cleanup at current milestone; if continuing, keep one contour per commit with strict route/SEO-core isolation.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-29 — Step 11 Stage D: reduced `packages/types/src/index.ts` to `MediaType` public export only; `knip` stayed clean and web type-check/build/SEO quick + smoke/detail-baseline remained stable (`9 / 172,781`).
 - 2026-04-29 — Step 10 Stage C contour #1: removed abandoned detail-shell experiment wiring (`detailShellOptimizationEnabled` prop path + middleware `x-pathname` header write); build/SEO quick/smoke/detail-baseline all remained stable (`9 / 172,781`).
 - 2026-04-29 — Step 9 Stage B batch #3: added audited `knip` ignores for `MovieDetailPageLite`, `MovieHeroBackdropCarousel`, and `@next/bundle-analyzer` (config-backed false positives); `knip` is now clean and web/type/build/SEO/smoke/detail-baseline checks stayed green (`9 / 172,781`).
 - 2026-04-29 — Step 9 Stage B batch #2: removed 3 unused animation helper files (header/hero/search); `@repo/web` type-check/build/SEO quick and `/movie/1318447` smoke remained green, with unchanged detail route baseline (`9 / 172,781`).
