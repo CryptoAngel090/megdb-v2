@@ -2,14 +2,15 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** Stage B batch #2 completed conservatively by removing three unused animation helper files (`Header.animations.ts`, `HeroSection.animations.ts`, `SearchBar.animations.ts`); post-batch web checks stayed green and detail chunk baseline held at `9 / 172,781` bytes.
+**Last focus:** Stage B batch #3 executed as mini-audit/config pass (no risky deletions): confirmed likely Knip false positives for detail-only fallback components and analyzer integration, then encoded explicit `knip` ignores (`MovieDetailPageLite`, `MovieHeroBackdropCarousel`, `@next/bundle-analyzer`) with stable verification and unchanged detail baseline.
 
-**Next:** Decide whether to checkpoint-commit Stage B batch #2 now, then continue with 1-2 high-confidence tmdb/discover/entity helper candidates while preserving strict no-touch boundaries for route groups/metadata/SEO core.
+**Next:** Continue Stage B with only high-confidence real dead-code candidates; keep using mini-audit first and prefer `knip` config entries over deletion when usage is indirect/dynamic/framework-coupled.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-29 — Step 9 Stage B batch #3: added audited `knip` ignores for `MovieDetailPageLite`, `MovieHeroBackdropCarousel`, and `@next/bundle-analyzer` (config-backed false positives); `knip` is now clean and web/type/build/SEO/smoke/detail-baseline checks stayed green (`9 / 172,781`).
 - 2026-04-29 — Step 9 Stage B batch #2: removed 3 unused animation helper files (header/hero/search); `@repo/web` type-check/build/SEO quick and `/movie/1318447` smoke remained green, with unchanged detail route baseline (`9 / 172,781`).
 - 2026-04-29 — Step 9 Stage B batch #1: removed 2 unused local helpers and 3 unused exported symbols/types; `@repo/web` build/type-check/SEO quick + `/movie/1318447` smoke stayed green, and detail route baseline held at `9 / 172,781` bytes.
 - 2026-04-29 — Biome style batch: ran `npx @biomejs/biome check --write .` (safe fixes), applied broad formatting/import-order updates (~103 files) and left 13 manual diagnostics for later non-style cleanup.

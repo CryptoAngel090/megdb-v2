@@ -8,7 +8,12 @@
     "apps/web": {
       "entry": ["next.config.ts", "src/app/**/*.{ts,tsx}", "scripts/**/*.mjs"],
       "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs", "*.config.{js,mjs,ts}"],
-      "ignore": [".seo/**"]
+      "ignore": [
+        ".seo/**",
+        "src/components/MovieDetailPage/MovieDetailPageLite.tsx",
+        "src/components/MovieDetailPage/MovieHeroBackdropCarousel.tsx"
+      ],
+      "ignoreDependencies": ["@next/bundle-analyzer"]
     },
     "apps/admin": {
       "entry": ["next.config.ts", "src/app/**/*.{ts,tsx}"],
