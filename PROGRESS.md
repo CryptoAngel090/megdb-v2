@@ -2,14 +2,21 @@
 
 **Current status:** Active development — web app, API, design tokens baseline.
 
-**Last focus:** `Header.tsx` slim orchestration (~20 lines): all state/effects in `Header.hooks.ts` (`useHeaderShell`), desktop chrome via `HeaderDesktopBar` (mega-menu uses `HeaderMegaMenuPanel`), mobile via `HeaderMobileDrawer`. `pnpm exec tsc --noEmit` in `apps/web` green.
+**Last focus:** Vercel-ready web app: `apps/web/vercel.json` (monorepo `pnpm install` from repo root + Next build), repo `.nvmrc` (Node 20), `apps/web/package.json` `engines.node`.
 
-**Next:** Optional split `MoviesDiscoverPageMobileFiltersModal.tsx` or `MovieDetailPage.module.css`; optional `next build` smoke.
+**Next:** In Vercel: New Project → import this repo → **Root Directory `apps/web`** → add env from `apps/web/.env.example` (at least `TMDB_API_KEY`, `NEXTAUTH_URL` preview URL, `NEXTAUTH_SECRET`, `NEXT_PUBLIC_API_URL` if API used) → Deploy. Optional: `MoviesDiscoverPageMobileFiltersModal` split; `reports/repo-map` refresh.
 
 ---
 
 ## Recent log (append one line per meaningful session step)
 
+- 2026-04-30 — Vercel: added `apps/web/vercel.json` (workspace install), `.nvmrc`, `engines` on `@repo/web` (agent cannot log into Vercel — user completes import + env in dashboard).
+- 2026-04-30 — Header tablet (768–1023): `.inner` was 3 columns with 4 children → actions wrapped; now `auto minmax(0,1fr) auto auto` + missing `.inlineSearch` wrapper styles.
+- 2026-04-30 — iPhone SE layout: SearchBar `@container` hides kbd hint; Hero meta wrap + narrow CTAs column; Header pill tighter grid on narrow `inline-size`.
+- 2026-04-30 — Repaired merged `MovieDetailPage.module.css`: replaced 21 accidental literal `\\n` sequences with real newlines (bad shell escaping from first merge); `pnpm --filter @repo/web build` OK.
+- 2026-04-30 — Movie detail: fixed CSS Modules spread collision (merged segments back into single `MovieDetailPage.module.css`); `tsc --noEmit` in `apps/web` OK.
+- 2026-04-30 — Confirmed `@repo/web` production build after CSS split: `pnpm --filter @repo/web build` (SEO quick + Next compile/SSG) OK; browser UI smoke not run in-session.
+- 2026-04-30 — Movie detail CSS: 10 segment modules + `MovieDetailPage.styles.ts`; removed `MovieDetailPage.module.css`; added second `min-width: 48rem` break for splitter-friendly top-level boundaries.
 - 2026-04-30 — Header orchestration: `useHeaderShell` in `Header.hooks.ts` + `HeaderDesktopBar` wiring; `Header.tsx` ~20 lines (under 250 target).
 - 2026-04-30 — Local prod host: cleared `apps/web/.next`, `.turbo`, `apps/web/.turbo`, `apps/web/node_modules/.cache`; stopped listeners on 3000/3100/3400/3401/5000/8080; `pnpm --filter @repo/web build` OK; `next start` on **http://localhost:3100** (HTTP 200).
 - 2026-04-30 — Header split: `HeaderMobileDrawer` + `HeaderMegaMenuPanel` + `Header.constants.ts`; removed duplicated drawer/mega-menu markup from `Header.tsx`.
