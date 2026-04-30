@@ -1,4 +1,4 @@
-import styles from './MovieDetailPage.module.css'
+import styles from './MovieDetailPage.styles'
 
 export type MovieFaqItem = {
   question: string

@@ -19,6 +19,8 @@
   --color-primary-muted: rgba(192, 132, 252, 0.1);
   --color-primary-border: rgba(192, 132, 252, 0.28);
   --color-text: #eef3ff;
+  /* Alias: globals.css + shared components expect --color-text-primary (web defines it in app globals). */
+  --color-text-primary: var(--color-text);
   --color-text-muted: #8fa8c8;
   --color-text-subtle: #4a6480;
   --color-border: rgba(255, 255, 255, 0.07);

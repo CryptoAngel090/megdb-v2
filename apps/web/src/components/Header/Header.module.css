@@ -78,6 +78,16 @@
   transition:
     background 0.22s ease,
     border-color 0.22s ease;
+  container-type: inline-size;
+  container-name: header-pill;
+}
+
+/* iPhone SE: logo | search | icons need more horizontal room */
+@container header-pill (max-width: 22rem) {
+  .inner {
+    gap: var(--space-1);
+    padding-inline: var(--space-2);
+  }
 }
 
 .pillScrolled {
@@ -113,6 +123,13 @@
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: var(--space-2);
+}
+
+/* Search column (desktop bar): must shrink inside 1fr or grid blows past viewport */
+.inlineSearch {
+  min-width: 0;
+  display: flex;
+  align-items: center;
 }
 
 /* ── Logo ── */
@@ -1104,13 +1121,15 @@
   .inner {
     min-height: var(--layout-pill-inner-min-lg);
     padding: 0 var(--space-4);
-    grid-template-columns: auto 1fr auto;
+    /* Four in-flow children: logo | search | nav | actions — 3 cols wrapped actions to row 2 */
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
     gap: var(--space-3);
   }
 
   .nav {
     display: flex;
   }
+
   .signInBtn {
     display: inline-flex;
   }
@@ -1133,7 +1152,7 @@
    ═══════════════════════════════ */
 @media (min-width: 1024px) {
   .inner {
-    grid-template-columns: auto 1fr auto auto;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
     gap: var(--space-4);
   }
 

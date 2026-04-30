@@ -5,6 +5,15 @@
   max-width: min(37.5rem, 100%);
   min-width: 0;
   box-sizing: border-box;
+  container-type: inline-size;
+  container-name: searchbar;
+}
+
+/* iPhone SE / narrow header column: kbd chips overlap the placeholder */
+@container searchbar (max-width: 17.5rem) {
+  .kbdHint {
+    display: none;
+  }
 }
 
 .inputWrapper {

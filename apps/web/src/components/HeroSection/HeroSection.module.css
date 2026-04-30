@@ -19,6 +19,8 @@
   max-width: 100%;
   min-width: 0;
   margin-top: calc(-1 * var(--hero-header-clearance));
+  container-type: inline-size;
+  container-name: hero;
   /* Fluid height: rem + svh — без жёстких 420/640px на всей шкале */
   height: clamp(
     calc(15rem + var(--hero-header-clearance)),
@@ -235,17 +237,10 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  flex-wrap: wrap;
+  row-gap: var(--space-2);
   min-width: 0;
   max-width: 100%;
-}
-
-.meta::-webkit-scrollbar {
-  display: none;
 }
 
 .rating {
@@ -290,10 +285,31 @@
   font-weight: var(--weight-medium);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  max-width: min(100%, 11rem);
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: var(--leading-tight);
+  text-align: center;
 }
 
 .separator {
   display: none;
+}
+
+/* Narrow hero (e.g. iPhone SE): side-by-side CTAs crush — stack full-width */
+@container hero (max-width: 22rem) {
+  .buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btnPrimary,
+  .btnSecondary {
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+  }
 }
 
 /* ── Overview — rule 9: body line-height 1.6, rule 12: 60–75 chars ≈ 480px */

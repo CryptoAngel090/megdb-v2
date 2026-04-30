@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic'
-import styles from './MovieDetailPage.module.css'
+import styles from './MovieDetailPage.styles'
 
 function DetailLazyFallback() {
   return <div className={styles.lazySection} aria-hidden />

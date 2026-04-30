@@ -5,7 +5,7 @@ import type { DetailMediaKind } from '@/lib/slug'
 import type { MoviePageDetail } from '@/lib/tmdb'
 import { getImageUrl } from '@/lib/tmdb'
 import { MovieCastSection } from './MovieCastSection'
-import styles from './MovieDetailPage.module.css'
+import styles from './MovieDetailPage.styles'
 import { MovieFaqAccordion } from './MovieFaqAccordion'
 
 interface MovieDetailPageLiteProps {

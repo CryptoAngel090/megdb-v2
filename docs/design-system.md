@@ -59,7 +59,7 @@
 | ------- | ---- | ---------- |
 | Шелф актёров, стрелки | `PopularActorsShelf.module.css` | `width`/`height` → `--hit-area-round-md`; геометрия ряда → `--rail-tile-gap` / `--rail-tile-columns` |
 | Шелф медиа, стрелки | `MediaShelf.module.css` | `40px` / `44px` → `--hit-area-round-md` / `--control-height-sm`; ряд → `--rail-tile-*` |
-| Карточки «More like this» / коллекции | `MovieDetailPage.module.css` | трек → `--rail-tile-gap` / `--rail-tile-columns` |
+| Карточки «More like this» / коллекции | `MovieDetailPage.module.css` (импорт через `MovieDetailPage.styles.ts`) | трек → `--rail-tile-gap` / `--rail-tile-columns` |
 | Хиро, пауза / модалка | `HeroSection.module.css` | круглые кнопки → `--hit-area-round-md` |
 | Хедер, drawer / dropdown | `Header.module.css` | пункт меню `min-height` → `--control-height-sm`; крестик → `--hit-area-round-md` |
 | Поиск, постер результата | `SearchBar.module.css` | ширина мини‑постера → `--hit-area-round-md` |

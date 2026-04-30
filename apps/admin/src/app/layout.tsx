@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={geist.variable} style={{ background: 'var(--color-bg)' }}>
+      <body className={geist.variable}>
         {children}
       </body>
     </html>

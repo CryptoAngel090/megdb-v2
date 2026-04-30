@@ -169,7 +169,7 @@ export function MovieHeroCarouselProvider({
 }
 
 interface MovieHeroCarouselBackdropProps {
-  /** e.g. `MovieDetailPage.module.css` `heroImgCover` for landscape treatment */
+  /** e.g. movie detail segment CSS `heroImgCover` for landscape treatment */
   slideImageClassName: string
 }
 

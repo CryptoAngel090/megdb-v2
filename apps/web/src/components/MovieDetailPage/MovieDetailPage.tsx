@@ -18,7 +18,7 @@ import {
   MoviePhotosSectionLazy,
   MovieTrailerBlockLazy,
 } from './MovieDetailBelowFoldDynamics'
-import styles from './MovieDetailPage.module.css'
+import styles from './MovieDetailPage.styles'
 import { MovieHeroBackdropImage } from './MovieHeroBackdropImage'
 import { MovieHeroTrailerActions } from './MovieHeroTrailerActions'
 import { MoviePrimarySummaryPanel } from './MoviePrimarySummaryPanel'

@@ -4,7 +4,7 @@ import type { MediaType } from '@repo/types'
 import { useCallback, useEffect, useState } from 'react'
 import { useToast } from '@/components/Toast/Toast'
 import { isInLocalWatchlist, toggleLocalWatchlistItem } from '@/lib/localWatchlist'
-import styles from './MovieDetailPage.module.css'
+import styles from './MovieDetailPage.styles'
 import { triggerMovieTrailerOpen } from './movieTrailerEvents'
 
 type Props = {

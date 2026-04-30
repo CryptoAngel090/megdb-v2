@@ -3,7 +3,7 @@
 import { Button } from '@repo/ui/button'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import iconSlot from '@/components/IconSlot/iconSlot.module.css'
 import styles from './SearchBar.module.css'
 
@@ -50,6 +50,7 @@ function searchResultTypeLabel(type: SearchResult['type']): string {
 
 export function SearchBar({ onFocus, onBlur, autoFocus }: SearchBarProps) {
   const router = useRouter()
+  const listboxId = useId()
   const [query, setQuery] = useState('')
   const [isFocused, setIsFocused] = useState(false)
   const [placeholderIndex, setPlaceholderIndex] = useState(0)
@@ -194,7 +195,10 @@ export function SearchBar({ onFocus, onBlur, autoFocus }: SearchBarProps) {
           onKeyDown={handleKeyDown}
           aria-label="Search movies, series, and people"
           aria-autocomplete="list"
-          aria-controls="search-results"
+          aria-expanded={showDropdown}
+          aria-haspopup="listbox"
+          aria-controls={showDropdown ? listboxId : undefined}
+          role="combobox"
         />
 
         {!query && !isFocused && (
@@ -224,7 +228,7 @@ export function SearchBar({ onFocus, onBlur, autoFocus }: SearchBarProps) {
               stroke="currentColor"
               strokeWidth="2"
               viewBox="0 0 24 24"
-              aria-hidden
+              aria-hidden={true}
             >
               <path d="M18 6 6 18M6 6l12 12" />
             </svg>
@@ -235,7 +239,7 @@ export function SearchBar({ onFocus, onBlur, autoFocus }: SearchBarProps) {
       {/* Newest releases first (API order); flat list so sort matches /search */}
       <>
         {showDropdown && (
-          <div ref={dropdownRef} id="search-results" className={styles.dropdown} role="listbox">
+          <div ref={dropdownRef} id={listboxId} className={styles.dropdown} role="listbox">
             {isLoading ? (
               <div className={styles.loading}>
                 <div className={styles.spinner} />
